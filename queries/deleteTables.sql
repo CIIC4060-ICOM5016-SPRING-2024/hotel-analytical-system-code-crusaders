@@ -1,0 +1,9 @@
+drop table Chains;
+drop table Hotel;
+drop table Employee;
+drop table Login;
+drop table RoomDescription;
+drop table Room;
+drop table RoomUnavailable;
+drop table Client;
+drop table Reserve;
