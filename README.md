@@ -79,8 +79,8 @@ sqlite3 --version
 Install python dependencies
 ```bash
 # this is to have access to excel files
-pip install pandas   --break-system-packages
-pip install openpyxl --break-system-packages
+pip install pandas   
+pip install openpyxl
 ```
 
 If it throws you an error, you can setup a virtual enviroment for python
