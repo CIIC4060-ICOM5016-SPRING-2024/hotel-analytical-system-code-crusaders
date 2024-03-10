@@ -3,9 +3,9 @@ import os
 import glob
 
 # Specify the path to your input and output CSV directories
-input_csv_directory    = '../data/unfiltered/' # from repository
-input_csv_directory_bk = '../data/filtered/'   # from repository (for backup)
-output_csv_directory   = '/data/filtered/'     # to root dir
+input_csv_directory    = '../data/unfiltered/'  # from repository
+input_csv_directory_bk = '../data/filtered/'    # from repository (for backup)
+output_csv_directory   = '../../data/filtered/' # to root dir (outside repo)
 
 os.makedirs(output_csv_directory, exist_ok=True)
 
