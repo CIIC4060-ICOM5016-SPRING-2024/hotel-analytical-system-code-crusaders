@@ -76,7 +76,15 @@ git --version
 sqlite3 --version 
 ```
 
-### 4. Connect to PostgreSQL
+### 4. Clone repository on root
+For this part you need to clone the repository to the root folder inside the container.
+You should be inside root when you entered the container to install all dependencies. To clone
+the repo you need the link of this remote repository and write the following command:
+```bash
+git clone <your_github_repo_link_here>
+```
+
+### 5. Connect to PostgreSQL
 Provide the port to which we can use to comunicate with the database, the user and the database name all from localhost.
 ```bash
 psql -h localhost -U myuser -d mydatabase -p 5432
