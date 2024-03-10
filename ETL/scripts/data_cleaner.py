@@ -6,9 +6,9 @@ import subprocess
 import shutil
 import pandas as pd
 
-input_directory     = '../data/unfiltered/'  # from repository
-output_directory    = '../../data/filtered/' # to root dir (outside repo)
-output_directory_bk = '../data/filtered/'    # from repository (for backup)
+input_directory     = '../../data/unfiltered/'  # from repository
+output_directory    = '../../../data/filtered/' # to root dir (outside repo)
+output_directory_bk = '../../data/filtered/'    # from repository (for backup)
 
 def write_to_csv(inPath, outPath, table_rows):
     # Open the output CSV file in write mode
