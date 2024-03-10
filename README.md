@@ -76,6 +76,20 @@ git --version
 sqlite3 --version 
 ```
 
+Install python dependencies
+```bash
+# this is to have access to excel files
+pip install pandas   --break-system-packages
+pip install openpyxl --break-system-packages
+```
+
+If it throws you an error, you can setup a virtual enviroment for python
+or you can just add the following flag after the pip install command
+```bash
+pip install pandas   --break-system-packages
+pip install openpyxl --break-system-packages
+```
+
 ### 4. Clone repository on root
 For this part you need to clone the repository to the root folder inside the container.
 You should be inside root when you entered the container to install all dependencies. To clone
