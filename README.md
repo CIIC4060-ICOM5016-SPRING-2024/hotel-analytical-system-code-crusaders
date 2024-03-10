@@ -47,7 +47,36 @@ Check if the container is running, if not check previous steps or official docke
 docker ps
 ```
 
-### 3. Connect to PostgreSQL
+### 3. Enter the container and update/install dependencies
+To install all dependencies to make everything functional, first you have to enter the container
+```bash
+docker exec -it my-postgres-container bash
+```
+
+Once inside the container running bash, update the debian version that the container is running on
+```bash
+apt update
+```
+
+After updating, install the following dependencies
+```bash
+apt install -y python3 git sqlite3 
+```
+
+After updating, install the following dependencies
+```bash
+apt install -y python3 python3-pip git sqlite3 
+```
+
+Check if installation was successfull
+```bash
+python3 --version 
+pip --version
+git --version
+sqlite3 --version 
+```
+
+### 4. Connect to PostgreSQL
 Provide the port to which we can use to comunicate with the database, the user and the database name all from localhost.
 ```bash
 psql -h localhost -U myuser -d mydatabase -p 5432
