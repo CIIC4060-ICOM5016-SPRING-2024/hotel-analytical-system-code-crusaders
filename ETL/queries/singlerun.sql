@@ -117,10 +117,11 @@ copy Room(rid, hid, rdid, rprice)
 
 copy RoomUnavailable(ruid, rid, startdate, enddate)                      
     from '/data/filtered/room_unavailable.csv' delimiter ',' csv header   
-        where ruid      is not null and
-              rid       is not null and
-              startdate is not null and
-              enddate   is not null; 
+        where 
+            ruid      is not null and
+            rid       is not null and
+            startdate is not null and
+            enddate   is not null; 
 
 copy Reserve(reid, ruid, clid, total_cost, payment, guests)                      
     from '/data/filtered/reserve.csv' delimiter ',' csv header;
