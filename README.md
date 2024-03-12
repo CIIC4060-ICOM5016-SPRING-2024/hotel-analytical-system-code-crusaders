@@ -5,6 +5,7 @@
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Instructions](#instructions)
+- [How to use](#How-to-use)
 - [Contributing](#contributing)
 
 ## Objectives
@@ -115,6 +116,28 @@ the database name all from localhost.
 ```bash
 psql -h localhost -U myuser -d mydatabase -p 5432
 ```
+
+## How to use
+
+### How to extract the data that was provied?
+
+The data to extract is located inside of `/data/unfiltered/` of this repository. Here is all
+the data that needs to be extracted. Inside the `ETL` folder you can find a directory named
+scripts that contains the `data_cleaner.py` script. This is used to extract the unfiltered data
+and transform it to csv files. When the data is being transfered to the csv, it cleans the data
+accordingly to have a valid csv as output, meaning that the output csv must not contain blank
+lines.
+
+To run this script you need to run the followings:
+```bash
+# to move inside the scripts folder
+cd ./repository/ETL/scripts
+
+# to execute the script
+python3 data_cleaner.py
+```
+If you get any errors, you'll need to check the dependencies if they were installed correctly.
+
 
 ## Contributing
 - Alfredo Soto
