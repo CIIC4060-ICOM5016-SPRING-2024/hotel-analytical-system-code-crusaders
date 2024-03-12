@@ -16,7 +16,12 @@
 
 ## Getting Started
 ### Prerequisites
-Before starting, docker must be instaleled on your machine. Once docker is installed you can pull the default Postgres container from docker itself through the terminal.
+For testing you will need docker to run containers with a PostgreSQL image. Here we can test all queries and
+extract, modify and load the data provided to the database. For production, you will need heroku all set up.
+Here it will run the PostgreSQL database with the final results and queries.
+
+In order to get the postgres image for docker, you can run the following command in your terminal. For this
+you will need to have docker allready installed in your local machine.
 ```
 docker pull postgres
 ```
@@ -24,21 +29,18 @@ docker pull postgres
 ### Instructions
 
 ### 1. Create and run a new docker PostgreSQL container
-You can run this in the terminal or in a executable bash file.
 
-for executable bash file:
-```bash
-docker run -d                     \
-  --name my-postgres-container    \
-  -e POSTGRES_USER=myuser         \
-  -e POSTGRES_PASSWORD=mypassword \
-  -e POSTGRES_DB=mydatabase       \
-  -p 5432:5432                    \
-  postgres
-```
-in terminal:
+Running the following command in the terminal will create and run a container with postgres within it.
 ```bash
 docker run -d --name my-postgres-container -e POSTGRES_USER=myuser -e POSTGRES_PASSWORD=mypassword -e POSTGRES_DB=mydatabase -p 5432:5432 postgres
+```
+
+This database will have default user and credentials as showned in the command above. For purposes of this project the credentials
+will be the following:
+```bash
+POSTGRES_USER=myuser
+POSTGRES_PASSWORD=mypassword
+POSTGRES_DB=mydatabase
 ```
 
 ### 2. Verify the container is running
@@ -56,11 +58,6 @@ docker exec -it my-postgres-container bash
 Once inside the container running bash, update the debian version that the container is running on
 ```bash
 apt update
-```
-
-After updating, install the following dependencies
-```bash
-apt install -y python3 git sqlite3 
 ```
 
 After updating, install the following dependencies
@@ -92,16 +89,35 @@ pip install openpyxl --break-system-packages
 
 ### 4. Clone repository on root
 For this part you need to clone the repository to the root folder inside the container.
-You should be inside root when you entered the container to install all dependencies. To clone
-the repo you need the link of this remote repository and write the following command:
+You should be inside root when you enter the container to install all dependencies. To clone
+the repository you need the link of this remote repository and write the following command:
 ```bash
 git clone <your_github_repo_link_here>
 ```
 
+In case of this not working inside the container, you will need to exit back to your local machine's terminal
+and clone the repository somewhere in your computer. After doing so, you will need to copy the cloned repository folder
+into the `root` location inside the container.
+
+try this inside your local machine, preferably in your desktop.
+```bash
+git clone <your_github_repo_link_here>
+```
+Then try the following command to copy the cloned repository to the root's directory inside the container.
+```bash
+docker cp <path of the cloned repository folder> my-postgres-container:/
+```
+
 ### 5. Connect to PostgreSQL
-Provide the port to which we can use to comunicate with the database, the user and the database name all from localhost.
+For this you will need to be inside the container, to do this you can try step #3 again if you are out
+from the container. Provide the port to which we can use to comunicate with the database, the user and
+the database name all from localhost.
 ```bash
 psql -h localhost -U myuser -d mydatabase -p 5432
 ```
 
 ## Contributing
+- Alfredo Soto
+- Cesar Delgado
+- Janice Figueroa
+- Saúl Figueroa Gálvez
