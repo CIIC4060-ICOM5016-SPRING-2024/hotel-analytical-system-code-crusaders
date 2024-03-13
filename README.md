@@ -3,8 +3,8 @@
 ## Table of Contents
 - [Objectives](#objectives)
 - [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Instructions](#instructions)
+  - [Instructions (Heroku)](#instructions-heroku)
+  - [Instructions (Docker)](#instructions-docker)
 - [How to use](#How-to-use)
 - [Contributing](#contributing)
 
@@ -16,7 +16,20 @@
 5. Gain overall knowledge with OLAP systems.
 
 ## Getting Started
-### Prerequisites
+
+### Instructions (Heroku)
+
+### 1. Prepare Heroku account and PostgreSQL
+For this first step you'll need a heroku account and have set up PostgreSQL.
+
+### 2. Create the tables
+To create the tables inside PostgreSQL in heroku, you'll need to run the `createTable.sql` in DataGrip or
+VScode (if you have the propper extensions)
+
+
+### Instructions (Docker)
+
+### 1. Obtain PostgreSQL image
 For testing you will need docker to run containers with a PostgreSQL image. Here we can test all queries and
 extract, modify and load the data provided to the database. For production, you will need heroku all set up.
 Here it will run the PostgreSQL database with the final results and queries.
@@ -27,9 +40,7 @@ you will need to have docker allready installed in your local machine.
 docker pull postgres
 ```
 
-### Instructions
-
-### 1. Create and run a new docker PostgreSQL container
+### 2. Create and run a new docker PostgreSQL container
 
 Running the following command in the terminal will create and run a container with postgres within it.
 ```bash
@@ -44,13 +55,13 @@ POSTGRES_PASSWORD=mypassword
 POSTGRES_DB=mydatabase
 ```
 
-### 2. Verify the container is running
+### 3. Verify the container is running
 Check if the container is running, if not check previous steps or official docker documentation
 ```bash
 docker ps
 ```
 
-### 3. Enter the container and update/install dependencies
+### 4. Enter the container and update/install dependencies
 To install all dependencies to make everything functional, first you have to enter the container
 ```bash
 docker exec -it my-postgres-container bash
@@ -88,29 +99,21 @@ pip install pandas   --break-system-packages
 pip install openpyxl --break-system-packages
 ```
 
-### 4. Clone repository on root
-For this part you need to clone the repository to the root folder inside the container.
-You should be inside root when you enter the container to install all dependencies. To clone
-the repository you need the link of this remote repository and write the following command:
+### 5. Clone repository and move it into root's container
+For this part you need to clone the repository and copy the folder to the root folder inside the container.
+To clone the repository you need the link of this remote repository and write the following command:
 ```bash
 git clone <your_github_repo_link_here>
 ```
-
-In case of this not working inside the container, you will need to exit back to your local machine's terminal
-and clone the repository somewhere in your computer. After doing so, you will need to copy the cloned repository folder
-into the `root` location inside the container.
-
-try this inside your local machine, preferably in your desktop.
-```bash
-git clone <your_github_repo_link_here>
-```
-Then try the following command to copy the cloned repository to the root's directory inside the container.
+You can clone the repository to where ever you want in your computer. After cloning the repository, you have to copy it into
+the container. To do so, you will need to type the following command in your terminal (note that this is in your system's terminal
+not your container's root).
 ```bash
 docker cp <path of the cloned repository folder> my-postgres-container:/
 ```
 
-### 5. Connect to PostgreSQL
-For this you will need to be inside the container, to do this you can try step #3 again if you are out
+### 6. Connect to PostgreSQL
+For this you will need to be inside the container, to do this you can try step #4 again if you are out
 from the container. Provide the port to which we can use to comunicate with the database, the user and
 the database name all from localhost.
 ```bash
@@ -119,25 +122,34 @@ psql -h localhost -U myuser -d mydatabase -p 5432
 
 ## How to use
 
-### How to extract the data that was provied?
+### How to extract the data that was provied? (Docker)
 
-The data to extract is located inside of `/data/unfiltered/` of this repository. Here is all
-the data that needs to be extracted. Inside the `ETL` folder you can find a directory named
-scripts that contains the `data_cleaner.py` script. This is used to extract the unfiltered data
-and transform it to csv files. When the data is being transfered to the csv, it cleans the data
-accordingly to have a valid csv as output, meaning that the output csv must not contain blank
-lines.
-
-To run this script you need to run the followings:
+Enter the container's root directory
 ```bash
-# to move inside the scripts folder
-cd ./repository/ETL/scripts
+docker exec -it my-postgres-container bash
+```
+Once inside you can enter to the repository scripts folder using:
+```bash
+cd ./repository_name/ETL/scripts
+```
 
-# to execute the script
+The data to extract is located inside of `/data/unfiltered/` of this repository. 
+Inside the `ETL` folder you can find a directory named scripts that contains the
+`data_cleaner.py` script. This is used to extract the unfiltered data and transform
+it to csv files. When the data is being transfered to the csv, it cleans the data
+accordingly to have a valid csv as output.
+
+To run this script you need to run the following inside the container:
+```bash
 python3 data_cleaner.py
 ```
 If you get any errors, you'll need to check the dependencies if they were installed correctly.
 
+To upload the data to the database, you will need to run the following script AFTER
+running the previous script.
+```bash
+python3 mount_data.py
+```
 
 ## Contributing
 - Alfredo Soto
