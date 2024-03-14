@@ -19,13 +19,25 @@
 
 ### Instructions (Heroku)
 
-### 1. Prepare Heroku account and PostgreSQL
+### 1. Heroku Database Credentials
+These are the credentials you'll need to use to connect to remote database in heroku.
+```bash
+host=ceu9lmqblp8t3q.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com
+username=u2p3dsde0sjqp3
+database=ddvlf2av5l7r2v
+password=pe1a48cb634efec82321f869c5f3fd1859e9deecff7597944830beecc0384d637
+```
+
+### 2. Prepare Heroku account and PostgreSQL
 For this first step you'll need a heroku account and have set up PostgreSQL.
 
-### 2. Create the tables
+### 3. Create the tables
 To create the tables inside PostgreSQL in heroku, you'll need to run the `createTable.sql` in DataGrip or
 VScode (if you have the propper extensions)
 
+### 4. Upload data
+The data once filtered and tested (in te docker instruction setup) you can upload the data to heroku.
+To do so you'll need DataGrip to attach the csv's to the remote database.
 
 ### Instructions (Docker)
 
