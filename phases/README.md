@@ -1,4 +1,4 @@
-# Hotel Analytical System Phase II
+# Hotel Analytical System Phase I
 
 ## Table of Contents
 - [Objectives](#objectives)
@@ -10,9 +10,10 @@
 
 ## Objectives
 1. Understand the design, implementation and use of an application backed by a database system. 
-2. Understand the use of table diagram for database application design. 
-3. Gain experience by implementing applications using layers of increasing complexity and complex data structures.
-4. Gain further experience with Web programming concepts including REST. 
+2. Understand the use of table diagram for database application design.  
+3. Gain experience by implementing applications using layers of increasing complexity and complex data structures. 
+4. Understand the design, implementation and use of a data pipeline using the ETL concept. 
+5. Gain overall knowledge with OLAP systems.
 
 ## Getting Started
 
@@ -21,13 +22,10 @@
 ### 1. Heroku Database Credentials
 These are the credentials you'll need to use to connect to remote database in heroku.
 ```bash
-host=ec2-35-169-9-79.compute-1.amazonaws.com
-username=edgviemrvgvubw
-database=dcqjte9oo7j864
-password=a625d1106cf9fe6ddcb87f11dc958726165b4cdb5563d46e56fba96f62cbbd1f
-
-port=5432
-URI=postgres://edgviemrvgvubw:a625d1106cf9fe6ddcb87f11dc958726165b4cdb5563d46e56fba96f62cbbd1f@ec2-35-169-9-79.compute-1.amazonaws.com:5432/dcqjte9oo7j864
+host=ceu9lmqblp8t3q.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com
+username=u2p3dsde0sjqp3
+database=ddvlf2av5l7r2v
+password=pe1a48cb634efec82321f869c5f3fd1859e9deecff7597944830beecc0384d637
 ```
 
 ### 2. Prepare Heroku account and PostgreSQL
