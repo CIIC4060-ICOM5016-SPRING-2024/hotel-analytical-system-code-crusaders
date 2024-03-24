@@ -28,6 +28,8 @@ password=a625d1106cf9fe6ddcb87f11dc958726165b4cdb5563d46e56fba96f62cbbd1f
 
 port=5432
 URI=postgres://edgviemrvgvubw:a625d1106cf9fe6ddcb87f11dc958726165b4cdb5563d46e56fba96f62cbbd1f@ec2-35-169-9-79.compute-1.amazonaws.com:5432/dcqjte9oo7j864
+
+rest_api_host=https://pdb-f386d9f3feff.herokuapp.com/
 ```
 
 ### 2. Prepare Heroku account and PostgreSQL
@@ -109,8 +111,13 @@ pip install openpyxl
 If it throws you an error, you can setup a virtual enviroment for python
 or you can just add the following flag after the pip install command
 ```bash
+
+pip install -U pip
 pip install pandas   --break-system-packages
 pip install openpyxl --break-system-packages
+pip install Flask
+pip install flask-cors
+pip install psycopg2-binary
 ```
 
 ### 5. Clone repository and move it into root's container
