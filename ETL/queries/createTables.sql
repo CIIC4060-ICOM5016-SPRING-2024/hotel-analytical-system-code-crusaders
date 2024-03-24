@@ -1,3 +1,6 @@
+
+-- This SQL queries to create the tables from the ER
+
 create table if not exists Client (
     clid       serial primary key,   
     fname      varchar(64) not null, 

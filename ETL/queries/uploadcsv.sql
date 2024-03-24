@@ -1,3 +1,8 @@
+
+-- This script is to upload the data to the docker container
+-- You need to have uploaded the filtered data to the /data/filtered/ in root
+-- if this is not done, the SQL query will not upload the data
+
 copy Client(clid, fname, lname, age, memberyear)                         
     from '/data/filtered/client.csv' delimiter ',' csv header;           
 
