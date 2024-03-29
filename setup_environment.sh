@@ -16,3 +16,5 @@ echo "Installing dependencies..."
 pip install -r requirements.txt
 
 echo "Virtual environment created and dependencies installed successfully."
+
+deactivate
