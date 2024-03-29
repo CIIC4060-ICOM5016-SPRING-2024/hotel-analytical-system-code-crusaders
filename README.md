@@ -125,6 +125,22 @@ Run the setup bash file to setup everything.
 ./setup_environment.sh
 ```
 
+After the application has setted up the virtual enviroment with all dependencies, you
+need to get inside the virtual enviroment to start running the application. You do
+this by running the following command:
+```bash
+source ./virtual-enviroment/bin/activate
+```
+If you wish to end/exit the virtual enviroment you can run
+```bash
+deactivate
+```
+
+To run the application you run start running the `app.py` with the following command:
+```bash
+python3 ./application/app.py
+```
+
 ### 4. ETL setup
 To load the data to the database to start testing, you will need to run the scripts related to transforming and
 loading the data inside the `ETL/` directory. Similarly, for production database in heroku, you will use DataGrip or
