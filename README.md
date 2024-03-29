@@ -125,62 +125,12 @@ Run the setup bash file to setup everything.
 ./setup_environment.sh
 ```
 
-### 3. Create the tables
+### 4. ETL setup
 To load the data to the database to start testing, you will need to run the scripts related to transforming and
 loading the data inside the `ETL/` directory. Similarly, for production database in heroku, you will use DataGrip or
 vsCode for uploading the data.
-
-Install python dependencies
 ```bash
-# this is to have access to excel files
-pip install pandas   
-pip install openpyxl
-```
-
-If it throws you an error, you can setup a virtual enviroment for python
-or you can just add the following flag after the pip install command
-```bash
-
-pip install -U pip
-pip install pandas   --break-system-packages
-pip install openpyxl --break-system-packages
-pip install Flask
-pip install flask-cors
-pip install psycopg2-binary
-```
-
-### 5. Clone repository and move it into root's container
-For this part you need to clone the repository and copy the folder to the root folder inside the container.
-To clone the repository you need the link of this remote repository and write the following command:
-```bash
-git clone <your_github_repo_link_here>
-```
-You can clone the repository to where ever you want in your computer. After cloning the repository, you have to copy it into
-the container. To do so, you will need to type the following command in your terminal (note that this is in your system's terminal
-not your container's root).
-```bash
-docker cp <path of the cloned repository folder> my-postgres-container:/
-```
-
-### 6. Connect to PostgreSQL
-For this you will need to be inside the container, to do this you can try step #4 again if you are out
-from the container. Provide the port to which we can use to comunicate with the database, the user and
-the database name all from localhost.
-```bash
-psql -h localhost -U myuser -d mydatabase -p 5432
-```
-
-## How to use
-
-### How to extract the data that was provied? (Docker)
-
-Enter the container's root directory
-```bash
-docker exec -it my-postgres-container bash
-```
-Once inside you can enter to the repository scripts folder using:
-```bash
-cd ./repository_name/ETL/scripts
+cd ./<repository_name>/ETL/scripts
 ```
 
 The data to extract is located inside of `/data/unfiltered/` of this repository. 

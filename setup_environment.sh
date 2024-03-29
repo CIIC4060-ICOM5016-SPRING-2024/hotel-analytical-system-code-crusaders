@@ -3,18 +3,13 @@
 # Define the name of the virtual environment
 VENV_NAME="virtual-application"
 
-# Check if virtualenv is installed, if not install it
-if ! command -v virtualenv &> /dev/null; then
-    echo "Installing virtualenv..."
-    pip install virtualenv
-fi
-
-# Create a virtual environment
+# Create the virtual enviroment
 echo "Creating virtual environment..."
-virtualenv "$VENV_NAME"
+python3 -m venv $VENV_NAME
 
 # Activate the virtual environment
-source "$VENV_NAME/bin/activate"
+echo "Activating virtual environment..."
+source ./$VENV_NAME/bin/activate
 
 # Install dependencies from requirements.txt
 echo "Installing dependencies..."
