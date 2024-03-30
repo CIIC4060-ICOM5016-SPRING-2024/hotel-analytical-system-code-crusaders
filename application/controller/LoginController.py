@@ -1,7 +1,11 @@
-
+from flask import jsonify
 from model.LoginDAO import LoginDAO
+from controller.BaseController import BaseController
 
-class LoginController:
+class LoginController(BaseController):
+
+    def __init__(self):
+        self.dao = LoginDAO()
 
     def make_json(self, table):
         # Turn the data to json
@@ -17,13 +21,18 @@ class LoginController:
             fullJson.append(dictionary)
         return fullJson
 
-    def getAllUsers(self):
-        # Build new DAO
+    def get_all(self):
+        result = self.dao.get_loginTable()
+        return self.make_json(result)
 
-        dao = LoginDAO()
+    def get_byID(self, id):
+        return jsonify("Selected Login id")
 
-        result = dao.getAllUsers()
+    def put_byID(self, id):
+        return jsonify("Inserted Login id")
 
-        answer = self.make_json(result)
+    def update_byID(self, id):
+        return jsonify("Updated Login id")
 
-        return answer
+    def delete_byID(self, id):
+        return jsonify("Deleted Login id")

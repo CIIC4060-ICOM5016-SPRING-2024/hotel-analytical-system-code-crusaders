@@ -6,7 +6,7 @@ class LoginDAO:
         
         pass
 
-    def getAllUsers(self):
+    def get_loginTable(self):
         self.db_connection = Database()
         
         result = self.db_connection.querySelectFrom(
