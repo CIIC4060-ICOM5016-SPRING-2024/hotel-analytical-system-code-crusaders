@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 from flask_cors import CORS
 from controller.hotels import Hotels
 from controller.chains import Chains
@@ -15,52 +15,46 @@ def hello_world():
 #############################################
 
 
-@app.route('/codecrusaders/hotel', methods=['GET'])
+@app.route('/codecrusaders/hotel', methods=['GET', 'POST'])
 def handleHotels():
     handler = Hotels()
-    return handler.getAllHotels()
-@app.route('/codecrusaders/hotel/<int:hid>', methods=['GET'])
+    if request.method == 'POST':
+        return handler.createHotel(request.json)
+    else:
+        return handler.getAllHotels()
+
+@app.route('/codecrusaders/hotel/<int:hid>', methods=['GET','PUT','DELETE'])
 def handleHotelsbyID(hid):
     handler = Hotels()
-    return handler.getHotelbyID(hid)
-@app.route('/codecrusaders/hotel/<int:hid>/<int:chid>/<string:hname>/<string:hcity>', methods=['POST'])
-def handleHotelCreation(hid, chid, hname, hcity):
-    handler = Hotels()
-    return handler.createHotel(hid,chid,hname,hcity)
-@app.route('/codecrusaders/hotel/<int:hid>', methods=['DELETE'])
-def handleHotelDelete(hid):
-    handler = Hotels()
-    return handler.deleteHotel(hid)
-@app.route('/codecrusaders/hotel/<int:hid>/<int:chid>/<string:hname>/<string:hcity>', methods=['PUT'])
-def handleupdateHotel(hid, chid, hname, hcity):
-    handler = Hotels()
-    return handler.updateHotel(hid,chid,hname,hcity)
+    if request.method == 'GET':
+        return handler.getHotelbyID(hid)
+    elif request.method == 'PUT':
+        return handler.updateHotel(request.json)
+    elif request.method == 'DELETE':
+        return handler.deleteHotel(hid)
 
 #############################################
 #                CHAINS
 #############################################
 
 
-@app.route('/codecrusaders/chains', methods=['GET'])
+@app.route('/codecrusaders/chains', methods=['GET', 'POST'])
 def handleChains():
     handler = Chains()
-    return handler.getAllChains()
-@app.route('/codecrusaders/chains/<int:chid>', methods=['GET'])
+    if request.method == 'POST':
+        return handler.createChain(request.json)
+    else:
+        return handler.getAllChains()
+
+@app.route('/codecrusaders/chains/<int:chid>', methods=['GET','PUT','DELETE'])
 def handleChainsbyID(chid):
     handler = Chains()
-    return handler.getChainbyID(chid)
-@app.route('/codecrusaders/chains/<int:chid>/<string:cname>/<float:springmkup>/<float:summermkup>/<float:fallmkup>/<float:wintermkup>', methods =['POST'])
-def handleChainsCreation(chid, cname, springmkup,summermkup,fallmkup,wintermkup):
-    handler = Chains()
-    return handler.createChain(chid,cname,springmkup,summermkup,fallmkup,wintermkup)
-@app.route('/codecrusaders/chains/<int:chid>', methods=['DELETE'])
-def handleChainsDelete(chid):
-    handler = Chains()
-    return handler.deleteChain(chid)
-@app.route('/codecrusaders/chains/<int:chid>/<string:cname>/<float:springmkup>/<float:summermkup>/<float:fallmkup>/<float:wintermkup>', methods =['PUT'])
-def handleupdateChains(chid, cname, springmkup,summermkup,fallmkup,wintermkup):
-    handler = Chains()
-    return handler.updateChain(chid,cname,springmkup,summermkup,fallmkup,wintermkup)
+    if request.method == 'GET':
+        return handler.getChainbyID(chid)
+    elif request.method == 'PUT':
+        return handler.updateChain(request.json)
+    elif request.method == 'DELETE':
+        return handler.deleteChain(chid)
 
 
 #############################################
@@ -68,25 +62,23 @@ def handleupdateChains(chid, cname, springmkup,summermkup,fallmkup,wintermkup):
 #############################################
 
 
-@app.route('/codecrusaders/employee', methods=['GET'])
-def handleEmployee():
+@app.route('/codecrusaders/employee', methods=['GET', 'POST'])
+def handleEmployees():
     handler = Employee()
-    return handler.getAllEmployees()
-@app.route('/codecrusaders/employee/<int:eid>', methods=['GET'])
+    if request.method == 'POST':
+        return handler.createEmployee(request.json)
+    else:
+        return handler.getAllEmployees()
+@app.route('/codecrusaders/employee/<int:eid>', methods=['GET','PUT','DELETE'])
 def handleEmployeesbyID(eid):
     handler = Employee()
-    return handler.getEmployeebyID(eid)
-@app.route('/codecrusaders/employee/<int:eid>/<int:hid>/<string:fname>/<string:lname>/<int:age>/<string:position>/<float:salary>', methods = ['POST'])
-def handleEmployeeCreation(eid,hid,fname,lname,age,position,salary):
-    handler = Employee()
-    return handler.createEmployee(eid,hid,fname,lname,age,position,salary)
-@app.route('/codecrusaders/employee/<int:eid>', methods=['DELETE'])
-def handleEmployeeDelete(eid):
-    handler = Employee()
-    return handler.deleteEmployee(eid)
-@app.route('/codecrusaders/employee/<int:eid>/<int:hid>/<string:fname>/<string:lname>/<int:age>/<string:position>/<float:salary>', methods = ['PUT'])
-def handleUpdateEmployee(eid,hid,fname,lname,age,position,salary):
-    handler = Employee()
-    return handler.updateEmployee(eid,hid,fname,lname,age,position,salary)
+    if request.method == 'GET':
+        return handler.getEmployeebyID(eid)
+    elif request.method == 'PUT':
+        return handler.updateEmployee(request.json)
+    elif request.method == 'DELETE':
+        return handler.deleteEmployee(eid)
+
+
 if __name__ == '__main__':
     app.run(debug=True)

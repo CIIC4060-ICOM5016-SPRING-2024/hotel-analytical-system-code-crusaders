@@ -31,7 +31,6 @@ class Employee:
         result = model.getAllEmployees()
         response = self.make_json(result)
         return response
-
     def getEmployeebyID(self,eid):
         model = EmployeeDAO()
         employee = model.getEmployeebyID(eid)
@@ -40,17 +39,20 @@ class Employee:
         else:
             response =  self.make_json_one(employee)
             return response
-    def createEmployee(self, eid,hid,fname,lname,age,position,salary):
-        if not eid and not hid and not fname and not lname and not age and not position and not salary:
-            return jsonify("Please verify submission values"), 404
+    def createEmployee(self, json):
+        hid = json['hid']
+        fname =json['fname']
+        lname = json['lname']
+        age = json['age']
+        position = json['position']
+        salary = json['salary']
         model = EmployeeDAO()
-        employee = model.createEmployee(eid,hid,fname,lname,age,position,salary)
+        employee = model.createEmployee(hid,fname,lname,age,position,salary)
         if not employee:
             return jsonify("Not found"), 404
         else:
             response = self.make_json_one(employee)
             return response
-
     def deleteEmployee(self, eid):
         model = EmployeeDAO()
         employee = model.deleteEmployee(eid)
@@ -59,11 +61,16 @@ class Employee:
         else:
             response = self.make_json_one(employee)
             return response
-    def updateEmployee(self, eid,hid,fname,lname,age,position,salary):
-        if not eid and not hid and not fname and not lname and not age and not position and not salary:
-            return jsonify("Please verify submission values"), 404
+    def updateEmployee(self, json):
+        eid = json['eid']
+        hid = json['hid']
+        fname =json['fname']
+        lname = json['lname']
+        age = json['age']
+        position = json['position']
+        salary = json['salary']
         model = EmployeeDAO()
-        employee = model.updateEmployee(eid, hid, fname, lname, age, position, salary)
+        employee = model.updateEmployee(eid,hid,fname,lname,age,position,salary)
         if not employee:
             return jsonify("Not found"), 404
         else:

@@ -10,7 +10,6 @@ class HotelsDAO:
         self.db.close()
         cur.close()
         return hotel_list
-
     def getHotelbyID(self,hid):
         cur = self.db.connection.cursor()
         query = """SELECT * FROM hotel where hid = %s"""
@@ -19,12 +18,13 @@ class HotelsDAO:
         self.db.close()
         cur.close()
         return hotel_list
-    def createHotel(self,hid,chid,hname,hcity):
+    def createHotel(self,chid,hname,hcity):
         cur = self.db.connection.cursor()
-        query1 = """INSERT INTO hotel (hid,chid,hname,hcity) VALUES (%s,%s,%s,%s)"""
-        query2 = """SELECT hid,chid,hname,hcity FROM hotel where hid = %s"""
-        cur.execute(query1,(hid,chid,hname,hcity))
-        cur.execute(query2,(hid,))
+        query1 = """INSERT INTO hotel (chid,hname,hcity) VALUES (%s,%s,%s) returning hid"""
+        query2 = """SELECT * FROM hotel where hid = %s"""
+        cur.execute(query1,(chid,hname,hcity))
+        hotel_id = cur.fetchone()[0]
+        cur.execute(query2,(hotel_id,))
         hotel_list = cur.fetchone()
         self.db.connection.commit()
         self.db.close()
@@ -34,9 +34,11 @@ class HotelsDAO:
         cur = self.db.connection.cursor()
         query1 = """SELECT * FROM hotel where hid = %s"""
         query2 = """DELETE FROM hotel where hid = %s"""
+        query3 = """SELECT setval('hotel_hid_seq', max(hid)) FROM hotel;"""
         cur.execute(query1,(hid,))
         hotel_list = cur.fetchone()
         cur.execute(query2,(hid,))
+        cur.execute(query3,(hid,))
         self.db.connection.commit()
         self.db.close()
         cur.close()

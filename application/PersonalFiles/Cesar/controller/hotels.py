@@ -25,7 +25,6 @@ class Hotels:
         result = model.getAllHotels()
         response = self.make_json(result)
         return response
-
     def getHotelbyID(self,hid):
         model = HotelsDAO()
         hotel = model.getHotelbyID(hid)
@@ -34,11 +33,12 @@ class Hotels:
         else:
             response =  self.make_json_one(hotel)
             return response
-    def createHotel(self, hid,chid,hname,hcity):
-        if not hid and not chid and not hname and not hcity:
-            return jsonify("Please verify submission values"), 404
+    def createHotel(self, json):
+        chid = json['chid']
+        hname = json['hname']
+        hcity = json['hcity']
         model = HotelsDAO()
-        hotel = model.createHotel(hid,chid,hname,hcity)
+        hotel = model.createHotel(chid,hname,hcity)
         if not hotel:
             return jsonify("Not found"), 404
         else:
@@ -52,9 +52,11 @@ class Hotels:
         else:
             response =  self.make_json_one(hotel)
             return response
-    def updateHotel(self, hid,chid,hname,hcity):
-        if not hid and not chid and not hname and not hcity:
-            return jsonify("Please verify submission values"), 404
+    def updateHotel(self, json):
+        hid = json['hid']
+        chid = json['chid']
+        hname = json['hname']
+        hcity = json['hcity']
         model = HotelsDAO()
         hotel = model.updateHotel(hid,chid,hname,hcity)
         if not hotel:
