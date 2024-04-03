@@ -18,26 +18,101 @@ class Database:
             database = Database.connection_credentials['database']
         )
 
-    def querySelectFrom(self, query):
+    def querySelectFrom(self, query, params):
         if(Database.connection_credentials is None):
-            return []
+            return None
         
-        result = []
+        try:
+            # Create a cursor object
+            cursor = self.connection.cursor()
 
-        # Create a new cursor from connection
-        cursor = self.connection.cursor()
-        # Run the query
-        cursor.execute(query)
+            # Execute the query
+            cursor.execute(query, params)
 
-        # Append the data to a list
-        for row in cursor:
-            result.append(row)
+            # Fetch all rows from the result set
+            result = cursor.fetchall()
 
-        # End the connection
-        self.connection.close()
-        cursor.close()
+            # Close the cursor
+            cursor.close()
+            self.connection.close()
 
-        return result
+            if len(result) == 0:
+                return None
+            else:
+                return result
+        except (Exception, psycopg2.Error) as error:
+            print("Error executing query:", error)
+            return None
+        
+    def queryUpdate(self, query, params):
+        if(Database.connection_credentials is None):
+            return False
+        
+        try:
+            # Create a cursor object
+            cursor = self.connection.cursor()
+
+            # Execute the query
+            cursor.execute(query, params)
+
+            # Complete transaction
+            self.connection.commit()
+
+            # Close the cursor
+            cursor.close()
+            self.connection.close()
+
+            return True
+        except (Exception, psycopg2.Error) as error:
+            print("Error executing query:", error)
+            return False
+        
+    def queryInsert(self, query, params):
+        if(Database.connection_credentials is None):
+            return False
+        
+        try:
+            # Create a cursor object
+            cursor = self.connection.cursor()
+
+            # Execute the query
+            cursor.execute(query, params)
+
+            # Commit the transaction to make the changes permanent
+            self.connection.commit()
+
+            # Close the cursor
+            cursor.close()
+            self.connection.close()
+
+            return True
+        except (Exception, psycopg2.Error) as error:
+            print("Error executing query:", error)
+            return False
+        
+    def queryDelete(self, query, params):
+        if(Database.connection_credentials is None):
+            return False
+        
+        try:
+            # Create a cursor object
+            cursor = self.connection.cursor()
+
+            # Execute the query
+            cursor.execute(query, params)
+
+            # Commit the transaction to make the changes permanent
+            self.connection.commit()
+
+            # Close the cursor
+            cursor.close()
+            self.connection.close()
+
+            return True
+        except (Exception, psycopg2.Error) as error:
+            print("Error executing query:", error)
+            return False
+
 
     # Load the credentials to static connection_url dictionary
     @staticmethod

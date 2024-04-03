@@ -21,7 +21,7 @@ controller_mapping = {
     'roomdescription': RoomDescription
 }
 
-@app.route('/code-crusaders/<entity>', methods = ['GET'])
+@app.route('/code-crusaders/<entity>', methods = ['GET', 'POST'])
 def handle_request_all(entity):
     # Check if the entity is valid
     if entity not in controller_mapping:
@@ -34,12 +34,19 @@ def handle_request_all(entity):
     if request.method == 'GET':
         return controller.get_all()
     
+    elif request.method == 'POST':
+        if request.is_json:
+            return controller.create(request.json)
+        else:
+            return jsonify(f"The request does not contain JSON data"), 400
+    
     else:
         # return error
         return jsonify(f"Method: {request.method} Not Allowed"), 405
 
-@app.route('/code-crusaders/<entity>/<int:id>', methods = ['GET', 'POST', 'DELETE'])
+@app.route('/code-crusaders/<entity>/<int:id>', methods = ['GET', 'PUT', 'DELETE'])
 def handle_request_byID(entity, id):
+
     # Check if the entity is valid
     if entity not in controller_mapping:
         return jsonify(f'Invalid entity: {entity} provided'), 404
@@ -52,12 +59,14 @@ def handle_request_byID(entity, id):
     if request.method == 'GET':
         return controller.get_byID(id)
     
-    elif request.method == 'POST':
-        return controller.put_byID(id)
-    
     elif request.method == 'DELETE':
         return controller.delete_byID(id)
     
+    elif request.method == 'PUT':
+        if request.is_json:
+            return controller.update_byID(id, request.json)
+        else:
+            return jsonify(f"The request does not contain JSON data"), 400
     else:
         # return error
         return jsonify(f"Method: {request.method} Not Allowed"), 405

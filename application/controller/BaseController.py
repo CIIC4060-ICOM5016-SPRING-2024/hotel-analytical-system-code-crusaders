@@ -11,11 +11,11 @@ class BaseController:
         pass
 
     @abstractmethod
-    def put_byID(self, id):
+    def create(self, data):
         pass
-
+    
     @abstractmethod
-    def update_byID(self, id):
+    def update_byID(self, id, data):
         pass
 
     @abstractmethod
