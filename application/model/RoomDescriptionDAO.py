@@ -1,6 +1,6 @@
 from config.Database import Database
 
-class LoginDAO:
+class RoomDescriptionDAO:
     
     def __init__(self):
         pass
@@ -8,7 +8,7 @@ class LoginDAO:
     def get_all(self):
         result = Database().querySelectFrom(
             """
-            select * from login;
+            select * from roomdescription;
             """,
             ()
         )
@@ -17,7 +17,7 @@ class LoginDAO:
     def get_byID(self, id):
         result = Database().querySelectFrom(
             """
-            select * from login where lid = %s;
+            select distinct * from roomdescription where rdid = %s limit 1;
             """,
             (id,)
         )
@@ -28,7 +28,7 @@ class LoginDAO:
         # Obtain the record before deleting
         result = Database().querySelectFrom(
             f"""
-            select distinct * from login where lid = %s limit 1;
+            select distinct * from roomdescription where rdid = %s limit 1;
             """,
             (id,)
         )
@@ -36,7 +36,7 @@ class LoginDAO:
         # Delete record
         deletionResult = Database().queryDelete(
             f"""
-            delete from login where lid = %s;
+            delete from roomdescription where rdid = %s;
             """,
             (id,)
         )
@@ -55,7 +55,7 @@ class LoginDAO:
 
         result = Database().queryUpdate(
             f"""
-            update login set {set_clause} where lid = %s;
+            update roomdescription set {set_clause} where rdid = %s;
             """,
             params
         )
@@ -73,7 +73,7 @@ class LoginDAO:
 
         result = Database().queryInsert(
             f"""
-            insert into login ({columns}) values ({placeholders});
+            insert into roomdescription ({columns}) values ({placeholders});
             """,
             params
         )

@@ -3,7 +3,7 @@ from flask_cors import CORS
 
 from config.Database import Database
 from controller.LoginController import LoginController
-from controller.RoomDescription import RoomDescription
+from controller.RoomDescriptionController import RoomDescriptionController
 
 # Define the server type
 SERVER = "docker"
@@ -18,7 +18,7 @@ CORS(app)
 # Define a dictionary mapping resource names to controller classes
 controller_mapping = {
     'login':           LoginController,
-    'roomdescription': RoomDescription
+    'roomdescription': RoomDescriptionController
 }
 
 @app.route('/code-crusaders/<entity>', methods = ['GET', 'POST'])
