@@ -34,11 +34,9 @@ class ChainsDAO:
         cur = self.db.connection.cursor()
         query1 = """SELECT * FROM chains where chid = %s"""
         query2 = """DELETE FROM chains where chid = %s"""
-        query3 = """SELECT setval('chains_chid_seq', max(chid)) FROM chains;"""
         cur.execute(query1,(chid,))
         chains_list = cur.fetchone()
         cur.execute(query2,(chid,))
-        cur.execute(query3,(chid,))
         self.db.connection.commit()
         self.db.close()
         cur.close()

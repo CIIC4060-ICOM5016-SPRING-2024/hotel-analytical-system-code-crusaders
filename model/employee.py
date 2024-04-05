@@ -34,11 +34,9 @@ class EmployeeDAO:
         cur = self.db.connection.cursor()
         query1 = """SELECT * FROM employee where eid = %s"""
         query2 = """DELETE FROM employee where eid = %s"""
-        query3 = """SELECT setval('employee_eid_seq', max(eid)) FROM employee;"""
         cur.execute(query1,(eid,))
         employee_list = cur.fetchone()
         cur.execute(query2,(eid,))
-        cur.execute(query3,(eid,))
         self.db.connection.commit()
         self.db.close()
         cur.close()

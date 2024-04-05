@@ -34,11 +34,9 @@ class HotelsDAO:
         cur = self.db.connection.cursor()
         query1 = """SELECT * FROM hotel where hid = %s"""
         query2 = """DELETE FROM hotel where hid = %s"""
-        query3 = """SELECT setval('hotel_hid_seq', max(hid)) FROM hotel;"""
         cur.execute(query1,(hid,))
         hotel_list = cur.fetchone()
         cur.execute(query2,(hid,))
-        cur.execute(query3,(hid,))
         self.db.connection.commit()
         self.db.close()
         cur.close()
