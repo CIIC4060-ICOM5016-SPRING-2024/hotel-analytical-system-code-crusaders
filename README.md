@@ -21,13 +21,13 @@
 ### 1. Heroku Database Credentials
 These are the credentials you'll need to use to connect to remote database in heroku.
 ```bash
-host=ec2-35-169-9-79.compute-1.amazonaws.com
-username=edgviemrvgvubw
-database=dcqjte9oo7j864
-password=a625d1106cf9fe6ddcb87f11dc958726165b4cdb5563d46e56fba96f62cbbd1f
+host=ec2-174-129-100-198.compute-1.amazonaws.com
+username=kzdcvixdiicyfu
+database=dd6ro3tka19ama
+password=be9bd083a8b90b0c94d2aa3581c5a46f5ee631ba6c871060bd3d9c2f3facd780
 
 port=5432
-URI=postgres://edgviemrvgvubw:a625d1106cf9fe6ddcb87f11dc958726165b4cdb5563d46e56fba96f62cbbd1f@ec2-35-169-9-79.compute-1.amazonaws.com:5432/dcqjte9oo7j864
+URI=postgres://kzdcvixdiicyfu:be9bd083a8b90b0c94d2aa3581c5a46f5ee631ba6c871060bd3d9c2f3facd780@ec2-174-129-100-198.compute-1.amazonaws.com:5432/dd6ro3tka19ama
 
 rest_api_host=https://pdb-f386d9f3feff.herokuapp.com/
 ```
