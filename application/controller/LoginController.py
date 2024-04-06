@@ -85,3 +85,25 @@ class LoginController(BaseController):
             return jsonify(f"Inserted record Login with ID:{data['lid']}") 
         else:
             return jsonify(f"Could not insert record Login with ID:{data['lid']}"), 400
+        
+
+    def login_user(self, data):
+        if len(data) != 2:
+            return jsonify(f"Invalid count of columns provided: {len(data)}"), 400
+        
+        # Check if the data contains valid columns
+        invalid_columns = [col for col in data.keys() if col not in self.login_columns]
+        if invalid_columns:
+            return jsonify(f"Invalid columns provided: {', '.join(invalid_columns)}"), 400
+        
+        result = self.dao.login_user(data['username'], data['password'])
+
+        if result is None:
+            return None
+
+        accessLevel = {
+            'position': result[0],
+            'hid'     : result[1]
+        }
+
+        return accessLevel

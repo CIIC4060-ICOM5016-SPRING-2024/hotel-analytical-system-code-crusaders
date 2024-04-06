@@ -112,7 +112,26 @@ class Database:
         except (Exception, psycopg2.Error) as error:
             print("Error executing query:", error)
             return False
+        
+    def create_function(self, query):
+        if(Database.connection_credentials is None):
+                return False
+        try:
+            # Create a cursor object
+            cursor = self.connection.cursor()
 
+            # Execute the query
+            cursor.execute(query)
+
+            # Commit the transaction
+            self.connection.commit()
+
+            # Close the cursor
+            cursor.close()
+
+            print("Function created successfully")
+        except (Exception, psycopg2.Error) as error:
+            print("Error creating function:", error)
 
     # Load the credentials to static connection_url dictionary
     @staticmethod

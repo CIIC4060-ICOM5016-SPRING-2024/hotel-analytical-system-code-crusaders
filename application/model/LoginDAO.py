@@ -78,3 +78,22 @@ class LoginDAO:
             params
         )
         return result
+    
+    def login_user(self, username, password):
+        result = Database().querySelectFrom(
+            """
+            select position, hid
+                from employee
+                    natural inner join login
+                where
+                    username = %s and
+                    password = %s;
+            """,
+            (username, password,)
+        )
+        # if no matching user was found in database, return none
+        # this will get handled by controller
+        if not result:
+            return None
+        
+        return result[0]
