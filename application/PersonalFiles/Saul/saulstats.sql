@@ -1,3 +1,6 @@
+--Still missing validation of user. Working on it.
+
+
 -- local statistic
 -- Top 3 highest paid regular employees.
 select fname, lname, position, salary from employee where position = 'Regular' order by salary desc limit 3;
