@@ -53,7 +53,7 @@ class RoomController:
             result = self.json_dict(room)
             return result 
         
-    def deleteRoomUnavailablebyID(self,ruid):
+    def deleteRoombyID(self,ruid):
         dao = RoomDAO()
         room = dao.deleteRoom(ruid)
         if not room:
@@ -62,7 +62,7 @@ class RoomController:
             result = self.json_dict(room)
             return result
         
-    def updateRoomUnavailablebyID(self,json):
+    def updateRoombyID(self,json):
         rid = json['rid']
         hid = json['hid']
         rdid = json['rdid']
