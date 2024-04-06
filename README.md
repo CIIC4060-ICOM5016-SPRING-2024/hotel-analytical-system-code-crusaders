@@ -26,6 +26,7 @@ password=be9bd083a8b90b0c94d2aa3581c5a46f5ee631ba6c871060bd3d9c2f3facd780
 
 port=5432
 URI=postgres://kzdcvixdiicyfu:be9bd083a8b90b0c94d2aa3581c5a46f5ee631ba6c871060bd3d9c2f3facd780@ec2-174-129-100-198.compute-1.amazonaws.com:5432/dd6ro3tka19ama
+```
 
 To access the front-end of the application, use the following link:
 ```bash
