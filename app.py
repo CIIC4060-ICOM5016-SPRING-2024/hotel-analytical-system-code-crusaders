@@ -7,6 +7,8 @@ from controller.clients import clients
 from controller.reserve import reserve
 from controller.room import RoomController
 from controller.room_unavailable import RoomUnavailableController
+from controller.local_stat import local_stat
+from controller.global_stat import global_stat
 
 app = Flask(__name__)
 CORS(app)
@@ -178,6 +180,30 @@ def handleRoomUnavailablebyID(ruid):
         return handler.updateRoomUnavailablebyID(ruid)
     elif request.method == 'DELETE':
         return handler.deleteRoomUnavailablebyID(ruid)
+
+
+##################################################
+#                LOCAL STATISTICS
+##################################################
+@app.route('/codecrusaders/hotel/<int:hid>/highestpaid', methods = ['POST'])
+def handle_hotel_highest_paid(hid):
+    if request.method == 'POST':
+        return local_stat().getHighestPaid(hid, request.json)
+    else:
+        return jsonify("method Not Allowed"), 405
+
+
+##################################################
+#                GLOBAL STATISTICS
+##################################################
+@app.route('/codecrusaders/most/capacity', methods = ['POST'])
+def handle_most_capacity():
+    return global_stat().getMostCapacity()
+
+
+@app.route('/codecrusaders/most/profitmonth', methods = ['POST'])
+def handle_most_profitmonth():
+    return global_stat().getMostProfitMonth()
     
 
 
