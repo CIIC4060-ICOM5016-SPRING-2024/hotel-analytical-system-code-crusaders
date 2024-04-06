@@ -2,9 +2,10 @@
 
 ## Table of Contents
 - [Objectives](#objectives)
+- [Production Database](#production-Database)
 - [Getting Started](#getting-started)
+  - [Local setup](#local-setup)
   - [Instructions (Heroku)](#instructions-heroku)
-  - [Instructions (Docker)](#instructions-docker)
 - [How to use](#How-to-use)
 - [Contributing](#contributing)
 
@@ -14,12 +15,9 @@
 3. Gain experience by implementing applications using layers of increasing complexity and complex data structures.
 4. Gain further experience with Web programming concepts including REST. 
 
-## Getting Started
+## Production Database
 
-### Instructions (Heroku)
-
-### 1. Heroku Database Credentials
-These are the credentials you'll need to use to connect to remote database in heroku.
+To access production database on heroku, you will use the following credentials:
 ```bash
 host=ec2-174-129-100-198.compute-1.amazonaws.com
 username=kzdcvixdiicyfu
@@ -29,129 +27,125 @@ password=be9bd083a8b90b0c94d2aa3581c5a46f5ee631ba6c871060bd3d9c2f3facd780
 port=5432
 URI=postgres://kzdcvixdiicyfu:be9bd083a8b90b0c94d2aa3581c5a46f5ee631ba6c871060bd3d9c2f3facd780@ec2-174-129-100-198.compute-1.amazonaws.com:5432/dd6ro3tka19ama
 
+To access the front-end of the application, use the following link:
+```bash
 rest_api_host=https://pdb-f386d9f3feff.herokuapp.com/
 ```
 
-### 2. Prepare Heroku account and PostgreSQL
-For this first step you'll need a heroku account and have set up PostgreSQL.
+## Getting Started
 
-### 3. Create the tables
-To create the tables inside PostgreSQL in heroku, you'll need to run the `createTable.sql` in DataGrip or
-VScode (if you have the propper extensions)
+### Local setup
 
-### 4. Upload data
-The data once filtered and tested (in te docker instruction setup) you can upload the data to heroku.
-To do so you'll need DataGrip to attach the csv's to the remote database.
+### 1. Setup Docker Container
+For this, you will need to have docker installed already in your machine. After having docker all setup
+you will need the latest image of postgreSQL on a container. To get it, you will use the following command
+on your terminal of preference:
 
-### Instructions (Docker)
-
-### 1. Obtain PostgreSQL image
-For testing you will need docker to run containers with a PostgreSQL image. Here we can test all queries and
-extract, modify and load the data provided to the database. For production, you will need heroku all set up.
-Here it will run the PostgreSQL database with the final results and queries.
-
-In order to get the postgres image for docker, you can run the following command in your terminal. For this
-you will need to have docker allready installed in your local machine.
-```
+```bash
 docker pull postgres
 ```
 
-### 2. Create and run a new docker PostgreSQL container
-
-Running the following command in the terminal will create and run a container with postgres within it.
+To create and start running a new docker container with the postgres image in it run the following command:
 ```bash
 docker run -d --name my-postgres-container -e POSTGRES_USER=myuser -e POSTGRES_PASSWORD=mypassword -e POSTGRES_DB=mydatabase -p 5432:5432 postgres
 ```
+For this the database created inside the container will have these credentials for the rest of the application use process.
+These can change in the future but for project simplicity it will stay like this. For real production databases these we do not 
+use dummy users and/or passwords.
 
-This database will have default user and credentials as showned in the command above. For purposes of this project the credentials
-will be the following:
-```bash
-POSTGRES_USER=myuser
-POSTGRES_PASSWORD=mypassword
-POSTGRES_DB=mydatabase
-```
-
-### 3. Verify the container is running
-Check if the container is running, if not check previous steps or official docker documentation
+### 2. Setup Application in container
+Check if the container is running by typing:
 ```bash
 docker ps
 ```
+If the container is not running, consider checking previous steps or official docker documentation.
 
-### 4. Enter the container and update/install dependencies
-To install all dependencies to make everything functional, first you have to enter the container
+Next, you will need to install all dependencies that will make the application go functional.
+For this you need to run the following command to enter the container using bash.
 ```bash
 docker exec -it my-postgres-container bash
 ```
 
-Once inside the container running bash, update the debian version that the container is running on
+Once inside the container running bash, update the linux distribution version that the container is running on to the latest.
 ```bash
 apt update
 ```
 
 After updating, install the following dependencies
 ```bash
-apt install -y python3 python3-pip git sqlite3 
+apt install -y python3 python3-pip git sqlite3 curl yay
 ```
 
-Check if installation was successfull
+Install heroku CLI for later production setup
+```bash
+curl https://cli-assets.heroku.com/install-ubuntu.sh | sh 
+```
+
+Check if all dependencies are installed by running individually:
 ```bash
 python3 --version 
 pip --version
 git --version
 sqlite3 --version 
+curl --version 
+yay --version 
+heroku --version 
 ```
+If one of these did not got installed inside the container, retry the commands or check official documentation
+on each application.
 
-Install python dependencies
-```bash
-# this is to have access to excel files
-pip install pandas   
-pip install openpyxl
-```
-
-If it throws you an error, you can setup a virtual enviroment for python
-or you can just add the following flag after the pip install command
-```bash
-
-pip install -U pip
-pip install pandas   --break-system-packages
-pip install openpyxl --break-system-packages
-pip install Flask
-pip install flask-cors
-pip install psycopg2-binary
-```
-
-### 5. Clone repository and move it into root's container
-For this part you need to clone the repository and copy the folder to the root folder inside the container.
-To clone the repository you need the link of this remote repository and write the following command:
-```bash
-git clone <your_github_repo_link_here>
-```
-You can clone the repository to where ever you want in your computer. After cloning the repository, you have to copy it into
-the container. To do so, you will need to type the following command in your terminal (note that this is in your system's terminal
-not your container's root).
+### 3. Cloning repository and setting up application
+For this part, you need to clone this repository in your local machine. After doing so, you need to copy the
+cloned repository inside the docker container. Make sure the container still running.
+This will copy the repository to the root directory inside the container.
 ```bash
 docker cp <path of the cloned repository folder> my-postgres-container:/
 ```
 
-### 6. Connect to PostgreSQL
-For this you will need to be inside the container, to do this you can try step #4 again if you are out
-from the container. Provide the port to which we can use to comunicate with the database, the user and
-the database name all from localhost.
-```bash
-psql -h localhost -U myuser -d mydatabase -p 5432
-```
+To setup the application you will need a couple of python dependencies and a virtual enviroment. Luckly we got a
+script to set this up ever time on a new repository. Inside the root directory inside the repository there is a file
+named `setup_environment.sh`. By running this script, it will generate a virtual enviroment locally in your container and it will
+install all python dependencies required for this application to work.
 
-## How to use
-
-### How to extract the data that was provied? (Docker)
-
-Enter the container's root directory
+First, enter the container again
 ```bash
 docker exec -it my-postgres-container bash
 ```
-Once inside you can enter to the repository scripts folder using:
+Enter the repository once inside the container
 ```bash
-cd ./repository_name/ETL/scripts
+cd ./<repository name>
+```
+Give permision to the `setup_environment.sh` file to run.
+```bash
+chmod +x setup_environment.sh
+```
+Run the setup bash file to setup everything.
+```bash
+./setup_environment.sh
+```
+
+After the application has setted up the virtual enviroment with all dependencies, you
+need to get inside the virtual enviroment to start running the application. You do
+this by running the following command:
+```bash
+source ./virtual-enviroment/bin/activate
+```
+If you wish to end/exit the virtual enviroment you can run
+```bash
+deactivate
+```
+
+To run the application you run start running the `app.py` with the following command:
+```bash
+python3 ./application/app.py
+```
+
+### 4. ETL setup
+To load the data to the database to start testing, you will need to run the scripts related to transforming and
+loading the data inside the `ETL/` directory. Similarly, for production database in heroku, you will use DataGrip or
+vsCode for uploading the data.
+```bash
+cd ./<repository_name>/ETL/scripts
 ```
 
 The data to extract is located inside of `/data/unfiltered/` of this repository. 
