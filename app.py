@@ -144,7 +144,7 @@ def handle_room():
     elif request.method == 'POST':
         return handler.createRoombyID(request.json)
     
-@app.route('/codecrusaders/room/<int:rid', method = ['GET','PUT','DELETE'])
+@app.route('/codecrusaders/room/<int:rid>', method = ['GET','PUT','DELETE'])
 def handleRoomsbyID(rid):
     handler = RoomController()
     if request.method == 'GET':

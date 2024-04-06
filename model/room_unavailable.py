@@ -1,4 +1,4 @@
-from db import Database 
+from model.db import Database 
 import psycopg2
 
 
