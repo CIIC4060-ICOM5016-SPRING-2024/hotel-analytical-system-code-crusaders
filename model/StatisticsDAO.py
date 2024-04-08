@@ -63,7 +63,7 @@ class StatisticsDAO:
                 from room
                     natural inner join roomunavailable
                 where
-                    hid = 1
+                    hid = %s
             group by rid
             order by datediff asc
             limit 3;
@@ -161,11 +161,16 @@ class StatisticsDAO:
         result = Database().querySelectFrom(
             """"
             select rid,cast(cast((guests) as decimal) / (capacity) as decimal(20,3)) as ratio from
-            (select rid, guests, capacity
-            from roomdescription natural inner join room natural inner join roomunavailable natural inner join reserve
-                where hid = 1
-            group by rid,guests,capacity
-            order by rid)
+            (
+                select rid, guests, capacity
+                    from roomdescription
+                        natural inner join room
+                        natural inner join roomunavailable
+                        natural inner join reserve
+                    where hid = %s
+                group by rid,guests,capacity
+                order by rid
+            )
             order by ratio asc
             limit 3;
             """,
@@ -199,6 +204,9 @@ class StatisticsDAO:
     def get_PaymentMethod(self):
         result = Database().querySelectFrom(
             """
+            select payment, cast((count(*) * 100) as decimal(20,2)) / (select count(*) from reserve) as percentage
+            from reserve
+            group by payment;
             """,
             ()
         )
