@@ -73,33 +73,40 @@ class StatisticsDAO:
         return result
 
     def get_MostCreditCard(self, id):
-        """
-        select fname, lname, count (*) as count_reservation 
-            from client
-                natural inner join reserve
-                natural inner join roomunavailable
-                natural inner join room
-            where age < 30 and
-                payment = 'credit card' and
-                hid = %s
-        group by clid
-        order by count_reservation desc 
-        limit 5;
-        """
+        result = Database().querySelectFrom(
+            """
+            select fname, lname, count (*) as count_reservation 
+                from client
+                    natural inner join reserve
+                    natural inner join roomunavailable
+                    natural inner join room
+                where age < 30 and
+                    payment = 'credit card' and
+                    hid = %s
+            group by clid
+            order by count_reservation desc 
+            limit 5;
+            """,
+            (id,)
+        )
+        return result
 
     def get_HighestPaid(self, id):
-        """
-        select  eid,
-                fname || ' ' || lname as full_name,
-                salary 
-            from employee
-            where
-                hid = 1 and
-                position = 'Regular' 
-        order by salary desc
-        limit 3;
-        """
-        pass
+        result = Database().querySelectFrom(
+            """
+            select  eid,
+                    fname || ' ' || lname as full_name,
+                    salary 
+                from employee
+                where
+                    hid = %s and
+                    position = 'Regular' 
+            order by salary desc
+            limit 3;
+            """,
+            (id,)
+        )
+        return result
 
     def get_MostDiscount(self, id):
         result = Database().querySelectFrom(
@@ -123,50 +130,55 @@ class StatisticsDAO:
         return result
     
     def get_RoomType(self, id):
-        """
-        select rtype, count(*) as reservations_total
-            from roomdescription
-                natural inner join room
-                natural inner join roomunavailable
-                natural inner join reserve 
-            where
-                hid = %s
-        group by rtype 
-        order by rtype;
-        """
-        pass
+        result = Database().querySelectFrom(
+            """
+            select rtype, count(*) as reservations_total
+                from roomdescription
+                    natural inner join room
+                    natural inner join roomunavailable
+                    natural inner join reserve 
+                where
+                    hid = %s
+            group by rtype 
+            order by rtype;
+            """,
+            (id,)
+        )
+        return result
     
     def get_LeastGuests(self, id):
-        """"
-        select rid,cast(cast((guests) as decimal) / (capacity) as decimal(20,3)) as ratio from
-        (select rid, guests, capacity
-        from roomdescription natural inner join room natural inner join roomunavailable natural inner join reserve
-            where hid = 1
-        group by rid,guests,capacity
-        order by rid)
-        order by ratio asc
-        limit 3;
-
-
-        select  rid,
-                cast(cast((guests) as decimal) / (capacity) as decimal(20,3)) as ratio
-            from room
-                natural inner join roomdescription
-                natural inner join roomunavailable
-                natural inner join reserve
-            where
-                hid = 1
-        group by rid, guests, capacity
-        order by ratio asc
-        limit 3;
-        """
-        pass
+            # select  rid,
+            #         cast(cast((guests) as decimal) / (capacity) as decimal(20,3)) as ratio
+            #     from room
+            #         natural inner join roomdescription
+            #         natural inner join roomunavailable
+            #         natural inner join reserve
+            #     where
+            #         hid = 1
+            # group by rid, guests, capacity
+            # order by ratio asc
+            # limit 3;
+        result = Database().querySelectFrom(
+            """"
+            select rid,cast(cast((guests) as decimal) / (capacity) as decimal(20,3)) as ratio from
+            (select rid, guests, capacity
+            from roomdescription natural inner join room natural inner join roomunavailable natural inner join reserve
+                where hid = 1
+            group by rid,guests,capacity
+            order by rid)
+            order by ratio asc
+            limit 3;
+            """,
+            (id,)
+        )
+        return result
 
     #
     #
     # GLOBAL STATISTICS
     #
     #
+
     def get_MostRevenue(self):
         result = Database().querySelectFrom(
             """
@@ -183,3 +195,48 @@ class StatisticsDAO:
             """, ()
         )
         return result
+
+    def get_PaymentMethod(self):
+        result = Database().querySelectFrom(
+            """
+            """,
+            ()
+        )
+        pass
+
+    def get_LeastRooms(self):
+        result = Database().querySelectFrom(
+            """
+            select ch.cname count (*) as count_rooms
+            from chains ch natural inner join hotel natural inner join room r
+            group by ch.chid, cname
+            order by count_rooms asc
+            limit 3 
+            """,
+            ()
+        )
+        pass
+
+    def get_MostCapacity(self):
+        result = Database().querySelectFrom(
+            """
+            """,
+            ()
+        )
+        pass
+
+    def get_MostReservation(self):
+        result = Database().querySelectFrom(
+            """
+            """,
+            ()
+        )
+        pass
+
+    def get_MostProfitMonth(self):
+        result = Database().querySelectFrom(
+            """
+            """,
+            ()
+        )
+        pass
