@@ -23,7 +23,7 @@ class RoomUnavailableController:
 
     def getAllRoomsUnavailable(self):
         dao = RoomUnavailableDAO()
-        rum_dict = dao.getAllRooms()
+        rum_dict = dao.getAllRoomsUnavailable()
         result = []
         for element in rum_dict:
             result.append(self.DictBuild(element))
@@ -55,7 +55,7 @@ class RoomUnavailableController:
         
     def deleteRoomUnavailablebyID(self,ruid):
         dao = RoomUnavailableDAO()
-        roomun = dao.deleteRoomUnavailable(ruid)
+        roomun = dao.deleteRoomUnavailablebyID(ruid)
         if not roomun:
             return jsonify("Not found") , 404
         else:
@@ -68,7 +68,7 @@ class RoomUnavailableController:
         startdate = json['startdate']
         enddate = json['enddate']
         dao = RoomUnavailableDAO()
-        roomun = dao.updateRoomUnavailable(ruid,rid,startdate,enddate)
+        roomun = dao.updateRoomUnavailablebyID(ruid,rid,startdate,enddate)
         if not roomun:
             return jsonify("Not found") , 404
         else: 

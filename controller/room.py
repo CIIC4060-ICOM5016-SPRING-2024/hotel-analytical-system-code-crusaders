@@ -33,7 +33,7 @@ class RoomController:
     
     def getRoombyid(self,rid):
         dao = RoomDAO()
-        room = dao.getHotelbyID(rid)
+        room = dao.getRoomID(rid)
         if not room:
             return jsonify("Not Found"), 404 
         else: 
@@ -55,7 +55,7 @@ class RoomController:
         
     def deleteRoombyID(self,ruid):
         dao = RoomDAO()
-        room = dao.deleteRoom(ruid)
+        room = dao.deleteRoombyID(ruid)
         if not room:
             return jsonify("Not found") , 404
         else:
@@ -68,7 +68,7 @@ class RoomController:
         rdid = json['rdid']
         rprice = json['rprice']
         dao = RoomDAO()
-        room = dao.updateRoom(rid,hid,rdid,rprice)
+        room = dao.updateRoombyID(rid,hid,rdid,rprice)
         if not room:
             return jsonify("Not found") , 404
         else: 
