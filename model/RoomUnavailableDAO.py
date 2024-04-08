@@ -7,7 +7,8 @@ class RoomUnavailableDAO:
 
     def getAllRoomsUnavailable(self):
         roomsun_list = Database().querySelectFrom(
-            """SELECT * FROM roomunavailable"""
+            """SELECT * FROM roomunavailable""",
+            ()
         )
         return roomsun_list
     
@@ -37,7 +38,7 @@ class RoomUnavailableDAO:
         )
 
         deleted = Database().queryDelete(
-            """DELETE FROM roomunavailable WHERE ruid = %s"""
+            """DELETE FROM roomunavailable WHERE ruid = %s""",
             (ruid,)
         )
         
