@@ -1,6 +1,8 @@
-from model.hotels import HotelsDAO
 from flask import jsonify
-class Hotels:
+from model.HotelDAO import HotelDAO
+
+class HotelController:
+    
     def make_json(self, tuples):
         result = []
         for tup in tuples:
@@ -21,12 +23,12 @@ class Hotels:
         result.append(d)
         return result
     def getAllHotels(self):
-        model = HotelsDAO()
+        model = HotelDAO()
         result = model.getAllHotels()
         response = self.make_json(result)
         return response
     def getHotelbyID(self,hid):
-        model = HotelsDAO()
+        model = HotelDAO()
         hotel = model.getHotelbyID(hid)
         if not hotel:
             return jsonify("Not found"), 404
@@ -37,7 +39,7 @@ class Hotels:
         chid = json['chid']
         hname = json['hname']
         hcity = json['hcity']
-        model = HotelsDAO()
+        model = HotelDAO()
         hotel = model.createHotel(chid,hname,hcity)
         if not hotel:
             return jsonify("Not found"), 404
@@ -45,7 +47,7 @@ class Hotels:
             response = self.make_json_one(hotel)
             return response
     def deleteHotel(self, hid):
-        model = HotelsDAO()
+        model = HotelDAO()
         hotel = model.deleteHotel(hid)
         if not hotel:
             return jsonify("Not found"), 404
@@ -57,7 +59,7 @@ class Hotels:
         chid = json['chid']
         hname = json['hname']
         hcity = json['hcity']
-        model = HotelsDAO()
+        model = HotelDAO()
         hotel = model.updateHotel(hid,chid,hname,hcity)
         if not hotel:
             return jsonify("Not found"), 404

@@ -1,5 +1,5 @@
-from model.clients import clientsDAO
 from flask import jsonify
+from model.ClientDAO import clientsDAO
 
 class clients:
 

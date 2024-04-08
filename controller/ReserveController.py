@@ -1,7 +1,7 @@
-from model.reserve import reserveDAO
 from flask import jsonify
+from model.ReserveDAO import ReserveDAO
 
-class reserve:
+class ReserveController:
 
     def DictBuild(self, row):
         a_dict = {"reid": row[0], "ruid": row[1], "clid": row[2], "total_cost": row[3], "payment": row[4], "guests": row[5]}
@@ -18,7 +18,7 @@ class reserve:
         return result
 
     def getAllReserve(self):
-        dao = reserveDAO()
+        dao = ReserveDAO()
         rd_dict = dao.getAllReserve()
         result = []
         for element in rd_dict:
@@ -27,7 +27,7 @@ class reserve:
         return jsonify(result)
 
     def getReserveById(self, reid):
-        dao = reserveDAO()
+        dao = ReserveDAO()
         rd_dict = dao.getReserveById(reid)
         if not rd_dict:
             return jsonify("not found"), 404
@@ -43,7 +43,7 @@ class reserve:
         total_cost = json["total_cost"]
         payment = json["payment"]
         guests = json["guests"]
-        dao = reserveDAO()
+        dao = ReserveDAO()
         insert_re = dao.insertReserve(ruid, clid, total_cost, payment, guests)
         result = self.build_attr_dict(insert_re, ruid, clid, total_cost, payment, guests) # rdcreate returns of inserted tuple
         if not insert_re:
@@ -59,7 +59,7 @@ class reserve:
         total_cost = json["total_cost"]
         payment = json["payment"]
         guests = json["guests"]
-        dao = reserveDAO()
+        dao = ReserveDAO()
         update_re = dao.updateReserve(reid, ruid, clid, total_cost, payment, guests)
         result = self.build_attr_dict(reid, ruid, clid, total_cost, payment, guests)
         if not update_re:
@@ -68,7 +68,7 @@ class reserve:
             return jsonify(result), 200
 
     def deleteReserve(self, reid):
-        dao = reserveDAO()
+        dao = ReserveDAO()
         result = dao.deleteReserve(reid)
         if result:
             return jsonify("DELETED"), 200

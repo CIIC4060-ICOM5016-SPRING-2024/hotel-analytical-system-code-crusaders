@@ -1,7 +1,7 @@
 from flask import Flask, request,jsonify
 from flask_cors import CORS
-from controller.room import RoomController
-from controller.room_unavailable import RoomUnavailableController
+from controller.RoomController import RoomController
+from controller.RoomUnavailableController import RoomUnavailableController
 
 
 app = Flask(__name__)

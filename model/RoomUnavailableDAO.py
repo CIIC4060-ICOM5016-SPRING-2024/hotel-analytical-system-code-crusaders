@@ -1,6 +1,5 @@
-from model.db import Database 
 import psycopg2
-
+from config.db import Database 
 
 class RoomUnavailableDAO:
 

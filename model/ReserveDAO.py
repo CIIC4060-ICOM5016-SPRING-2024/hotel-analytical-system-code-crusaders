@@ -1,8 +1,6 @@
-from model.db import Database
+from config.db import Database
 
-
-class reserveDAO:
-
+class ReserveDAO:
 
     def __init__(self):
         self.db = Database()

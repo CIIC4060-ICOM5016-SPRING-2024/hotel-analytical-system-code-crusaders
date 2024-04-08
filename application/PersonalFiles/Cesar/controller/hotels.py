@@ -1,5 +1,6 @@
-from model.hotels import HotelsDAO
 from flask import jsonify
+from model.HotelDAO import HotelsDAO
+
 class Hotels:
     def make_json(self, tuples):
         result = []

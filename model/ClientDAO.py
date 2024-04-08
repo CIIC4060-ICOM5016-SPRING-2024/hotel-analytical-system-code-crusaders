@@ -1,6 +1,6 @@
-from model.db import Database
+from config.db import Database
 
-class clientsDAO:
+class ClientDAO:
 
     def __init__(self):
         self.db = Database()

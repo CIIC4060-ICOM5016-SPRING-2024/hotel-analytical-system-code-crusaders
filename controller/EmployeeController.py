@@ -1,6 +1,7 @@
-from model.employee import EmployeeDAO
 from flask import jsonify
-class Employee:
+from model.EmployeeDAO import EmployeeDAO
+
+class EmployeeController:
     def make_json(self, tuples):
         result = []
         for tup in tuples:

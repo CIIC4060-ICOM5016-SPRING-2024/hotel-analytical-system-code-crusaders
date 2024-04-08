@@ -1,5 +1,7 @@
-from model.db import Database
+from config.db import Database
+
 class EmployeeDAO:
+
     def __init__(self):
         self.db = Database()
     def getAllEmployees(self):

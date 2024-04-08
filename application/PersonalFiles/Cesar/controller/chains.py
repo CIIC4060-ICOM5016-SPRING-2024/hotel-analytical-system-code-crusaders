@@ -1,4 +1,4 @@
-from model.chains import ChainsDAO
+from model.ChainsDAO import ChainsDAO
 from flask import jsonify
 class Chains:
     def make_json(self, tuples):

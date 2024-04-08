@@ -1,5 +1,7 @@
-from model.db import Database
-class HotelsDAO:
+from config.db import Database
+
+class HotelDAO:
+
     def __init__(self):
         self.db = Database()
     def getAllHotels(self):
