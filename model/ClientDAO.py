@@ -1,50 +1,51 @@
-from config.db import Database
+from config.Database import Database
 
 class ClientDAO:
 
     def __init__(self):
-        self.db = Database()
-
+        pass
+    
     def getAllClients(self):
-        cur = self.db.connection.cursor()
-        query = """SELECT * FROM client;"""
-        cur.execute(query)
-        client_list = cur.fetchall()
-        self.db.close()
-        cur.close()
+        client_list = Database().querySelectFrom(
+            """SELECT * FROM client;""",
+            ()
+        )
         return client_list
 
     def getClientById(self, clid):
-        cur = self.db.connection.cursor()
-        query = """SELECT * FROM client where clid = %s;"""
-        cur.execute(query, (clid,))
-        result = cur.fetchone()
-        cur.close()
+        result = Database().querySelectFrom(
+            """
+            SELECT * FROM client where clid = %s;
+            """,
+            (clid,)
+        )
         return result
 
     def insertClient(self, fname, lname, age, memberyear):
-        cur = self.db.connection.cursor()
-        query = "insert into client(fname, lname, age, memberyear) values (%s,%s,%s,%s) returning clid;"
-        cur.execute(query, (fname, lname, age, memberyear,))
-        clid = cur.fetchone()[0]
-        self.db.connection.commit()
-        cur.close()
+        clid = Database().queryInsertFetch(
+            """
+            insert into client(fname, lname, age, memberyear) values (%s,%s,%s,%s) returning clid;
+            """,
+            (fname, lname, age, memberyear,)
+        )
         return clid
 
     def updateClient(self, clid, fname, lname, age, memberyear):
-        cur = self.db.connection.cursor()
-        query = "update client set fname =%s, lname =%s, age =%s, memberyear =%s where clid =%s"
-        cur.execute(query, (fname, lname, age, memberyear, clid))
-        self.db.connection.commit()
-        cur.close()
-        return True
+        updated = Database().queryUpdate(
+            """
+            update client set fname =%s, lname =%s, age =%s, memberyear =%s where clid =%s
+            """,
+            (fname, lname, age, memberyear, clid)
+        )
+        return updated
 
     def deleteClient(self, clid):
-        cur = self.db.connection.cursor()
-        query = "delete from client where clid=%s;"
-        cur.execute(query, (clid,))
-        affected_rows = cur.rowcount
-        self.db.connection.commit()
-        return affected_rows != 0
+        deleted = Database().queryDelete(
+            """
+            delete from client where clid=%s;
+            """,
+            (clid,)
+        )
+        return deleted
 
 

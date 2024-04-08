@@ -71,7 +71,7 @@ class LoginController(BaseController):
 
     def create(self, data):
         # Check if the data contains the right ammount of columns of single record
-        if len(data) is not len(self.login_columns):
+        if len(data) is not len(self.login_columns) - 1:
             return jsonify(f"Invalid count of columns provided: {len(data)}"), 400
         
         # Check if the data contains valid columns
@@ -82,9 +82,9 @@ class LoginController(BaseController):
         result = self.dao.create_record(data)
 
         if result:
-            return jsonify(f"Inserted record Login with ID:{data['lid']}") 
+            return jsonify(f"Inserted record Login") 
         else:
-            return jsonify(f"Could not insert record Login with ID:{data['lid']}"), 400
+            return jsonify(f"Could not insert record Login"), 400
         
 
     def login_user(self, data):

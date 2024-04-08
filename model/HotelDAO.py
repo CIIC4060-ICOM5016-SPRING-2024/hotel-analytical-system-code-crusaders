@@ -1,56 +1,63 @@
-from config.db import Database
+from config.Database import Database
 
 class HotelDAO:
 
     def __init__(self):
-        self.db = Database()
+        pass
+
     def getAllHotels(self):
-        cur = self.db.connection.cursor()
-        query = """SELECT * FROM hotel"""
-        cur.execute(query)
-        hotel_list = cur.fetchall()
-        self.db.close()
-        cur.close()
+        hotel_list = Database().querySelectFrom(
+            """SELECT * FROM hotel""",
+            ()
+        )
         return hotel_list
+    
     def getHotelbyID(self,hid):
-        cur = self.db.connection.cursor()
-        query = """SELECT * FROM hotel where hid = %s"""
-        cur.execute(query,(hid,))
-        hotel_list = cur.fetchone()
-        self.db.close()
-        cur.close()
+        hotel_list = Database().querySelectFrom(
+            """SELECT * FROM hotel where hid = %s""",
+            (hid,)
+        )
         return hotel_list
+    
     def createHotel(self,chid,hname,hcity):
-        cur = self.db.connection.cursor()
-        query1 = """INSERT INTO hotel (chid,hname,hcity) VALUES (%s,%s,%s) returning hid"""
-        query2 = """SELECT * FROM hotel where hid = %s"""
-        cur.execute(query1,(chid,hname,hcity))
-        hotel_id = cur.fetchone()[0]
-        cur.execute(query2,(hotel_id,))
-        hotel_list = cur.fetchone()
-        self.db.connection.commit()
-        self.db.close()
-        cur.close()
+        hotel_id = Database().queryInsertFetch(
+            """INSERT INTO hotel (chid,hname,hcity) VALUES (%s,%s,%s) returning hid""",
+            (chid,hname,hcity)
+        )
+
+        hotel_list = Database().querySelectFrom(
+            """SELECT * FROM hotel where hid = %s""",
+            (hotel_id)
+        )
         return hotel_list
+    
     def deleteHotel(self,hid):
-        cur = self.db.connection.cursor()
-        query1 = """SELECT * FROM hotel where hid = %s"""
-        query2 = """DELETE FROM hotel where hid = %s"""
-        cur.execute(query1,(hid,))
-        hotel_list = cur.fetchone()
-        cur.execute(query2,(hid,))
-        self.db.connection.commit()
-        self.db.close()
-        cur.close()
+        hotel_list = Database().querySelectFrom(
+            """SELECT * FROM hotel where hid = %s""",
+            (hid,)
+        )
+
+        result = Database().queryDelete(
+            """DELETE FROM hotel where hid = %s""",
+            (hid,)
+        )
+
+        if result is False:
+            return []
+        
         return hotel_list
+    
     def updateHotel(self,hid,chid,hname,hcity):
-        cur = self.db.connection.cursor()
-        query1 = """UPDATE hotel SET chid = %s, hname = %s, hcity = %s WHERE hid = %s"""
-        query2 = """SELECT hid,chid,hname,hcity FROM hotel where hid = %s"""
-        cur.execute(query1,(chid,hname,hcity,hid))
-        cur.execute(query2,(hid,))
-        hotel_list = cur.fetchone()
-        self.db.connection.commit()
-        self.db.close()
-        cur.close()
+        result = Database().queryUpdate(
+            """UPDATE hotel SET chid = %s, hname = %s, hcity = %s WHERE hid = %s""",
+            (chid,hname,hcity,hid)
+        )
+
+        if result is False:
+            return []
+
+        hotel_list = Database().querySelectFrom(
+            """SELECT hid,chid,hname,hcity FROM hotel where hid = %s""",
+            (hid)
+        )
         return hotel_list

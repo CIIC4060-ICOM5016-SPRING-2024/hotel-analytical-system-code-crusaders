@@ -4,6 +4,31 @@ import psycopg2
 class Database:
     connection_credentials = None
 
+    # Load the credentials to static connection_url dictionary
+    @staticmethod
+    def load_credentials(SERVER):
+        # Load JSON credentials from file
+        with open('./application/config/credentials.json', 'r') as file:
+            credentials = json.load(file)
+
+        # Iterate through each server configuration in the JSON credentials
+        for server_config in credentials:
+            if server_config['server'] == SERVER:
+                # Found a match, save the credentials as a dictionary and return
+                Database.connection_credentials = {
+                    'server':   server_config['server'],
+                    'host':     server_config['host'],
+                    'user':     server_config['user'],
+                    'password': server_config['pass'],
+                    'database': server_config['database'],
+                    'port':     server_config['port']
+                }
+                return
+
+        Database.connection_credentials = None
+        print("No matching server for database credentials")
+
+
     # Create a new connection
     def __init__(self):
         if(Database.connection_credentials is None):
@@ -90,6 +115,31 @@ class Database:
             print("Error executing query:", error)
             return False
         
+    def queryInsertFetch(self, query, params):
+        if(Database.connection_credentials is None):
+            return None
+        
+        try:
+            # Create a cursor object
+            cursor = self.connection.cursor()
+
+            # Execute the query
+            cursor.execute(query, params)
+
+            fetchedValue = cursor.fetchone()[0]
+
+            # Commit the transaction to make the changes permanent
+            self.connection.commit()
+
+            # Close the cursor
+            cursor.close()
+            self.connection.close()
+
+            return fetchedValue
+        except (Exception, psycopg2.Error) as error:
+            print("Error executing query:", error)
+            return None
+        
     def queryDelete(self, query, params):
         if(Database.connection_credentials is None):
             return False
@@ -132,27 +182,3 @@ class Database:
             print("Function created successfully")
         except (Exception, psycopg2.Error) as error:
             print("Error creating function:", error)
-
-    # Load the credentials to static connection_url dictionary
-    @staticmethod
-    def load_credentials(SERVER):
-        # Load JSON credentials from file
-        with open('./application/config/credentials.json', 'r') as file:
-            credentials = json.load(file)
-
-        # Iterate through each server configuration in the JSON credentials
-        for server_config in credentials:
-            if server_config['server'] == SERVER:
-                # Found a match, save the credentials as a dictionary and return
-                Database.connection_credentials = {
-                    'server':   server_config['server'],
-                    'host':     server_config['host'],
-                    'user':     server_config['user'],
-                    'password': server_config['pass'],
-                    'database': server_config['database'],
-                    'port':     server_config['port']
-                }
-                return
-
-        Database.connection_credentials = None
-        print("No matching server for database credentials")
