@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify 
 from flask_cors import CORS
 
+from config.Database import Database
+
 from controller.RoomController            import RoomController
 from controller.HotelController           import HotelController
 from controller.LoginController           import LoginController
@@ -15,6 +17,10 @@ from controller.StatisticsController import StatisticsController
 
 app = Flask(__name__)
 CORS(app)
+
+@app.route('/codecrusaders')
+def handle_welcome():
+    return '<h1>Welcome Code crusaders!</h1>'
 
 #############################################
 #                HOTEL
@@ -202,6 +208,11 @@ def handleRoomUnavailablebyID(ruid):
 ###############################################
 #             Login & Room Description
 ###############################################
+
+# Define the server type
+SERVER = "docker"
+# Load database credentials
+Database.load_credentials(SERVER)
 
 # Define a dictionary mapping resource names to controller classes
 controller_mapping = {
