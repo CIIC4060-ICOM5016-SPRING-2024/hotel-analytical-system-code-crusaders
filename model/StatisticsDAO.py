@@ -35,22 +35,6 @@ class StatisticsDAO:
     #
     #
 
-    def get_LeastReserve(self, id):
-        result = Database().querySelectFrom(
-            """
-            select  room.*,
-                    (enddate - startdate) as duration_unavailable
-                from room
-                    natural inner join roomunavailable
-                where
-                    hid = %s
-            order by duration_unavailable asc
-            limit 3;
-            """,
-            (id,)
-        )
-        return result
-    
     def get_Handicaproom(self, id):
         result = Database().querySelectFrom(
             """
@@ -70,6 +54,52 @@ class StatisticsDAO:
             (id,)
         )
         return result
+    
+    def get_LeastReserve(self, id):
+        result = Database().querySelectFrom(
+            """
+            select  rid,
+                    sum(enddate - startdate) as datediff
+                from room
+                    natural inner join roomunavailable
+                where
+                    hid = 1
+            group by rid
+            order by datediff asc
+            limit 3;
+            """,
+            (id,)
+        )
+        return result
+
+    def get_MostCreditCard(self, id):
+        """
+        select fname, lname, count (*) as count_reservation 
+            from client
+                natural inner join reserve
+                natural inner join roomunavailable
+                natural inner join room
+            where age < 30 and
+                payment = 'credit card' and
+                hid = %s
+        group by clid
+        order by count_reservation desc 
+        limit 5;
+        """
+
+    def get_HighestPaid(self, id):
+        """
+        select  eid,
+                fname || ' ' || lname as full_name,
+                salary 
+            from employee
+            where
+                hid = 1 and
+                position = 'Regular' 
+        order by salary desc
+        limit 3;
+        """
+        pass
 
     def get_MostDiscount(self, id):
         result = Database().querySelectFrom(
@@ -91,6 +121,46 @@ class StatisticsDAO:
             (id,)
         )
         return result
+    
+    def get_RoomType(self, id):
+        """
+        select rtype, count(*) as reservations_total
+            from roomdescription
+                natural inner join room
+                natural inner join roomunavailable
+                natural inner join reserve 
+            where
+                hid = %s
+        group by rtype 
+        order by rtype;
+        """
+        pass
+    
+    def get_LeastGuests(self, id):
+        """"
+        select rid,cast(cast((guests) as decimal) / (capacity) as decimal(20,3)) as ratio from
+        (select rid, guests, capacity
+        from roomdescription natural inner join room natural inner join roomunavailable natural inner join reserve
+            where hid = 1
+        group by rid,guests,capacity
+        order by rid)
+        order by ratio asc
+        limit 3;
+
+
+        select  rid,
+                cast(cast((guests) as decimal) / (capacity) as decimal(20,3)) as ratio
+            from room
+                natural inner join roomdescription
+                natural inner join roomunavailable
+                natural inner join reserve
+            where
+                hid = 1
+        group by rid, guests, capacity
+        order by ratio asc
+        limit 3;
+        """
+        pass
 
     #
     #
