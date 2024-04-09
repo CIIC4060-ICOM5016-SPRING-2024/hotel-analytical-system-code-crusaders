@@ -4,8 +4,16 @@ from model.ClientDAO import ClientDAO
 class ClientController:
 
     def DictBuild(self, row):
-        a_dict = {"clid": row[0], "fname": row[1], "lname": row[2], "age": row[3], "memberyear": row[4]}
-        return a_dict
+        result = []
+        for tuples in row:
+            d = dict()
+            d['chid'] = tuples[0]
+            d['cname'] = tuples[1]
+            d['springmkup'] = tuples[2]
+            d['summermkup'] = tuples[3]
+            d['fallmkup'] = tuples[4]
+            result.append(d)
+        return result
 
     def build_attr_dict(self, clid, fname, lname, age, memberyear):
         result = {}
@@ -19,10 +27,7 @@ class ClientController:
     def getAllClients(self):
         model = ClientDAO()
         client_dict = model.getAllClients()
-        result = []
-        for element in client_dict:
-            result.append(self.DictBuild(element))
-
+        result = self.DictBuild(client_dict)
         return jsonify(result)
 
 
@@ -32,8 +37,7 @@ class ClientController:
         if not client:
             return jsonify("not found"), 404
         else:
-            result = []
-            result.append(self.DictBuild(client))
+            result = self.DictBuild(client)
             return jsonify(result), 200
 
     def addNewClient(self, json):
