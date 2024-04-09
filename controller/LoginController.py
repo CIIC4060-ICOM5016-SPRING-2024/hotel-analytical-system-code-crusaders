@@ -87,23 +87,33 @@ class LoginController(BaseController):
             return jsonify(f"Could not insert record Login"), 400
         
 
-    def login_user(self, data):
+    def login_user(self, hid, data):
         if len(data) != 2:
-            return jsonify(f"Invalid count of columns provided: {len(data)}"), 400
+            return ("Incorrect Username or Password", False)
         
         # Check if the data contains valid columns
         invalid_columns = [col for col in data.keys() if col not in self.login_columns]
         if invalid_columns:
-            return jsonify(f"Invalid columns provided: {', '.join(invalid_columns)}"), 400
+            return ("Incorrect Username or Password", False)
         
         result = self.dao.login_user(data['username'], data['password'])
 
         if result is None:
-            return None
-
+            return ("Incorrect Username or Password", False)
+        
         accessLevel = {
             'position': result[0],
-            'hid'     : result[1]
+            'hid'     : result[1],
+            'chid'    : result[2]
         }
 
-        return accessLevel
+        if accessLevel['position'] == 'Regular' and accessLevel['hid'] != hid:
+            return ("Incorrect Username or Password", False)
+        
+        if accessLevel['position'] == 'Supervisor' and accessLevel['chid'] != self.dao.get_hotel_chain(hid):
+            return ("Incorrect Username or Password", False)
+        
+        if accessLevel['position'] == 'Administrator': 
+            return ("Entering as Admin", True)
+        
+        return ("User logged in successfully", True)

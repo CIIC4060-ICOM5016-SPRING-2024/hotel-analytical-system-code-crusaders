@@ -266,8 +266,8 @@ def handle_request_byID(entity, id):
         return jsonify(f"Method: {request.method} Not Allowed"), 405
 
 
-@app.route('/codecrusaders/hotel/<int:id>/<string:local_statistic>', methods = ['POST'])
-def handle_local_statistic_request_byID(id, local_statistic):
+@app.route('/codecrusaders/hotel/<int:hid>/<string:local_statistic>', methods = ['POST'])
+def handle_local_statistic_request_byID(hid, local_statistic):
 
     # validate login request 
     if not request.is_json:
@@ -277,31 +277,27 @@ def handle_local_statistic_request_byID(id, local_statistic):
     controller = StatisticsController()
 
     # user validation before reading statistics
-    # userlogon = LoginController()
-    # accessLevel = userlogon.login_user(request.json)
+    userlogon = LoginController()
+    accessLevel = userlogon.login_user(hid, request.json)
 
-    # if accessLevel is None:
-    #     return jsonify(f"Incorrect Username or Password"), 400
+    if accessLevel[1] is False:
+        return jsonify(accessLevel[0]), 404
     
-    # if accessLevel['position'] == 'Regular' and accessLevel['hid'] != id:
-    #     return jsonify(f"Regular employees cannot watch statistics of other hotels")
-    
-
     # Handle the request method
     if local_statistic == 'handicaproom':
-        return controller.get_Handicaproom(id)
+        return controller.get_Handicaproom(hid)
     elif local_statistic == 'leastreserve':
-        return controller.get_LeastReserve(id)
+        return controller.get_LeastReserve(hid)
     elif local_statistic == 'mostcreditcard':
-        return controller.get_MostCreditCard(id)
+        return controller.get_MostCreditCard(hid)
     elif local_statistic == 'highestpaid':
-        return controller.get_HighestPaid(id)
+        return controller.get_HighestPaid(hid)
     elif local_statistic == 'mostdiscount':
-        return controller.get_MostDiscount(id)
+        return controller.get_MostDiscount(hid)
     elif local_statistic == 'roomtype':
-        return controller.get_RoomType(id)
+        return controller.get_RoomType(hid)
     elif local_statistic == 'leastguests':
-        return controller.get_LeastGuests(id)
+        return controller.get_LeastGuests(hid)
     else:
         # return error
         return jsonify(f"local_statistic: {local_statistic} does not exist!"), 404
@@ -317,6 +313,11 @@ def handle_most_global_statistics(type):
     controller = StatisticsController()
 
     # user validation before reading statistics
+    userlogon = LoginController()
+    accessLevel = userlogon.login_user(-1, request.json)
+
+    if accessLevel[1] is False:
+        return jsonify(accessLevel[0]), 404
 
     # Handle the request method
     if type == 'revenue':
@@ -342,6 +343,11 @@ def handle_least_global_statistics(type):
     controller = StatisticsController()
 
     # user validation before reading statistics
+    userlogon = LoginController()
+    accessLevel = userlogon.login_user(-1, request.json)
+
+    if accessLevel[1] is False:
+        return jsonify(accessLevel[0]), 404
 
     # Handle the request method
     if type == 'rooms':
@@ -351,7 +357,7 @@ def handle_least_global_statistics(type):
         return jsonify(f"global_statistic: {type} does not exist!"), 404
 
 @app.route('/codecrusaders/paymentmethod', methods = ['POST'])
-def handle_general_global_statistics(type): 
+def handle_general_global_statistics(): 
     
     if not request.is_json:
         return jsonify(f"The request does not contain JSON data"), 400
@@ -360,6 +366,11 @@ def handle_general_global_statistics(type):
     controller = StatisticsController()
 
     # user validation before reading statistics
+    userlogon = LoginController()
+    accessLevel = userlogon.login_user(-1, request.json)
+
+    if accessLevel[1] is False:
+        return jsonify(accessLevel[0]), 404
 
     # Handle the request method
     return controller.get_PaymentMethod()

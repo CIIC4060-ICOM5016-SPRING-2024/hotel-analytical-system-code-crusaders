@@ -82,9 +82,10 @@ class LoginDAO:
     def login_user(self, username, password):
         result = Database().querySelectFrom(
             """
-            select position, hid
+            select position, hid, chid
                 from employee
                     natural inner join login
+                    natural inner join hotel
                 where
                     username = %s and
                     password = %s;
@@ -97,3 +98,15 @@ class LoginDAO:
             return None
         
         return result[0]
+    
+    def get_hotel_chain(self, hid):
+        result = Database().querySelectFrom(
+            """
+            select chid from hotel where hid = %s;
+            """,
+            (hid,)
+        )
+        if not result:
+            return -1
+        
+        return result[0][0]
