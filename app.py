@@ -18,6 +18,17 @@ from controller.StatisticsController import StatisticsController
 app = Flask(__name__)
 CORS(app)
 
+# Define the server type
+SERVER = "heroku"
+# Load database credentials
+Database.load_credentials(SERVER)
+
+# Define a dictionary mapping resource names to controller classes
+controller_mapping = {
+    'login':           LoginController,
+    'roomdescription': RoomDescriptionController
+}
+
 @app.route('/codecrusaders')
 def handle_welcome():
     return '<h1>Welcome Code crusaders!</h1>'
@@ -208,17 +219,6 @@ def handleRoomUnavailablebyID(ruid):
 ###############################################
 #             Login & Room Description
 ###############################################
-
-# Define the server type
-SERVER = "docker"
-# Load database credentials
-Database.load_credentials(SERVER)
-
-# Define a dictionary mapping resource names to controller classes
-controller_mapping = {
-    'login':           LoginController,
-    'roomdescription': RoomDescriptionController
-}
 
 @app.route('/codecrusaders/<entity>', methods = ['GET', 'POST'])
 def handle_request_all(entity):

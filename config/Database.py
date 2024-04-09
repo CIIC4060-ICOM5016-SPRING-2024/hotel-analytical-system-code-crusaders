@@ -8,7 +8,7 @@ class Database:
     @staticmethod
     def load_credentials(SERVER):
         # Load JSON credentials from file
-        with open('./application/config/credentials.json', 'r') as file:
+        with open('./config/credentials.json', 'r') as file:
             credentials = json.load(file)
 
         # Iterate through each server configuration in the JSON credentials
