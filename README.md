@@ -30,7 +30,7 @@ URI=postgres://kzdcvixdiicyfu:be9bd083a8b90b0c94d2aa3581c5a46f5ee631ba6c871060bd
 
 To access the front-end of the application, use the following link:
 ```bash
-rest_api_host=https://pdb-f386d9f3feff.herokuapp.com/
+rest_api_host=https://pdb-f386d9f3feff.herokuapp.com/codecrusaders
 ```
 
 ## Getting Started
