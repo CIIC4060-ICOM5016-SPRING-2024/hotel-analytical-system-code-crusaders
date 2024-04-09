@@ -117,6 +117,6 @@ class StatisticsController:
         result = self.dao.get_MostProfitMonth()
 
         if result is not None:
-            return self.make_json(result, ['name', 'year', 'month', 'highest'])
+            return self.make_json(result, ['name', 'year', 'month', 'total_reservations'])
         return jsonify(f"There is no top 3 month with the most reservation by chain. :("), 404
         
