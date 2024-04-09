@@ -9,6 +9,12 @@ class RoomDescriptionController(BaseController):
     def __init__(self):
         self.dao = RoomDescriptionDAO()
 
+    def handle_one_element(self, fullJson):
+        if len(fullJson) == 1:
+            return fullJson[0]
+        else:
+            return fullJson
+
     def make_json(self, table):
         # Turn the data to json
         fullJson = []
@@ -22,11 +28,7 @@ class RoomDescriptionController(BaseController):
                 self.roomDescription_columns[4]: tuple[4],
             }
             fullJson.append(dictionary)
-        
-        if len(fullJson) == 1:
-            return fullJson[0]
-        else:
-            return fullJson
+        return self.handle_one_element(fullJson)
 
     def get_all(self):
         result = self.dao.get_all()

@@ -3,12 +3,20 @@ from model.RoomUnavailableDAO import RoomUnavailableDAO
 
 class RoomUnavailableController:
 
+    def __init__(self):
+        pass
+
     def DictBuild(self,row):
         ru_dict = {'ruid': row[0], 'rid': row[1], 'startdate': row[2], 'enddate': row[3]}
         return ru_dict
     
-    @staticmethod
-    def json_dict(tuples):
+    def handle_one_element(self, fullJson):
+        if len(fullJson) == 1:
+            return fullJson[0]
+        else:
+            return fullJson
+
+    def json_dict(self, tuples):
          result = []
          for tup in tuples:
              rmu_dict = {
@@ -18,7 +26,7 @@ class RoomUnavailableController:
                  'enddate': tup[3],
              }
              result.append(rmu_dict)
-         return result
+         return self.handle_one_element(result)
 
 
     def getAllRoomsUnavailable(self):

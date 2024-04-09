@@ -82,5 +82,41 @@ class StatisticsController:
         result = self.dao.get_MostRevenue()
 
         if result is not None:
-            return self.make_json(result, [])
-        return jsonify(f"There is no most revenue :("), 404 
+            return self.make_json(result, ['chid', 'cname', 'total_revenue'])
+        return jsonify(f"There is no top 3 chains with the highest total revenue. :("), 404
+    
+    def get_PaymentMethod(self):
+        result = self.dao.get_PaymentMethod()
+
+        if result is not None:
+            return self.make_json(result, ['payment', 'percentage'])
+        return jsonify(f"There is no total reservation percentage by payment method. :("), 404
+
+    def get_LeastRooms(self):
+        result = self.dao.get_LeastRooms()
+
+        if result is not None:
+            return self.make_json(result, ['cname', 'count_rooms'])
+        return jsonify(f"There is no top 3 chain with the least rooms. :("), 404
+    
+    def get_MostCapacity(self):
+        result = self.dao.get_MostCapacity()
+
+        if result is not None:
+            return self.make_json(result, ['hname', 'total_capacity'])
+        return jsonify(f"There is no top 5 hotels with the most capacity. :("), 404
+        
+    def get_MostReservation(self):
+        result = self.dao.get_MostReservation()
+
+        if result is not None:
+            return self.make_json(result, ['hname', 'reservations'])
+        return jsonify(f"There is no top 10% hotels that had the most reservations. :("), 404
+        
+    def get_MostProfitMonth(self):
+        result = self.dao.get_MostProfitMonth()
+
+        if result is not None:
+            return self.make_json(result, ['name', 'year', 'month', 'highest'])
+        return jsonify(f"There is no top 3 month with the most reservation by chain. :("), 404
+        

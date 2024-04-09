@@ -307,6 +307,62 @@ def handle_local_statistic_request_byID(id, local_statistic):
         return jsonify(f"local_statistic: {local_statistic} does not exist!"), 404
 
 
+@app.route('/codecrusaders/most/<string:type>', methods = ['POST'])
+def handle_most_global_statistics(type): 
+    
+    if not request.is_json:
+        return jsonify(f"The request does not contain JSON data"), 400
+    
+    # Instantiate the corresponding controller object
+    controller = StatisticsController()
+
+    # user validation before reading statistics
+
+    # Handle the request method
+    if type == 'revenue':
+        return controller.get_MostRevenue()
+    elif type == 'capacity':
+        return controller.get_MostCapacity()
+    elif type == 'reservation':
+        return controller.get_MostReservation()
+    elif type == 'profitmonth':
+        return controller.get_MostProfitMonth()
+    else:
+        # return error
+        return jsonify(f"global_statistic: {type} does not exist!"), 404
+
+
+@app.route('/codecrusaders/least/<string:type>', methods = ['POST'])
+def handle_least_global_statistics(type): 
+    
+    if not request.is_json:
+        return jsonify(f"The request does not contain JSON data"), 400
+    
+    # Instantiate the corresponding controller object
+    controller = StatisticsController()
+
+    # user validation before reading statistics
+
+    # Handle the request method
+    if type == 'rooms':
+        return controller.get_LeastRooms()
+    else:
+        # return error
+        return jsonify(f"global_statistic: {type} does not exist!"), 404
+
+@app.route('/codecrusaders/paymentmethod', methods = ['POST'])
+def handle_general_global_statistics(type): 
+    
+    if not request.is_json:
+        return jsonify(f"The request does not contain JSON data"), 400
+    
+    # Instantiate the corresponding controller object
+    controller = StatisticsController()
+
+    # user validation before reading statistics
+
+    # Handle the request method
+    return controller.get_PaymentMethod()
 
 if __name__ == '__main__':
     app.run(debug=True)
