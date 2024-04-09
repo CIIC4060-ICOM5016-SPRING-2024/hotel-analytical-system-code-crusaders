@@ -20,14 +20,14 @@ class HotelDAO:
         return hotel_list
     
     def createHotel(self,chid,hname,hcity):
-        hotel_id = Database().queryInsertFetch(
+        hid = Database().queryInsertFetch(
             """INSERT INTO hotel (chid,hname,hcity) VALUES (%s,%s,%s) returning hid""",
             (chid,hname,hcity)
         )
 
         hotel_list = Database().querySelectFrom(
             """SELECT * FROM hotel where hid = %s""",
-            (hotel_id)
+            (hid,)
         )
         return hotel_list
     

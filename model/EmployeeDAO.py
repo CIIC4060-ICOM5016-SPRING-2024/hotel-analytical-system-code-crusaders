@@ -20,14 +20,14 @@ class EmployeeDAO:
         return employee_list
     
     def createEmployee(self,hid,fname,lname,age,position,salary):
-        employee_id = Database().queryInsertFetch(
+        eid = Database().queryInsertFetch(
             """INSERT INTO employee (hid,fname,lname,age,position,salary) VALUES (%s,%s,%s,%s,%s,%s) returning eid""",
             (hid,fname,lname,age,position,salary)
         )
 
         employee_list = Database().querySelectFrom(
             """SELECT * FROM employee where eid = %s""",
-            (employee_id)
+            (eid,)
         )
         return employee_list
 
