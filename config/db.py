@@ -1,5 +1,4 @@
 import csv
-
 import psycopg2
 
 class Database:

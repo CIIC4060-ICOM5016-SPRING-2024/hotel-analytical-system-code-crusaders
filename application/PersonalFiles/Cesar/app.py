@@ -1,8 +1,8 @@
 from flask import Flask, request
 from flask_cors import CORS
-from controller.hotels import Hotels
-from controller.chains import Chains
-from controller.employee import Employee
+from controller.HotelController import Hotels
+from controller.ChainsController import Chains
+from controller.EmployeeController import Employee
 
 app = Flask(__name__)
 CORS(app)

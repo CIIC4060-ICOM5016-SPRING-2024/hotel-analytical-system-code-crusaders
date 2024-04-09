@@ -1,5 +1,5 @@
-from model.reserve import reserveDAO
 from flask import jsonify
+from model.ReserveDAO import reserveDAO
 
 class reserve:
 

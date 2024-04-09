@@ -1,5 +1,5 @@
-from model.room import RoomDAO
 from flask import jsonify
+from model.RoomDAO import RoomDAO
 
 class RoomController:
 

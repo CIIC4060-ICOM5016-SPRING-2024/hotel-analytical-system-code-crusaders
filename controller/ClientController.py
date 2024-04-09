@@ -1,7 +1,7 @@
-from model.clients import clientsDAO
 from flask import jsonify
+from model.ClientDAO import ClientDAO
 
-class clients:
+class ClientController:
 
     def DictBuild(self, row):
         a_dict = {"clid": row[0], "fname": row[1], "lname": row[2], "age": row[3], "memberyear": row[4]}
@@ -17,7 +17,7 @@ class clients:
         return result
 
     def getAllClients(self):
-        model = clientsDAO()
+        model = ClientDAO()
         client_dict = model.getAllClients()
         result = []
         for element in client_dict:
@@ -27,7 +27,7 @@ class clients:
 
 
     def getClientByID(self, clid):
-        dao = clientsDAO()
+        dao = ClientDAO()
         client = dao.getClientById(clid)
         if not client:
             return jsonify("not found"), 404
@@ -41,7 +41,7 @@ class clients:
         lname = json['lname']
         age = json['age']
         memberyear = json['memberyear']
-        dao = clientsDAO()
+        dao = ClientDAO()
         insertclient = dao.insertClient(fname, lname, age, memberyear)
         result = self.build_attr_dict(insertclient, fname, lname, age, memberyear)  # insertClient returns id of tuple
         if not insertclient:
@@ -55,7 +55,7 @@ class clients:
         lname = json['lname']
         age = json['age']
         memberyear = json['memberyear']
-        dao = clientsDAO()
+        dao = ClientDAO()
         updateclient = dao.updateClient(clid, fname, lname, age, memberyear)
         result = self.build_attr_dict(clid, fname, lname, age, memberyear)
         if not updateclient:
@@ -64,7 +64,7 @@ class clients:
             return jsonify(result), 200
 
     def deleteClient(self, clid):
-        dao = clientsDAO()
+        dao = ClientDAO()
         result = dao.deleteClient(clid)
         if result:
             return jsonify("DELETED"), 200
