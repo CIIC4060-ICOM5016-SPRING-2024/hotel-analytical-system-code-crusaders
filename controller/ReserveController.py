@@ -38,8 +38,7 @@ class ReserveController:
         if not rd_dict:
             return jsonify("not found"), 404
         else:
-            result = []
-            result.append(self.DictBuild(rd_dict))
+            result = self.DictBuild(rd_dict)
             return jsonify(result)
 
 
