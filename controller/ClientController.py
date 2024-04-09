@@ -27,16 +27,13 @@ class ClientController:
     def getAllClients(self):
         model = ClientDAO()
         client_dict = model.getAllClients()
-        result = []
-        for element in client_dict:
-            result.append(self.DictBuild(element))
-
+        result = self.DictBuild(element)
         return jsonify(result)
 
 
     def getClientByID(self, clid):
         model = ClientDAO()
-        client_dict = model.getAllClients()
+        client_dict = model.getClientById(clid)
         result = self.DictBuild(client_dict)
         return jsonify(result)
 
