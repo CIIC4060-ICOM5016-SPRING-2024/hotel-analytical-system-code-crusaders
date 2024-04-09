@@ -38,7 +38,7 @@ class StatisticsDAO:
     def get_Handicaproom(self, id):
         result = Database().querySelectFrom(
             """
-            select  rdid, rname, rtype,
+            select  rname, rtype,
                     count(*) as reservation_count
                 from roomdescription
                     natural inner join room
@@ -75,7 +75,8 @@ class StatisticsDAO:
     def get_MostCreditCard(self, id):
         result = Database().querySelectFrom(
             """
-            select fname, lname, count (*) as count_reservation 
+            select  fname || ' ' || lname as full_name,
+                    count (*) as count_reservation 
                 from client
                     natural inner join reserve
                     natural inner join roomunavailable
@@ -111,8 +112,7 @@ class StatisticsDAO:
     def get_MostDiscount(self, id):
         result = Database().querySelectFrom(
             """
-            select  clid,
-                    fname || ' ' || lname        as full_name,
+            select  fname || ' ' || lname  as full_name,
                     sum(total_cost * get_mem_discount(memberyear)) as discount
                 from client
                     natural inner join reserve
@@ -147,30 +147,17 @@ class StatisticsDAO:
         return result
     
     def get_LeastGuests(self, id):
-            # select  rid,
-            #         cast(cast((guests) as decimal) / (capacity) as decimal(20,3)) as ratio
-            #     from room
-            #         natural inner join roomdescription
-            #         natural inner join roomunavailable
-            #         natural inner join reserve
-            #     where
-            #         hid = 1
-            # group by rid, guests, capacity
-            # order by ratio asc
-            # limit 3;
         result = Database().querySelectFrom(
-            """"
-            select rid,cast(cast((guests) as decimal) / (capacity) as decimal(20,3)) as ratio from
-            (
-                select rid, guests, capacity
-                    from roomdescription
-                        natural inner join room
-                        natural inner join roomunavailable
-                        natural inner join reserve
-                    where hid = %s
-                group by rid,guests,capacity
-                order by rid
-            )
+            """
+            select  rid,
+                    cast(cast((guests) as decimal) / (capacity) as decimal(20,3)) as ratio
+                from room
+                    natural inner join roomdescription
+                    natural inner join roomunavailable
+                    natural inner join reserve
+                where
+                    hid = %s
+            group by rid, guests, capacity
             order by ratio asc
             limit 3;
             """,

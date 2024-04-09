@@ -265,5 +265,48 @@ def handle_request_byID(entity, id):
     else:
         return jsonify(f"Method: {request.method} Not Allowed"), 405
 
+
+@app.route('/codecrusaders/hotel/<int:id>/<string:local_statistic>', methods = ['POST'])
+def handle_local_statistic_request_byID(id, local_statistic):
+
+    # validate login request 
+    if not request.is_json:
+        return jsonify(f"The request does not contain JSON data"), 400
+    
+    # Instantiate the corresponding controller object
+    controller = StatisticsController()
+
+    # user validation before reading statistics
+    # userlogon = LoginController()
+    # accessLevel = userlogon.login_user(request.json)
+
+    # if accessLevel is None:
+    #     return jsonify(f"Incorrect Username or Password"), 400
+    
+    # if accessLevel['position'] == 'Regular' and accessLevel['hid'] != id:
+    #     return jsonify(f"Regular employees cannot watch statistics of other hotels")
+    
+
+    # Handle the request method
+    if local_statistic == 'handicaproom':
+        return controller.get_Handicaproom(id)
+    elif local_statistic == 'leastreserve':
+        return controller.get_LeastReserve(id)
+    elif local_statistic == 'mostcreditcard':
+        return controller.get_MostCreditCard(id)
+    elif local_statistic == 'highestpaid':
+        return controller.get_HighestPaid(id)
+    elif local_statistic == 'mostdiscount':
+        return controller.get_MostDiscount(id)
+    elif local_statistic == 'roomtype':
+        return controller.get_RoomType(id)
+    elif local_statistic == 'leastguests':
+        return controller.get_LeastGuests(id)
+    else:
+        # return error
+        return jsonify(f"local_statistic: {local_statistic} does not exist!"), 404
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)
