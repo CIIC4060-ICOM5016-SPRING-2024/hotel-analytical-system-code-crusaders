@@ -50,7 +50,7 @@ class RoomUnavailableDAO:
 
         updated = Database().queryUpdate(
             """UPDATE roomunavailable SET rid = %s, startdate = %s, enddate = %s WHERE ruid = %s""",
-            (ruid,rid,startdate,enddate)
+            (rid,startdate,enddate, ruid)
         )
 
         if updated is False:

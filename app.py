@@ -210,7 +210,7 @@ def handleRoomUnavailablebyID(ruid):
     if request.method == 'GET':
         return handler.getRoomUnavailablebyID(ruid)
     elif request.method == 'PUT':
-        return handler.updateRoomUnavailablebyID(ruid)
+        return handler.updateRoomUnavailablebyID(request.json)
     elif request.method == 'DELETE':
         return handler.deleteRoomUnavailablebyID(ruid)
     else:
