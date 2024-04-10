@@ -4,8 +4,16 @@ from model.ClientDAO import ClientDAO
 class ClientController:
 
     def DictBuild(self, row):
-        a_dict = {"clid": row[0], "fname": row[1], "lname": row[2], "age": row[3], "memberyear": row[4]}
-        return a_dict
+        result = []
+        for tuples in row:
+            d = dict()
+            d['clid'] = tuples[0]
+            d['fname'] = tuples[1]
+            d['lname'] = tuples[2]
+            d['age'] = tuples[3]
+            d['memberyear'] = tuples[4]
+            result.append(d)
+        return result
 
     def build_attr_dict(self, clid, fname, lname, age, memberyear):
         result = {}
@@ -19,22 +27,15 @@ class ClientController:
     def getAllClients(self):
         model = ClientDAO()
         client_dict = model.getAllClients()
-        result = []
-        for element in client_dict:
-            result.append(self.DictBuild(element))
-
+        result = self.DictBuild(client_dict)
         return jsonify(result)
 
 
     def getClientByID(self, clid):
-        dao = ClientDAO()
-        client = dao.getClientById(clid)
-        if not client:
-            return jsonify("not found"), 404
-        else:
-            result = []
-            result.append(self.DictBuild(client))
-            return jsonify(result), 200
+        model = ClientDAO()
+        client_dict = model.getClientById(clid)
+        result = self.DictBuild(client_dict)
+        return jsonify(result)
 
     def addNewClient(self, json):
         fname = json['fname']
@@ -49,8 +50,7 @@ class ClientController:
         else:
             return jsonify(result), 201
 
-    def updateClient(self, json):
-        clid = json['clid']
+    def updateClient(self, clid, json):
         fname = json['fname']
         lname = json['lname']
         age = json['age']

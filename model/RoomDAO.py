@@ -19,14 +19,14 @@ class RoomDAO:
         )
         return rooms_list
     
-    def createRoombyID(self, rid, hid, rdid, rprice):
+    def createRoombyID(self, hid, rdid, rprice):
         rid = Database().queryInsertFetch(
             """INSERT into room (hid, rdid, rprice) VALUES (%s, %s, %s) returning rid""",
             (hid, rdid, rprice,)
         )
 
         rooms_list = Database().querySelectFrom(
-            """SELECT rid, hid, rdid, rpice FROM room WHERE rid = %s""",
+            """SELECT rid, hid, rdid, rprice FROM room WHERE rid = %s""",
             (rid,)
         )
         return rooms_list
@@ -49,14 +49,14 @@ class RoomDAO:
     def updateRoombyID(self,rid,hid,rdid,rprice):
         updated = Database().queryUpdate(
             """UPDATE room SET hid = %s, rdid = %s, rprice = %s WHERE rid = %s""",
-            (rid,hid,rdid,rprice)
+            (hid,rdid,rprice,rid,)
         )
 
         if updated is False:
             return[]
 
         rooms_list = Database().querySelectFrom(
-            """SELECT rid,hid,rdid,rprice FROM roomdescription WHERE rid = %s""",
+            """SELECT rid,hid,rdid,rprice FROM room WHERE rid = %s""",
             (rid,)
         )
         return rooms_list

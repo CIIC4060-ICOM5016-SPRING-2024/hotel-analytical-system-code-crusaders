@@ -49,12 +49,11 @@ class RoomUnavailableController:
             return result
         
     def createRoomUnavailablebyID(self,json):
-        ruid = json['ruid']
         rid = json['rid']
         startdate = json['startdate']
         enddate = json['enddate']
         dao = RoomUnavailableDAO()
-        roomun = dao.createRoomUnavailablebyID(ruid,rid,startdate,enddate)
+        roomun = dao.createRoomUnavailablebyID(rid,startdate,enddate)
         if not roomun:
             return jsonify("Not found") , 404 
         else: 
@@ -70,8 +69,7 @@ class RoomUnavailableController:
             result = self.json_dict(roomun)
             return result
         
-    def updateRoomUnavailablebyID(self,json):
-        ruid = json['ruid']
+    def updateRoomUnavailablebyID(self, ruid, json):
         rid = json['rid']
         startdate = json['startdate']
         enddate = json['enddate']

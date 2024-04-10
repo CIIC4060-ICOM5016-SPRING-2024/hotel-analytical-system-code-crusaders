@@ -49,7 +49,7 @@ class EmployeeDAO:
     def updateEmployee(self,eid,hid,fname,lname,age,position,salary):
         result = Database().queryUpdate(
             """UPDATE employee SET hid = %s, fname = %s, lname = %s, age = %s, position = %s, salary = %s WHERE eid = %s""",
-            (hid,fname,lname,age,position,salary,eid)
+            (hid,fname,lname,age,position,salary,eid,)
         )
 
         if result is False:
@@ -57,6 +57,6 @@ class EmployeeDAO:
 
         employee_list = Database().querySelectFrom(
             """SELECT eid,hid,fname,lname,age,position,salary FROM employee where eid = %s""",
-            (eid)
+            (eid,)
         )
         return employee_list

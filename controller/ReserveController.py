@@ -4,8 +4,17 @@ from model.ReserveDAO import ReserveDAO
 class ReserveController:
 
     def DictBuild(self, row):
-        a_dict = {"reid": row[0], "ruid": row[1], "clid": row[2], "total_cost": row[3], "payment": row[4], "guests": row[5]}
-        return a_dict
+        result = []
+        for tuples in row:
+            d = dict()
+            d['reid'] = tuples[0]
+            d['ruid'] = tuples[1]
+            d['clid'] = tuples[2]
+            d['total_cost'] = tuples[3]
+            d['payment'] = tuples[4]
+            d['guests'] = tuples[5]
+            result.append(d)
+        return result
 
     def build_attr_dict(self, reid, ruid, clid, total_cost, payment, guests):
         result = {}
@@ -20,10 +29,7 @@ class ReserveController:
     def getAllReserve(self):
         dao = ReserveDAO()
         rd_dict = dao.getAllReserve()
-        result = []
-        for element in rd_dict:
-            result.append(self.DictBuild(element))
-
+        result = self.DictBuild(rd_dict)
         return jsonify(result)
 
     def getReserveById(self, reid):
@@ -32,8 +38,7 @@ class ReserveController:
         if not rd_dict:
             return jsonify("not found"), 404
         else:
-            result = []
-            result.append(self.DictBuild(rd_dict))
+            result = self.DictBuild(rd_dict)
             return jsonify(result)
 
 
@@ -52,8 +57,7 @@ class ReserveController:
             return jsonify(result), 201
 
 
-    def updateReserve(self, json):
-        reid = json["reid"]
+    def updateReserve(self, reid, json):
         ruid = json["ruid"]
         clid = json["clid"]
         total_cost = json["total_cost"]

@@ -51,7 +51,7 @@ def handleHotelsbyID(hid):
     if request.method == 'GET':
         return handler.getHotelbyID(hid)
     elif request.method == 'PUT':
-        return handler.updateHotel(request.json)
+        return handler.updateHotel(hid, request.json)
     elif request.method == 'DELETE':
         return handler.deleteHotel(hid)
     else:
@@ -76,7 +76,7 @@ def handleChainsbyID(chid):
     if request.method == 'GET':
         return handler.getChainbyID(chid)
     elif request.method == 'PUT':
-        return handler.updateChain(request.json)
+        return handler.updateChain(chid, request.json)
     elif request.method == 'DELETE':
         return handler.deleteChain(chid)
     else:
@@ -101,7 +101,7 @@ def handleEmployeesbyID(eid):
     if request.method == 'GET':
         return handler.getEmployeebyID(eid)
     elif request.method == 'PUT':
-        return handler.updateEmployee(request.json)
+        return handler.updateEmployee(eid, request.json)
     elif request.method == 'DELETE':
         return handler.deleteEmployee(eid)
     else:
@@ -128,7 +128,7 @@ def handle_clientById(clid):
     if request.method == 'GET':
         return handler.getClientByID(clid)
     elif request.method == 'PUT':
-        return handler.updateClient(request.json)
+        return handler.updateClient(clid, request.json)
     elif request.method == 'DELETE':
         return handler.deleteClient(clid)
     else:
@@ -155,7 +155,7 @@ def handle_reserveById(reid):
     if request.method == 'GET':
         return handler.getReserveById(reid)
     elif request.method == 'PUT':
-        return handler.updateReserve(request.json)
+        return handler.updateReserve(reid, request.json)
     elif request.method == 'DELETE':
         return handler.deleteReserve(reid)
     else:
@@ -183,7 +183,7 @@ def handleRoomsbyID(rid):
     if request.method == 'GET':
         return handler.getRoombyid(rid)
     elif request.method == 'PUT':
-        return handler.updateRoombyID(request.json)
+        return handler.updateRoombyID(rid, request.json)
     elif request.method == 'DELETE':
         return handler.deleteRoombyID(rid)
     else:
@@ -210,7 +210,7 @@ def handleRoomUnavailablebyID(ruid):
     if request.method == 'GET':
         return handler.getRoomUnavailablebyID(ruid)
     elif request.method == 'PUT':
-        return handler.updateRoomUnavailablebyID(ruid)
+        return handler.updateRoomUnavailablebyID(ruid, request.json)
     elif request.method == 'DELETE':
         return handler.deleteRoomUnavailablebyID(ruid)
     else:
