@@ -4,7 +4,7 @@ from model.RoomDescriptionDAO import RoomDescriptionDAO
 
 class RoomDescriptionController(BaseController):
 
-    roomDescription_columns = ['rid', 'rname', 'rtype', 'capacity', 'ishandicap']
+    roomDescription_columns = ['rdid', 'rname', 'rtype', 'capacity', 'ishandicap']
 
     def __init__(self):
         self.dao = RoomDescriptionDAO()
@@ -74,7 +74,7 @@ class RoomDescriptionController(BaseController):
 
     def create(self, data):
         # Check if the data contains the right ammount of columns of single record
-        if len(data) is not len(self.roomDescription_columns):
+        if len(data) is not len(self.roomDescription_columns) - 1:
             return jsonify(f"Invalid count of columns provided: {len(data)}"), 400
         
         # Check if the data contains valid columns
@@ -85,6 +85,6 @@ class RoomDescriptionController(BaseController):
         result = self.dao.create_record(data)
 
         if result:
-            return jsonify(f"Inserted record room description with ID:{data['rdid']}") 
+            return jsonify(f"Inserted record room description") 
         else:
-            return jsonify(f"Could not insert record room description with ID:{data['rdid']}"), 400
+            return jsonify(f"Could not insert record room description"), 400
