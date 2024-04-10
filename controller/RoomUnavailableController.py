@@ -69,8 +69,7 @@ class RoomUnavailableController:
             result = self.json_dict(roomun)
             return result
         
-    def updateRoomUnavailablebyID(self,json):
-        ruid = json['ruid']
+    def updateRoomUnavailablebyID(self, ruid, json):
         rid = json['rid']
         startdate = json['startdate']
         enddate = json['enddate']

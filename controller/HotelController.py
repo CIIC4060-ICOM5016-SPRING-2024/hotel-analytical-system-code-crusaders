@@ -61,8 +61,7 @@ class HotelController:
             response =  self.make_json(hotel)
             return response
         
-    def updateHotel(self, json):
-        hid = json['hid']
+    def updateHotel(self, hid, json):
         chid = json['chid']
         hname = json['hname']
         hcity = json['hcity']

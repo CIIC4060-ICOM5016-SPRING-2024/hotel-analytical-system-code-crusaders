@@ -57,8 +57,7 @@ class ReserveController:
             return jsonify(result), 201
 
 
-    def updateReserve(self, json):
-        reid = json["reid"]
+    def updateReserve(self, reid, json):
         ruid = json["ruid"]
         clid = json["clid"]
         total_cost = json["total_cost"]

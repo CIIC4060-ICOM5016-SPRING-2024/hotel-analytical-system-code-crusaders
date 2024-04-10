@@ -63,8 +63,7 @@ class ChainsController:
             response = self.make_json(chain)
             return response
         
-    def updateChain(self,json):
-        chid = json['chid']
+    def updateChain(self, chid, json):
         cname = json['cname']
         springmkup = json['springmkup']
         summermkup = json['summermkup']

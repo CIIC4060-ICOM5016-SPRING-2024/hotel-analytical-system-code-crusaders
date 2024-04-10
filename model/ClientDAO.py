@@ -33,9 +33,9 @@ class ClientDAO:
     def updateClient(self, clid, fname, lname, age, memberyear):
         updated = Database().queryUpdate(
             """
-            update client set fname =%s, lname =%s, age =%s, memberyear =%s where clid =%s
+            update client set fname =%s, lname =%s, age =%s, memberyear =%s where clid =%s;
             """,
-            (fname, lname, age, memberyear, clid)
+            (fname, lname, age, memberyear, clid,)
         )
         return updated
 

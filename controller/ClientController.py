@@ -50,8 +50,7 @@ class ClientController:
         else:
             return jsonify(result), 201
 
-    def updateClient(self, json):
-        clid = json['clid']
+    def updateClient(self, clid, json):
         fname = json['fname']
         lname = json['lname']
         age = json['age']

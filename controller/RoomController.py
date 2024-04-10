@@ -41,12 +41,11 @@ class RoomController:
             return result
     
     def createRoombyID(self,json):
-        rid = json['rid']
         hid = json['hid']
         rdid = json['rdid']
         rprice = json['rprice']
         dao = RoomDAO()
-        room = dao.createRoombyID(rid,hid,rdid,rprice)
+        room = dao.createRoombyID(hid,rdid,rprice)
         if not room:
             return jsonify("Not found") , 404 
         else: 
@@ -62,8 +61,7 @@ class RoomController:
             result = self.json_dict(room)
             return result
         
-    def updateRoombyID(self,json):
-        rid = json['rid']
+    def updateRoombyID(self, rid, json):
         hid = json['hid']
         rdid = json['rdid']
         rprice = json['rprice']

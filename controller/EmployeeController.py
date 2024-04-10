@@ -65,8 +65,7 @@ class EmployeeController:
             response = self.make_json(employee)
             return response
         
-    def updateEmployee(self, json):
-        eid = json['eid']
+    def updateEmployee(self, eid, json):
         hid = json['hid']
         fname =json['fname']
         lname = json['lname']

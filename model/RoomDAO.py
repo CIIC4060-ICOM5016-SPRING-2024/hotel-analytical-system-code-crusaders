@@ -19,7 +19,7 @@ class RoomDAO:
         )
         return rooms_list
     
-    def createRoombyID(self, rid, hid, rdid, rprice):
+    def createRoombyID(self, hid, rdid, rprice):
         rid = Database().queryInsertFetch(
             """INSERT into room (hid, rdid, rprice) VALUES (%s, %s, %s) returning rid""",
             (hid, rdid, rprice,)
