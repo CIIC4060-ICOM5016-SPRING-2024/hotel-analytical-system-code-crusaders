@@ -1,5 +1,7 @@
-from flask import Flask, request, jsonify 
+import subprocess
+
 from flask_cors import CORS
+from flask import Flask, request, jsonify 
 
 from config.Database import Database
 
@@ -19,7 +21,7 @@ app = Flask(__name__)
 CORS(app)
 
 # Define the server type
-SERVER = "heroku"
+SERVER = "docker"
 # Load database credentials
 Database.load_credentials(SERVER)
 
@@ -29,9 +31,42 @@ controller_mapping = {
     'roomdescription': RoomDescriptionController
 }
 
-@app.route('/codecrusaders')
-def handle_welcome():
-    return '<h1>Welcome Code crusaders!</h1>'
+@app.route('/')
+def handle_application_start():
+    return '''
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>My Flask Application</title>
+            </head>
+            <body>
+                <h1>Welcome to My Flask Application</h1>
+                <p>This is the main page of the application.</p>
+                <a href="/streamlit">Launch Streamlit</a>
+            </body>
+            </html>
+            '''
+
+@app.route('/streamlit')
+def streamlit_route():
+    # Launch Streamlit as a subprocess
+    subprocess.Popen(['streamlit', 'run', './view/loginView.py'])
+    return "Launching Streamlit..."
+
+@app.route('/login', methods = ['POST'])
+def handle_firsttime_login(): 
+    
+    if not request.is_json:
+        return jsonify(f"The request does not contain JSON data"), 400
+    
+    # user validation before reading statistics
+    userlogon = LoginController()
+    accessLevel = userlogon.login_user(-1, request.json)
+
+    if accessLevel[1] is False:
+        return jsonify(accessLevel[0]), 404
+
+    return jsonify(accessLevel)
 
 #############################################
 #                HOTEL
