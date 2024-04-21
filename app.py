@@ -33,7 +33,7 @@ controller_mapping = {
     'roomdescription': RoomDescriptionController
 }
 
-@app.route('/')
+@app.route('/streamlit')
 def handle_application_start():
     # Launch Streamlit as a subprocess
     subprocess.Popen(['streamlit', 'run', './view/fapp.py'])
