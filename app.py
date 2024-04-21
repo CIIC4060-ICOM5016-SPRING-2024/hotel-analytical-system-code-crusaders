@@ -3,6 +3,7 @@ import requests
 import json
 import pandas as pd
 import altair as alt
+import plotly as px
 
 
 def login_frontend():
@@ -33,7 +34,10 @@ login_frontend()
 
 # def main():
 
-#     select = st.selectbox("Choose Statistic", ("Top 3 highest paid regular employee", "Top 5 hotel with the most client capacity", "Top 3 month with the most reservation by chain"), index=None)
+#     select = st.selectbox("Choose Statistic", ("Top 3 highest paid regular employee",
+#     "Top 5 hotel with the most client capacity", "Top 3 month with the most reservation by chain",
+#      "Top 10% of the hotels that had the most reservations", "Top 3 rooms that were the least time unavailable",
+#      "Total reservation percentage by payment method", "Top 3 rooms that had the least guest-to-capacity ratio"), index=None)
 #     hotel = st.text_input("hotel id")
 #     if select == "Top 3 highest paid regular employee":
 #         route = 'http://localhost:5000/codecrusaders/hotel/'+hotel+'/highestpaid'
@@ -78,6 +82,49 @@ login_frontend()
 #                 color = 'month',
 #             )
 #             st.altair_chart(bar_chart, use_container_width=False)
+#     elif select == "Top 3 rooms that were the least time unavailable":
+#         data = '{"username": "fmays2", "password": "mP6+bo"}'
+#         json_object = json.loads(data)
+#         response = requests.post('https://pdb-f386d9f3feff.herokuapp.com/codecrusaders/hotel/+hotel+/leastreserve', json=json_object)
+#         if checkstatus(response):
+#           df = pd.DataFrame(query_results, columns=['datediff', 'rid'])
+#           st.write("Query Results:", df)
+#           st.bar_chart(df,x="rid",y="datediff")
+#     elif select == "Top 10% of the hotels that had the most reservations":
+#         data = '{"username": "fmays2", "password": "mP6+bo"}'
+#         json_object = json.loads(data)
+#         response = requests.post('https://pdb-f386d9f3feff.herokuapp.com/codecrusaders/most/reservation', json=json_object)
+#         if checkstatus(response):
+#           df = pd.DataFrame(query_results, columns=['hname', 'reservation'])
+#           st.write("Query Results:", df)
+#           st.bar_chart(df,x="hname",y="reservation")
+#     elif select == "Total reservation percentage by payment method":
+#         data = '{"username": "fmays2", "password": "mP6+bo"}'
+#         json_object = json.loads(data)
+#         response = requests.post('https://pdb-f386d9f3feff.herokuapp.com/codecrusaders/paymentmethod', json=json_object)
+#         if checkstatus(response):
+#           df = pd.DataFrame(query_results, columns=['payment', 'percentage'])
+#            fig = px.pie(df, values='percentage', names='payment')
+#            st.plotly_chart(fig)
+#     elif select == "Top 3 rooms that had the least guest-to-capacity ratio":
+#         data = '{"username": "fmays2", "password": "mP6+bo"}'
+#         json_object = json.loads(data)
+#         response = requests.post('https://pdb-f386d9f3feff.herokuapp.com/codecrusaders/hotel/+hotel+/leastguests', json=json_object)
+#         if checkstatus(response):
+#               df = pd.DataFrame(query_results, columns=['rid', 'ratio'])
+#               st.write("Query Results:", df)
+#               st.scatter_chart(df,x="rid",y="ratio")
+#
+#
+#
+#
+#
+#
+#
+#
+
+
+         
 
 # # Run the main function to start the Streamlit app
 # if __name__ == "__main__":
