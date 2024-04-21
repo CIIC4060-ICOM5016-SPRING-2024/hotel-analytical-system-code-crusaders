@@ -4,6 +4,7 @@ from flask_cors import CORS
 from flask import redirect
 from flask import Flask, request, jsonify 
 
+import streamlit as st
 from config.Database import Database
 
 from controller.RoomController            import RoomController
@@ -35,7 +36,7 @@ controller_mapping = {
 @app.route('/')
 def handle_application_start():
     # Launch Streamlit as a subprocess
-    subprocess.Popen(['streamlit', 'run', './view/loginView.py'])
+    subprocess.Popen(['streamlit', 'run', './view/fapp.py'])
 
     return redirect('http://localhost:8501/')
 
