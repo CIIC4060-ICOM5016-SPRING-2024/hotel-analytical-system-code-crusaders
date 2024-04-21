@@ -23,7 +23,7 @@ app = Flask(__name__)
 CORS(app)
 
 # Define the server type
-SERVER = "docker"
+SERVER = "heroku"
 # Load database credentials
 Database.load_credentials(SERVER)
 
@@ -38,7 +38,9 @@ def handle_application_start():
     # Launch Streamlit as a subprocess
     subprocess.Popen(['streamlit', 'run', './view/fapp.py'])
 
-    return redirect('http://localhost:8501/')
+    # return redirect('http://localhost:8501/')
+
+    return 'Redirecting to frontend of application'
 
 @app.route('/login', methods = ['POST'])
 def handle_firsttime_login(): 
