@@ -33,12 +33,17 @@ controller_mapping = {
     'roomdescription': RoomDescriptionController
 }
 
-@app.route('/streamlit')
-def handle_application_start():
-    # Launch Streamlit as a subprocess
-    subprocess.Popen(['streamlit', 'run', './view/fapp.py'])
+# Set Streamlit port dynamically
+port = st.config.get_option("server.port")
+st.set_option('server.port', port)
 
-    return redirect('http://localhost:8501/')
+# @app.route('/streamlit')
+# def handle_application_start():
+#     # Launch Streamlit as a subprocess
+#     # subprocess.Popen(['streamlit', 'run', './view/fapp.py'])
+#     # return redirect('http://localhost:8501/')
+
+#     return 'Redirecting to frontend of application'
 
 @app.route('/login', methods = ['POST'])
 def handle_firsttime_login(): 
