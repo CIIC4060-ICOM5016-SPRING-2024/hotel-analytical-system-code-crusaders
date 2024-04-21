@@ -33,10 +33,6 @@ controller_mapping = {
     'roomdescription': RoomDescriptionController
 }
 
-# Set Streamlit port dynamically
-port = st.config.get_option("server.port")
-st.set_option('server.port', port)
-
 # @app.route('/streamlit')
 # def handle_application_start():
 #     # Launch Streamlit as a subprocess
