@@ -1,6 +1,7 @@
 import subprocess
 
 from flask_cors import CORS
+from flask import redirect
 from flask import Flask, request, jsonify 
 
 from config.Database import Database
@@ -33,25 +34,10 @@ controller_mapping = {
 
 @app.route('/')
 def handle_application_start():
-    return '''
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <title>My Flask Application</title>
-            </head>
-            <body>
-                <h1>Welcome to My Flask Application</h1>
-                <p>This is the main page of the application.</p>
-                <a href="/streamlit">Launch Streamlit</a>
-            </body>
-            </html>
-            '''
-
-@app.route('/streamlit')
-def streamlit_route():
     # Launch Streamlit as a subprocess
     subprocess.Popen(['streamlit', 'run', './view/loginView.py'])
-    return "Launching Streamlit..."
+
+    return redirect('http://localhost:8501/')
 
 @app.route('/login', methods = ['POST'])
 def handle_firsttime_login(): 
