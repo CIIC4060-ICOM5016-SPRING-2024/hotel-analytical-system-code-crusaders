@@ -3,20 +3,13 @@ import requests
 import json
 import pandas as pd
 import altair as alt
-import plotly as px
+import plotly.express as px
+
+from views.Dashboard import Dashboard
 
 SERVER = "heroku"
 
 class FApplication:
-
-    # User credentials
-    userLogged = None
-    userPassword = None
-
-    # Employee info
-    chainID = None
-    position = None
-    employeeID = None
 
     # Flask route
     mainRoute = None
@@ -40,15 +33,13 @@ class FApplication:
             if response.status_code == 200:
                 user_details = response.json()
 
-                self.userLogged = username
-                self.userPassword = password
+                st.session_state.userLogged = username
+                st.session_state.userPassword = password
 
-                self.position = user_details[0]['position']
-                self.chainID = user_details[0]['chid']
-                self.employeeID = user_details[0]['hid']
+                st.session_state.position = user_details[0]['position']
+                st.session_state.chainID = user_details[0]['chid']
+                st.session_state.employeeID = user_details[0]['hid']
                 
-                st.success(f'Welcome, {self.position} {self.chainID} {self.employeeID} {self.userLogged} {self.userPassword}!')
-
                 st.session_state.logged_in = True
                 st.empty()
                 st.rerun()
@@ -79,18 +70,98 @@ class FApplication:
 
             print(username, password)
 
+    # check if data is received
+    def checkstatus(self, tocheck):
+        if tocheck.status_code == 200:
+            return True
+        else:
+            return st.error(f"Failed to retrieve data. Status code: {tocheck.status_code}")
 
-    def dashboard(self):
-        st.title("Dashboard")
-        st.write("Welcome to the dashboard!")
+
+    def createDashboard(self):
+        self.dashboard = Dashboard(st.session_state.position)
+
+        # select = st.selectbox("Choose Statistic", ("Top 3 highest paid regular employee",
+        # "Top 5 hotel with the most client capacity", "Top 3 month with the most reservation by chain",
+        # "Top 10% of the hotels that had the most reservations", "Top 3 rooms that were the least time unavailable",
+        # "Total reservation percentage by payment method", "Top 3 rooms that had the least guest-to-capacity ratio"), index=None)
+        # hotel = st.text_input("hotel id")
+        # if select == "Top 3 highest paid regular employee":
+        #     route = f'{self.mainRoute}hotel/{hotel}/highestpaid'
+        #     data = '{"username": "fmays2", "password": "mP6+bo"}'
+        #     json_object = json.loads(data)
+        #     response = requests.post(route, json=json_object)
+        #     if self.checkstatus(response):
+        #         df = pd.DataFrame.from_dict(response.json())
+        #         st.table(df)
+        #         bar_chart = alt.Chart(df).mark_bar().encode(
+        #             y='salary',
+        #             x='full_name',
+        #             color ='full_name'
+        #         )
+        #         st.altair_chart(bar_chart, use_container_width=True)
+        # elif select == "Top 5 hotel with the most client capacity":
+        #     data = '{"username": "fmays2", "password": "mP6+bo"}'
+        #     json_object = json.loads(data)
+        #     response = requests.post(f'{self.mainRoute}most/capacity', json=json_object)
+        #     if self.checkstatus(response):
+        #         df = pd.DataFrame.from_dict(response.json())
+        #         st.table(df)
+        #         bar_chart = alt.Chart(df).mark_bar().encode(
+        #             y='total_capacity',
+        #             x='hname',
+        #             color = 'hname'
+        #         )
+        #         st.altair_chart(bar_chart, use_container_width=True)
+        # elif select == "Top 3 month with the most reservation by chain":
+        #     data = '{"username": "fmays2", "password": "mP6+bo"}'
+        #     json_object = json.loads(data)
+        #     response = requests.post(f'{self.mainRoute}most/profitmonth', json=json_object)
+        #     if self.checkstatus(response):
+        #         #st.table(response.json())
+        #         #st.bar_chart(response.json())
+        #         df = pd.DataFrame.from_dict(response.json())
+        #         st.table(df)
+        #         bar_chart = alt.Chart(df).mark_bar().encode(
+        #             x = 'year',
+        #             y = 'total_reservations',
+        #             column = 'name',
+        #             color = 'month',
+        #         )
+        #         st.altair_chart(bar_chart, use_container_width=False)
+        # elif select == "Top 3 rooms that were the least time unavailable":
+        #     data = '{"username": "fmays2", "password": "mP6+bo"}'
+        #     json_object = json.loads(data)
+        #     response = requests.post(f'{self.mainRoute}hotel/{hotel}/leastreserve', json=json_object)
+        #     if self.checkstatus(response):
+        #         df = pd.DataFrame(response.json(), columns=['datediff', 'rid'])
+        #         st.write("Query Results:", df)
+        #         st.bar_chart(df,x="rid",y="datediff")
+        # elif select == "Top 10% of the hotels that had the most reservations":
+        #     data = '{"username": "fmays2", "password": "mP6+bo"}'
+        #     json_object = json.loads(data)
+        #     response = requests.post(f'{self.mainRoute}most/reservation', json=json_object)
+        #     if self.checkstatus(response):
+        #         df = pd.DataFrame(response.json(), columns=['hname', 'reservations'])
+        #         st.write("Query Results:", df)
+        #         st.bar_chart(df,x="hname",y="reservations")
+        # elif select == "Total reservation percentage by payment method":
+        #     data = '{"username": "fmays2", "password": "mP6+bo"}'
+        #     json_object = json.loads(data)
+        #     response = requests.post(f'{self.mainRoute}paymentmethod', json=json_object)
+        #     if self.checkstatus(response):
+        #         df = pd.DataFrame(response.json(), columns=['payment', 'percentage'])
+        #         fig = px.pie(df, values='percentage', names='payment')
+        #         st.plotly_chart(fig)
+        # elif select == "Top 3 rooms that had the least guest-to-capacity ratio":
+        #     data = '{"username": "fmays2", "password": "mP6+bo"}'
+        #     json_object = json.loads(data)
+        #     response = requests.post(f'{self.mainRoute}hotel/{hotel}/leastguests', json=json_object)
+        #     if self.checkstatus(response):
+        #         df = pd.DataFrame(response.json(), columns=['rid', 'ratio'])
+        #         st.write("Query Results:", df)
+        #         st.bar_chart(df,x="rid",y="ratio")
    
-# check if data is received
-# def checkstatus(tocheck):
-#     if tocheck.status_code == 200:
-#         return True
-#     else:
-#         return st.error(f"Failed to retrieve data. Status code: {tocheck.status_code}")
-
 
 # def main():
 
@@ -204,4 +275,4 @@ if __name__ == "__main__":
         frontendApplication.login()
     else:
     # Display dashboard if user is logged in
-        frontendApplication.dashboard()
+        frontendApplication.createDashboard()
