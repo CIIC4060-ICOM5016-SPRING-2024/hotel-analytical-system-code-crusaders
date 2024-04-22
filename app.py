@@ -5,24 +5,50 @@ import pandas as pd
 import altair as alt
 import plotly as px
 
+SERVER = "heroku"
 
-def login_frontend():
-    st.title('Login')
-    username = st.text_input('Username')
-    password = st.text_input('Password', type='password')
-    login_button = st.button('Login')
+class FApplication:
 
-    # if login_button:
-    #     response = requests.post('http://localhost:5000/login', json={'username': username, 'password': password})
-    #     if response.status_code == 200:
-    #         user_details = response.json()
-    #         print(user_details)
-    #         # st.success(f'Welcome, {user_details["username"]}!')
-    #         # Redirect to main app or show other content...
-    #     else:
-    #         st.error('Invalid credentials')
+    # User credentials
+    userLogged = None
+    userPassword = None
 
-login_frontend()
+    # Employee info
+    chainID = None
+    position = None
+    employeeID = None
+
+    # Flask route
+    mainRoute = None
+
+    signInSession_loggedin = False
+
+    def __init__(self):
+        if SERVER == "heroku":
+            self.mainRoute = 'https://pdb-frontend-6b009c60f251.herokuapp.com/'
+        else:
+            self.mainRoute = 'http://localhost:5000/'
+        pass
+
+    def sign_in(self):
+        st.title('Sign-in')
+        username = st.text_input('Username')
+        password = st.text_input('Password', type='password')
+        user_signed_in = st.button('Sign-in')
+
+        if user_signed_in:
+            response = requests.post(f'{self.mainRoute}login', json = {'username': username, 'password': password})
+
+            print(response)
+
+            if response.status_code == 200:
+                user_details = response.json()
+                print(user_details)
+                # st.success(f'Welcome, {user_details["username"]}!')
+                # Redirect to main app or show other content...
+            else:
+                st.error('Invalid credentials')
+        pass
 
 # check if data is received
 # def checkstatus(tocheck):
@@ -127,5 +153,7 @@ login_frontend()
          
 
 # # Run the main function to start the Streamlit app
-# if __name__ == "__main__":
-#     main()
+if __name__ == "__main__":
+    frontendApplication = FApplication()
+
+    frontendApplication.sign_in()
