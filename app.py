@@ -21,8 +21,6 @@ class FApplication:
     # Flask route
     mainRoute = None
 
-    signInSession_loggedin = False
-
     def __init__(self):
         if SERVER == "heroku":
             self.mainRoute = 'https://pdb-f386d9f3feff.herokuapp.com/codecrusaders/'
@@ -30,26 +28,62 @@ class FApplication:
             self.mainRoute = 'http://localhost:5000/'
         pass
 
-    def sign_in(self):
-        st.title('Sign-in')
+    def login(self):
+        st.title('Login')
         username = st.text_input('Username')
         password = st.text_input('Password', type='password')
-        user_signed_in = st.button('Sign-in')
+        user_logged_in = st.button('login')
 
-        if user_signed_in:
+        if user_logged_in:
             response = requests.post(f'{self.mainRoute}login', json = {'username': username, 'password': password})
 
             if response.status_code == 200:
                 user_details = response.json()
 
+                self.userLogged = username
+                self.userPassword = password
+
+                self.position = user_details[0]['position']
+                self.chainID = user_details[0]['chid']
+                self.employeeID = user_details[0]['hid']
                 
-                print(user_details)
-                # st.success(f'Welcome, {user_details["username"]}!')
-                # Redirect to main app or show other content...
+                st.success(f'Welcome, {self.position} {self.chainID} {self.employeeID} {self.userLogged} {self.userPassword}!')
+
+                st.session_state.logged_in = True
+                st.empty()
+                st.rerun()
             else:
                 st.error('Invalid credentials')
-        pass
 
+        st.write("Don't have an account?")
+        if st.button("Sign up"):
+            # Redirect to sign-up page or take appropriate action
+            st.session_state.logged_in = False
+            st.session_state.create_account = True
+            st.empty()
+            st.rerun()
+
+
+    def create_account(self):
+        st.title('Create Account')
+        username = st.text_input('Create Username')
+        password = st.text_input('Create Password', type='password')
+        user_created_account = st.button('Create!')
+
+        if user_created_account:
+            # response = requests.post(f'{self.mainRoute}login', json = {'username': username, 'password': password})
+            st.session_state.logged_in = False
+            st.session_state.create_account = False
+            st.empty()
+            st.experimental_rerun()
+
+            print(username, password)
+
+
+    def dashboard(self):
+        st.title("Dashboard")
+        st.write("Welcome to the dashboard!")
+   
 # check if data is received
 # def checkstatus(tocheck):
 #     if tocheck.status_code == 200:
@@ -156,4 +190,18 @@ class FApplication:
 if __name__ == "__main__":
     frontendApplication = FApplication()
 
-    frontendApplication.sign_in()
+    # Check if user is logged in
+    if "logged_in" not in st.session_state:
+        st.session_state.logged_in = False
+
+    if "create_account" not in st.session_state:
+        st.session_state.create_account = False
+
+    if st.session_state.create_account is True:
+        frontendApplication.create_account()
+    elif not st.session_state.logged_in:
+    # Display login page if user is not logged in
+        frontendApplication.login()
+    else:
+    # Display dashboard if user is logged in
+        frontendApplication.dashboard()
