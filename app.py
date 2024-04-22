@@ -25,7 +25,7 @@ class FApplication:
 
     def __init__(self):
         if SERVER == "heroku":
-            self.mainRoute = 'https://pdb-f386d9f3feff.herokuapp.com/'
+            self.mainRoute = 'https://pdb-f386d9f3feff.herokuapp.com/codecrusaders/'
         else:
             self.mainRoute = 'http://localhost:5000/'
         pass
@@ -39,10 +39,10 @@ class FApplication:
         if user_signed_in:
             response = requests.post(f'{self.mainRoute}login', json = {'username': username, 'password': password})
 
-            print(response)
-
             if response.status_code == 200:
                 user_details = response.json()
+
+                
                 print(user_details)
                 # st.success(f'Welcome, {user_details["username"]}!')
                 # Redirect to main app or show other content...
