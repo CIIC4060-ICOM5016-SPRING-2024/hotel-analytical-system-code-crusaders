@@ -25,7 +25,7 @@ class FApplication:
 
     def __init__(self):
         if SERVER == "heroku":
-            self.mainRoute = 'https://pdb-frontend-6b009c60f251.herokuapp.com/'
+            self.mainRoute = 'https://pdb-f386d9f3feff.herokuapp.com/'
         else:
             self.mainRoute = 'http://localhost:5000/'
         pass
