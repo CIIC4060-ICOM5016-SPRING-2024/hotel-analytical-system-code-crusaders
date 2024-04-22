@@ -33,17 +33,8 @@ controller_mapping = {
     'roomdescription': RoomDescriptionController
 }
 
-@app.route('/streamlit')
-def handle_application_start():
-    # Launch Streamlit as a subprocess
-    subprocess.Popen(['streamlit', 'run', './view/fapp.py'])
-
-    # return redirect('http://localhost:8501/')
-
-    return 'Redirecting to frontend of application'
-
-@app.route('/login', methods = ['POST'])
-def handle_firsttime_login(): 
+@app.route('/codecrusaders/login', methods = ['POST'])
+def handle_login(): 
     
     if not request.is_json:
         return jsonify(f"The request does not contain JSON data"), 400

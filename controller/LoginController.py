@@ -113,7 +113,4 @@ class LoginController(BaseController):
         if accessLevel['position'] == 'Supervisor' and accessLevel['chid'] != self.dao.get_hotel_chain(hid):
             return ("Incorrect Username or Password", False)
         
-        if accessLevel['position'] == 'Administrator': 
-            return ("Entering as Admin", True)
-        
-        return ("User logged in successfully", True)
+        return (accessLevel, True)
