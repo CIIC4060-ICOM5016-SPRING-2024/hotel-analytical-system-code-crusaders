@@ -5,70 +5,50 @@ import pandas as pd
 import altair as alt
 import plotly.express as px
 
+from views.Login import Login
 from views.Dashboard import Dashboard
 
 SERVER = "heroku"
 
 class FApplication:
 
+    fapplication_singleton = None
+
     # Flask route
     mainRoute = None
+
+    loginHandle = None
+
+    @staticmethod
+    def create():
+        if FApplication.fapplication_singleton is None:
+            FApplication.fapplication_singleton = FApplication()
+    
+    @staticmethod
+    def instance():
+        return FApplication.fapplication_singleton
+
+    @staticmethod
+    def init():
+        login = FApplication.fapplication_singleton.loginHandle
+        
+        if login.new_account is True:
+            login.create_account()
+        elif not login.login_success:
+            login.login_user()
+        else:
+            dashboard = Dashboard(login.position)
+        pass
 
     def __init__(self):
         if SERVER == "heroku":
             self.mainRoute = 'https://pdb-f386d9f3feff.herokuapp.com/codecrusaders/'
         else:
             self.mainRoute = 'http://localhost:5000/'
+
+        # Create new login object
+        self.loginHandle = Login()
         pass
-
-    def login(self):
-        st.title('Login')
-        username = st.text_input('Username')
-        password = st.text_input('Password', type='password')
-        user_logged_in = st.button('login')
-
-        if user_logged_in:
-            response = requests.post(f'{self.mainRoute}login', json = {'username': username, 'password': password})
-
-            if response.status_code == 200:
-                user_details = response.json()
-
-                st.session_state.userLogged = username
-                st.session_state.userPassword = password
-
-                st.session_state.position = user_details[0]['position']
-                st.session_state.chainID = user_details[0]['chid']
-                st.session_state.employeeID = user_details[0]['hid']
-                
-                st.session_state.logged_in = True
-                st.empty()
-                st.rerun()
-            else:
-                st.error('Invalid credentials')
-
-        st.write("Don't have an account?")
-        if st.button("Sign up"):
-            # Redirect to sign-up page or take appropriate action
-            st.session_state.logged_in = False
-            st.session_state.create_account = True
-            st.empty()
-            st.rerun()
-
-
-    def create_account(self):
-        st.title('Create Account')
-        username = st.text_input('Create Username')
-        password = st.text_input('Create Password', type='password')
-        user_created_account = st.button('Create!')
-
-        if user_created_account:
-            # response = requests.post(f'{self.mainRoute}login', json = {'username': username, 'password': password})
-            st.session_state.logged_in = False
-            st.session_state.create_account = False
-            st.empty()
-            st.experimental_rerun()
-
-            print(username, password)
 
     # check if data is received
     def checkstatus(self, tocheck):
@@ -259,20 +239,24 @@ class FApplication:
 
 # # Run the main function to start the Streamlit app
 if __name__ == "__main__":
-    frontendApplication = FApplication()
+    FApplication.create()
+    FApplication.init()
 
-    # Check if user is logged in
-    if "logged_in" not in st.session_state:
-        st.session_state.logged_in = False
 
-    if "create_account" not in st.session_state:
-        st.session_state.create_account = False
+    # frontendApplication = FApplication()
 
-    if st.session_state.create_account is True:
-        frontendApplication.create_account()
-    elif not st.session_state.logged_in:
-    # Display login page if user is not logged in
-        frontendApplication.login()
-    else:
-    # Display dashboard if user is logged in
-        frontendApplication.createDashboard()
+    # # Check if user is logged in
+    # if "logged_in" not in st.session_state:
+    #     st.session_state.logged_in = False
+
+    # if "create_account" not in st.session_state:
+    #     st.session_state.create_account = False
+
+    # if st.session_state.create_account is True:
+    #     frontendApplication.create_account()
+    # elif not st.session_state.logged_in:
+    # # Display login page if user is not logged in
+    #     frontendApplication.login()
+    # else:
+    # # Display dashboard if user is logged in
+    #     frontendApplication.createDashboard()
