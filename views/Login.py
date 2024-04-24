@@ -1,8 +1,6 @@
 import requests
 import streamlit as st
 
-from app import FApplication
-
 class Login:
 
     username = None
@@ -33,7 +31,7 @@ class Login:
         user_create_account_button = st.button("Sign up")
 
         if user_logged_in_button:
-            response = requests.post(f'{self.mainRoute}login', json = {'username': username, 'password': password})
+            response = requests.post(f'{self.mainRoute}user_logon', json = {'username': username, 'password': password})
 
             user_details = response.json()
             if user_details[1] is not False:
@@ -60,29 +58,84 @@ class Login:
     def create_account(self):
         # Create account
         st.title('Create Employee Account')
-        username = st.text_input('Create Username')
-        password = st.text_input('Create Password', type='password')
-        user_created_account = st.button('Create!')
+        self.create_logon()
+        employee_position = self.create_employee()
+        self.create_hotel_selection(employee_position)
         
-        st.title('Create Account')
-        username = st.text_input('Create Username')
+        if st.button('Create!') and self.entered_username.strip() and self.entered_password.strip() and self.fname.strip() and self.lname.strip():
+            response = requests.post(f'{self.mainRoute}user_logon', json=self.login_record)
+            check_account_existance = response.json()
 
-        if user_created_account:
-            check_account_existance_response = requests.post(f'{self.mainRoute}login', json = {'username': username, 'password': password})
-
-            if check_account_existance_response[1] is False:
+            if check_account_existance[1] is True:
                 st.error('Invalid username')
                 pass
 
-            response = requests.post(f'{self.mainRoute}login', json = {'username': username, 'password': password})
+            response = requests.post(f'{self.mainRoute}employee', json=self.employee_record)
 
-            if response.status_code != 200:
-                st.error('Invalid username')
-                pass
+            print(response.json())
+            
 
             self.new_account = False
             self.login_success = False
             st.empty()
             st.rerun()
+        else:
+            st.error('Must fill up all fields')
+    
+    def create_logon(self):
+        self.entered_username = st.text_input('Create Username')
+        self.entered_password = st.text_input('Create Password', type='password')
 
-            print(username, password)
+        self.login_record = {
+            'username': self.entered_username,
+            'password': self.entered_password
+        }
+
+    def create_employee(self):
+        self.fname = st.text_input('First Name')
+        self.lname = st.text_input('Last Name')
+        age = st.number_input('Age', min_value=18, step=1)
+        position = st.selectbox('Job Position', ['Regular', 'Supervisor', 'Administrator'])
+
+        if position == 'Supervisor':
+            min_salary = 50000
+            max_salary = 79999
+        elif position == 'Administrator':
+            min_salary = 80000
+            max_salary = 120000
+        else:
+            min_salary = 18000
+            max_salary = 49999
+
+        salary = st.number_input('Salary', min_value=min_salary, max_value=max_salary, step=1000)
+
+        self.employee_record = {
+            'fname': self.fname,
+            'lname': self.lname,
+            'age': age,
+            'position': position,
+            'salary': salary
+        }
+
+        return position
+
+    def create_hotel_selection(self, employee_position):
+        response = requests.get(f'{self.mainRoute}hotel')
+        self.allHotels = response.json()
+
+        available_hotels = []
+        for hotel in self.allHotels:
+            if hotel['hname'] != 'Administrative':
+                available_hotels.append(hotel['hname'])
+        
+        if employee_position != 'Administrator':
+            selected_option = st.selectbox('Select an Hotel from the chain above', available_hotels)
+        else:
+            selected_option = st.selectbox('Select an Hotel from the chain above', ['Administrative'])
+
+        for hotel in self.allHotels:
+            if hotel['hname'] == selected_option:
+                self.employee_record['hid'] = hotel['hid']
+                break
+        
+        
