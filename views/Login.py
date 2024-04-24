@@ -1,6 +1,8 @@
 import requests
 import streamlit as st
 
+from app import FApplication
+
 class Login:
 
     username = None
@@ -15,7 +17,8 @@ class Login:
     new_account = False
     login_success = False
 
-    def __init__(self):
+    def __init__(self, mainRoute):
+        self.mainRoute = mainRoute
         pass
 
     def login_user(self):
@@ -62,7 +65,18 @@ class Login:
         user_created_account = st.button('Create!')
 
         if user_created_account:
-            # response = requests.post(f'{self.mainRoute}login', json = {'username': username, 'password': password})
+            check_account_existance_response = requests.post(f'{self.mainRoute}login', json = {'username': username, 'password': password})
+
+            if check_account_existance_response[1] is False:
+                st.error('Invalid username')
+                pass
+
+            response = requests.post(f'{self.mainRoute}login', json = {'username': username, 'password': password})
+
+            if response.status_code != 200:
+                st.error('Invalid username')
+                pass
+
             self.new_account = False
             self.login_success = False
             st.empty()

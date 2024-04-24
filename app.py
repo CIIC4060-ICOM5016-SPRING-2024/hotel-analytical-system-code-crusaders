@@ -12,25 +12,15 @@ SERVER = "heroku"
 
 class FApplication:
 
-    fapplication_singleton = None
-
     # Flask route
     mainRoute = None
 
-    loginHandle = None
-
-    @staticmethod
-    def create():
-        if FApplication.fapplication_singleton is None:
-            FApplication.fapplication_singleton = FApplication()
-    
-    @staticmethod
-    def instance():
-        return FApplication.fapplication_singleton
-
     @staticmethod
     def init():
-        login = FApplication.fapplication_singleton.loginHandle
+        if "fapp_singleton" not in st.session_state:
+            st.session_state.fapp_singleton = FApplication()
+
+        login = st.session_state.fapp_singleton.loginHandle
         
         if login.new_account is True:
             login.create_account()
@@ -47,7 +37,7 @@ class FApplication:
             self.mainRoute = 'http://localhost:5000/'
 
         # Create new login object
-        self.loginHandle = Login()
+        self.loginHandle = Login(self.mainRoute)
         pass
 
     # check if data is received
@@ -239,9 +229,7 @@ class FApplication:
 
 # # Run the main function to start the Streamlit app
 if __name__ == "__main__":
-    FApplication.create()
     FApplication.init()
-
 
     # frontendApplication = FApplication()
 
