@@ -23,7 +23,7 @@ app = Flask(__name__)
 CORS(app)
 
 # Define the server type
-SERVER = "heroku"
+SERVER = "docker"
 # Load database credentials
 Database.load_credentials(SERVER)
 
@@ -33,7 +33,11 @@ controller_mapping = {
     'roomdescription': RoomDescriptionController
 }
 
-@app.route('/codecrusaders/login', methods = ['POST'])
+#############################################
+#            Handle user logon
+#############################################
+
+@app.route('/codecrusaders/user_logon', methods = ['POST'])
 def handle_login(): 
     
     if not request.is_json:
@@ -41,12 +45,9 @@ def handle_login():
     
     # user validation before reading statistics
     userlogon = LoginController()
-    accessLevel = userlogon.login_user(-1, request.json)
+    accessLevel = userlogon.logon(request.json)
 
-    if accessLevel[1] is False:
-        return jsonify(accessLevel[0]), 404
-
-    return jsonify(accessLevel)
+    return jsonify(accessLevel), 200
 
 #############################################
 #                HOTEL
@@ -293,10 +294,10 @@ def handle_local_statistic_request_byID(hid, local_statistic):
 
     # user validation before reading statistics
     userlogon = LoginController()
-    accessLevel = userlogon.login_user(hid, request.json)
+    accessLevel = userlogon.logon(request.json)
 
-    if accessLevel[1] is False:
-        return jsonify(accessLevel[0]), 404
+    if userlogon.validate_login(hid, accessLevel) is False:
+        return jsonify("User is not valid"), 404
     
     # Handle the request method
     if local_statistic == 'handicaproom':
@@ -329,10 +330,10 @@ def handle_most_global_statistics(type):
 
     # user validation before reading statistics
     userlogon = LoginController()
-    accessLevel = userlogon.login_user(-1, request.json)
+    accessLevel = userlogon.logon(request.json)
 
-    if accessLevel[1] is False:
-        return jsonify(accessLevel[0]), 404
+    if userlogon.validate_login(-1, accessLevel) is False:
+        return jsonify("User is not valid"), 404
 
     # Handle the request method
     if type == 'revenue':
@@ -359,10 +360,10 @@ def handle_least_global_statistics(type):
 
     # user validation before reading statistics
     userlogon = LoginController()
-    accessLevel = userlogon.login_user(-1, request.json)
+    accessLevel = userlogon.logon(request.json)
 
-    if accessLevel[1] is False:
-        return jsonify(accessLevel[0]), 404
+    if userlogon.validate_login(-1, accessLevel) is False:
+        return jsonify("User is not valid"), 404
 
     # Handle the request method
     if type == 'rooms':
@@ -382,10 +383,10 @@ def handle_general_global_statistics():
 
     # user validation before reading statistics
     userlogon = LoginController()
-    accessLevel = userlogon.login_user(-1, request.json)
+    accessLevel = userlogon.logon(request.json)
 
-    if accessLevel[1] is False:
-        return jsonify(accessLevel[0]), 404
+    if userlogon.validate_login(-1, accessLevel) is False:
+        return jsonify("User is not valid"), 404
 
     # Handle the request method
     return controller.get_PaymentMethod()

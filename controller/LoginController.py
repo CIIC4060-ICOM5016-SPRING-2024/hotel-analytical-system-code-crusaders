@@ -87,7 +87,35 @@ class LoginController(BaseController):
             return jsonify(f"Could not insert record Login"), 400
         
 
-    def login_user(self, hid, data):
+    # def login_user(self, hid, data):
+    #     if len(data) != 2:
+    #         return ("Incorrect Username or Password", False)
+        
+    #     # Check if the data contains valid columns
+    #     invalid_columns = [col for col in data.keys() if col not in self.login_columns]
+    #     if invalid_columns:
+    #         return ("Incorrect Username or Password", False)
+        
+    #     result = self.dao.login_user(data['username'], data['password'])
+
+    #     if result is None:
+    #         return ("Incorrect Username or Password", False)
+        
+    #     accessLevel = {
+    #         'position': result[0],
+    #         'hid'     : result[1],
+    #         'chid'    : result[2]
+    #     }
+
+    #     if accessLevel['position'] == 'Regular' and accessLevel['hid'] != hid:
+    #         return ("Incorrect Username or Password", False)
+        
+    #     if accessLevel['position'] == 'Supervisor' and accessLevel['chid'] != self.dao.get_hotel_chain(hid):
+    #         return ("Incorrect Username or Password", False)
+        
+    #     return (accessLevel, True)
+    
+    def logon(self, data):
         if len(data) != 2:
             return ("Incorrect Username or Password", False)
         
@@ -106,11 +134,14 @@ class LoginController(BaseController):
             'hid'     : result[1],
             'chid'    : result[2]
         }
-
-        if accessLevel['position'] == 'Regular' and accessLevel['hid'] != hid:
-            return ("Incorrect Username or Password", False)
-        
-        if accessLevel['position'] == 'Supervisor' and accessLevel['chid'] != self.dao.get_hotel_chain(hid):
-            return ("Incorrect Username or Password", False)
         
         return (accessLevel, True)
+    
+    def validate_login(self, hid, accessLevel):
+        if accessLevel[0]['position'] == 'Regular' and accessLevel[0]['hid'] != hid:
+            return False
+        
+        if accessLevel[0]['position'] == 'Supervisor' and accessLevel[0]['chid'] != self.dao.get_hotel_chain(hid):
+            return False
+        
+        return True
