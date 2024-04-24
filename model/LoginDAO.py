@@ -71,9 +71,9 @@ class LoginDAO:
         # Construct the parameter values
         params = tuple(data.values())
 
-        result = Database().queryInsert(
+        result = Database().queryInsertFetch(
             f"""
-            insert into login ({columns}) values ({placeholders});
+            insert into login ({columns}) values ({placeholders}) returning lid;
             """,
             params
         )

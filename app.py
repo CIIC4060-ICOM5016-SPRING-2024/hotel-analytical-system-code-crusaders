@@ -23,7 +23,7 @@ app = Flask(__name__)
 CORS(app)
 
 # Define the server type
-SERVER = "heroku"
+SERVER = "docker"
 # Load database credentials
 Database.load_credentials(SERVER)
 

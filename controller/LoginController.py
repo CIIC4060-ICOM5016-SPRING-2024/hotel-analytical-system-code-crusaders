@@ -81,10 +81,10 @@ class LoginController(BaseController):
         
         result = self.dao.create_record(data)
 
-        if result:
-            return jsonify(f"Inserted record Login") 
-        else:
+        if not result:
             return jsonify(f"Could not insert record Login"), 400
+        else:
+            return jsonify(result)
         
 
     # def login_user(self, hid, data):

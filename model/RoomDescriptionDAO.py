@@ -73,7 +73,7 @@ class RoomDescriptionDAO:
 
         result = Database().queryInsert(
             f"""
-            insert into roomdescription ({columns}) values ({placeholders});
+            insert into roomdescription ({columns}) values ({placeholders}) returning rdid;
             """,
             params
         )

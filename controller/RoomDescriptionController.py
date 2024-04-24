@@ -84,7 +84,7 @@ class RoomDescriptionController(BaseController):
         
         result = self.dao.create_record(data)
 
-        if result:
-            return jsonify(f"Inserted record room description") 
-        else:
+        if not result:
             return jsonify(f"Could not insert record room description"), 400
+        else:
+            return jsonify(result) 
