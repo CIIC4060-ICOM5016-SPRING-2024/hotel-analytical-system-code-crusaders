@@ -17,7 +17,9 @@ class Login:
 
     def __init__(self, mainRoute):
         self.mainRoute = mainRoute
-        pass
+
+    def getLoginJson(self):
+        return {'username': self.username, 'password': self.password}
 
     def login_user(self):
         # Login user

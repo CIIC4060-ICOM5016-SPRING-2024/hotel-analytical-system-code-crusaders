@@ -1,11 +1,24 @@
 import streamlit as st
 
+from views.LocalStats import LocalStats
+from views.GlobalStats import GlobalStats
+
 class Dashboard:
+
+    accessible_tabs = [
+        "Local Statistics",
+        "GlobalStatistics",
+        "Create Reservation"
+    ]
 
     def __init__(self, position):
         self.position = position
+        self.local_stat = LocalStats()
+        self.global_stat = GlobalStats()
 
-        self.tabs = st.sidebar.radio("Navigation", ["Tab 1", "Tab 2", "Tab 3"])
+        st.sidebar.title('Hotel Selection')
+        
+        self.tabs = st.sidebar.radio("Navigation", self.accessible_tabs)
 
         if position == 'Administrator':
             self.create_Administrator()
