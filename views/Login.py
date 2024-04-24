@@ -71,9 +71,11 @@ class Login:
                 pass
 
             response = requests.post(f'{self.mainRoute}employee', json=self.employee_record)
+            employee_id = response.json()
+            self.login_record['eid'] = employee_id
+            response = requests.post(f'{self.mainRoute}login', json=self.login_record)
 
-            print(response.json())
-            
+            # check response and create account
 
             self.new_account = False
             self.login_success = False
