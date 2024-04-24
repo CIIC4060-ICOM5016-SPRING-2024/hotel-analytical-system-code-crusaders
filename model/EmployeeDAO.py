@@ -19,17 +19,21 @@ class EmployeeDAO:
         )
         return employee_list
     
-    def createEmployee(self,hid,fname,lname,age,position,salary):
-        eid = Database().queryInsertFetch(
-            """INSERT INTO employee (hid,fname,lname,age,position,salary) VALUES (%s,%s,%s,%s,%s,%s) returning eid""",
-            (hid,fname,lname,age,position,salary)
-        )
+    def createEmployee(self, data):
+        # Construct columns
+        columns = ', '.join(data.keys())
 
-        employee_list = Database().querySelectFrom(
-            """SELECT * FROM employee where eid = %s""",
-            (eid,)
+        # Construct palceholders
+        placeholders = ', '.join(['%s'] * len(data))
+
+        # Construct the parameter values
+        params = tuple(data.values())
+
+        eid = Database().queryInsertFetch(
+            f"""INSERT INTO employee ({columns}) values ({placeholders}) returning eid;""",
+            params
         )
-        return employee_list
+        return eid
 
     def deleteEmployee(self,eid):
         employee_list = Database().querySelectFrom(
@@ -43,20 +47,18 @@ class EmployeeDAO:
         )
 
         if not result:
-            return []
+            return None
         return employee_list
     
-    def updateEmployee(self,eid,hid,fname,lname,age,position,salary):
+    def updateEmployee(self, id, data):
+        # Construct the SET clause
+        set_clause = ', '.join([f"{key} = %s" for key in data.keys()])
+        
+        # Construct the parameter values
+        params = tuple(data.values()) + (id,)
+
         result = Database().queryUpdate(
-            """UPDATE employee SET hid = %s, fname = %s, lname = %s, age = %s, position = %s, salary = %s WHERE eid = %s""",
-            (hid,fname,lname,age,position,salary,eid,)
+            f"""UPDATE employee SET {set_clause} WHERE eid = %s""",
+            params
         )
-
-        if result is False:
-            return []
-
-        employee_list = Database().querySelectFrom(
-            """SELECT eid,hid,fname,lname,age,position,salary FROM employee where eid = %s""",
-            (eid,)
-        )
-        return employee_list
+        return result

@@ -21,11 +21,7 @@ class LoginController(BaseController):
                 self.login_columns[3]: tuple[3],
             }
             fullJson.append(dictionary)
-        
-        if len(fullJson) == 1:
-            return fullJson[0]
-        else:
-            return fullJson
+        return self.handle_one_element(fullJson)
 
     def get_all(self):
         result = self.dao.get_all()
@@ -63,10 +59,7 @@ class LoginController(BaseController):
        
         result = self.dao.update_byID(id, data)
 
-        if result == True:
-            return jsonify(f"Updated Record at Login ID:{id}") 
-
-        return jsonify(f"Could not update Record at Login ID:{id}")
+        return jsonify(result) 
 
 
     def create(self, data):

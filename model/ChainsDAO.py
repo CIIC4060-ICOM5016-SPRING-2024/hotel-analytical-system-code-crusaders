@@ -5,7 +5,7 @@ class ChainsDAO:
     def __init__(self):
         pass
 
-    def getAllChains(self):
+    def get_all(self):
         chains_list = Database().querySelectFrom(
             """
             SELECT * FROM chains
@@ -14,7 +14,7 @@ class ChainsDAO:
         )
         return chains_list
     
-    def getChainbyID(self,chid):
+    def get_byID(self,chid):
         chains_list = Database().querySelectFrom(
             """
             SELECT * FROM chains where chid = %s
@@ -23,23 +23,27 @@ class ChainsDAO:
         )
         return chains_list
     
-    def createChain(self,cname,springmkup,summermkup,fallmkup,wintermkup):
+    def createChain(self, data):
+
+        # Construct columns
+        columns = ', '.join(data.keys())
+
+        # Construct palceholders
+        placeholders = ', '.join(['%s'] * len(data))
+
+        # Construct the parameter values
+        params = tuple(data.values())
+
         chid = Database().queryInsertFetch(
-            """
-            INSERT INTO chains (cname,springmkup,summermkup,fallmkup,wintermkup) VALUES (%s,%s,%s,%s,%s) returning chid
+            f"""
+            INSERT INTO chains ({columns}) VALUES ({placeholders}) returning chid
             """,
-            (cname, springmkup, summermkup, fallmkup, wintermkup, )
+            params
         )
 
-        chains_list = Database().querySelectFrom(
-            """
-            SELECT * FROM chains where chid = %s
-            """,
-            (chid,)
-        )
-        return chains_list
+        return chid
     
-    def deleteChain(self,chid):
+    def delete_byID(self, chid):
         chains_list = Database().querySelectFrom(
             """
             SELECT * FROM chains where chid = %s
@@ -54,26 +58,23 @@ class ChainsDAO:
             (chid,)
         )
 
-        if result is False:
-            return []
+        if not result:
+            return None
 
         return chains_list
-    def updateChain(self,chid,cname,springmkup,summermkup,fallmkup,wintermkup):
+    
+    def update_byID(self, id, data):
+
+        # Construct the SET clause
+        set_clause = ', '.join([f"{key} = %s" for key in data.keys()])
+        
+        # Construct the parameter values
+        params = tuple(data.values()) + (id,)
+
         result = Database().queryUpdate(
-            """
-            UPDATE chains SET cname = %s, springmkup = %s, summermkup = %s, fallmkup = %s, wintermkup = %s WHERE chid = %s
+            f"""
+            update chains set {set_clause} where chid = %s;
             """,
-            (cname,springmkup,summermkup,fallmkup,wintermkup,chid,)
+            params
         )
-
-        if result is False:
-            return []
-
-        chains_list = Database().querySelectFrom(
-            """
-            SELECT chid,cname,springmkup,summermkup,fallmkup,wintermkup FROM chains where chid = %s
-            """,
-            (chid,)
-        )
-
-        return chains_list
+        return result

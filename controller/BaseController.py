@@ -21,3 +21,9 @@ class BaseController:
     @abstractmethod
     def delete_byID(self, id):
         pass
+
+    def handle_one_element(self, fullJson):
+        if len(fullJson) == 1:
+            return fullJson[0]
+        else:
+            return fullJson

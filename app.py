@@ -23,14 +23,16 @@ app = Flask(__name__)
 CORS(app)
 
 # Define the server type
-SERVER = "heroku"
+SERVER = "docker"
 # Load database credentials
 Database.load_credentials(SERVER)
 
 # Define a dictionary mapping resource names to controller classes
 controller_mapping = {
     'login':           LoginController,
-    'roomdescription': RoomDescriptionController
+    'roomdescription': RoomDescriptionController,
+    'chains': ChainsController,
+    'employee': EmployeeController
 }
 
 #############################################
@@ -78,25 +80,25 @@ def handleHotelsbyID(hid):
 #############################################
 
 
-@app.route('/codecrusaders/chains', methods=['GET', 'POST'])
-def handleChains():
-    handler = ChainsController()
-    if request.method == 'POST':
-        return handler.createChain(request.json)
-    else:
-        return handler.getAllChains()
+# @app.route('/codecrusaders/chains', methods=['GET', 'POST'])
+# def handleChains():
+#     handler = ChainsController()
+#     if request.method == 'POST':
+#         return handler.createChain(request.json)
+#     else:
+#         return handler.getAllChains()
 
-@app.route('/codecrusaders/chains/<int:chid>', methods=['GET','PUT','DELETE'])
-def handleChainsbyID(chid):
-    handler = ChainsController()
-    if request.method == 'GET':
-        return handler.getChainbyID(chid)
-    elif request.method == 'PUT':
-        return handler.updateChain(chid, request.json)
-    elif request.method == 'DELETE':
-        return handler.deleteChain(chid)
-    else:
-        return jsonify(f"Method: {request.method} Not Allowed"), 405
+# @app.route('/codecrusaders/chains/<int:chid>', methods=['GET','PUT','DELETE'])
+# def handleChainsbyID(chid):
+#     handler = ChainsController()
+#     if request.method == 'GET':
+#         return handler.getChainbyID(chid)
+#     elif request.method == 'PUT':
+#         return handler.updateChain(chid, request.json)
+#     elif request.method == 'DELETE':
+#         return handler.deleteChain(chid)
+#     else:
+#         return jsonify(f"Method: {request.method} Not Allowed"), 405
 
 
 #############################################
@@ -104,24 +106,24 @@ def handleChainsbyID(chid):
 #############################################
 
 
-@app.route('/codecrusaders/employee', methods=['GET', 'POST'])
-def handleEmployees():
-    handler = EmployeeController()
-    if request.method == 'POST':
-        return handler.createEmployee(request.json)
-    else:
-        return handler.getAllEmployees()
-@app.route('/codecrusaders/employee/<int:eid>', methods=['GET','PUT','DELETE'])
-def handleEmployeesbyID(eid):
-    handler = EmployeeController()
-    if request.method == 'GET':
-        return handler.getEmployeebyID(eid)
-    elif request.method == 'PUT':
-        return handler.updateEmployee(eid, request.json)
-    elif request.method == 'DELETE':
-        return handler.deleteEmployee(eid)
-    else:
-        return jsonify(f"Method: {request.method} Not Allowed"), 405
+# @app.route('/codecrusaders/employee', methods=['GET', 'POST'])
+# def handleEmployees():
+#     handler = EmployeeController()
+#     if request.method == 'POST':
+#         return handler.createEmployee(request.json)
+#     else:
+#         return handler.getAllEmployees()
+# @app.route('/codecrusaders/employee/<int:eid>', methods=['GET','PUT','DELETE'])
+# def handleEmployeesbyID(eid):
+#     handler = EmployeeController()
+#     if request.method == 'GET':
+#         return handler.getEmployeebyID(eid)
+#     elif request.method == 'PUT':
+#         return handler.updateEmployee(eid, request.json)
+#     elif request.method == 'DELETE':
+#         return handler.deleteEmployee(eid)
+#     else:
+#         return jsonify(f"Method: {request.method} Not Allowed"), 405
 
 
 ##################################################
