@@ -62,6 +62,7 @@ class Login:
         employee_position = self.create_employee()
         self.create_hotel_selection(employee_position)
         
+        # Check if is valid to create when button is pressed
         if st.button('Create!') and self.entered_username.strip() and self.entered_password.strip() and self.fname.strip() and self.lname.strip():
             response = requests.post(f'{self.mainRoute}user_logon', json=self.login_record)
             check_account_existance = response.json()
@@ -74,9 +75,7 @@ class Login:
             employee_id = response.json()
             self.login_record['eid'] = employee_id
             response = requests.post(f'{self.mainRoute}login', json=self.login_record)
-
-            # check response and create account
-
+    
             self.new_account = False
             self.login_success = False
             st.empty()
