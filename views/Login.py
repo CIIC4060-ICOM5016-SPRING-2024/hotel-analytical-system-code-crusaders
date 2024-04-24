@@ -59,10 +59,13 @@ class Login:
 
     def create_account(self):
         # Create account
-        st.title('Create Account')
+        st.title('Create Employee Account')
         username = st.text_input('Create Username')
         password = st.text_input('Create Password', type='password')
         user_created_account = st.button('Create!')
+        
+        st.title('Create Account')
+        username = st.text_input('Create Username')
 
         if user_created_account:
             check_account_existance_response = requests.post(f'{self.mainRoute}login', json = {'username': username, 'password': password})
