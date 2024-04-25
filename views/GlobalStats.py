@@ -51,6 +51,10 @@ class GlobalStats:
 
     #Top 3 chains with the highest total revenue.
     def gstat_MostRevenue(self):
+        response = requests.post(f'{self.mainRoute}most/revenue', json=self.login.getLoginJson())
+        if self.checkstatus(response):
+            df = pd.DataFrame(response.json(), columns=['chid', 'cname', 'total_revenue'])
+            st.bar_chart(df, x="cname", y="total_revenue", color="cname")
         pass
 
     #Total reservation percentage by payment method
@@ -63,6 +67,10 @@ class GlobalStats:
 
     #Top 3 chain with the least rooms.
     def gstat_LeastRooms(self):
+        response = requests.post(f'{self.mainRoute}least/rooms', json=self.login.getLoginJson())
+        if self.checkstatus(response):
+            df = pd.DataFrame(response.json(), columns=['cname', 'count_rooms'])
+            st.bar_chart(df, x="cname", y="count_rooms", color="cname")
         pass
     
     #Top 5 hotels with the most capacity.
@@ -72,7 +80,7 @@ class GlobalStats:
             return
 
         df = pd.DataFrame.from_dict(response.json())
-        st.table(df)
+        #st.table(df)
         bar_chart = alt.Chart(df).mark_bar().encode(
             y='total_capacity',
             x='hname',
@@ -86,8 +94,8 @@ class GlobalStats:
         if not self.checkstatus(response):
             return
         df = pd.DataFrame(response.json(), columns=['hname', 'reservations'])
-        st.write("Query Results:", df)
-        st.bar_chart(df,x="hname",y="reservations")
+        #st.write("Query Results:", df)
+        st.bar_chart(df,x="hname",y="reservations", color="hname")
 
     #Top 3 month with the most reservation by chain
     def gstat_MostProfitMonth(self):
@@ -98,7 +106,7 @@ class GlobalStats:
         #st.table(response.json())
         #st.bar_chart(response.json())
         df = pd.DataFrame.from_dict(response.json())
-        st.table(df)
+        #st.table(df)
         bar_chart = alt.Chart(df).mark_bar().encode(
             x = 'year',
             y = 'total_reservations',
