@@ -5,6 +5,7 @@ import pandas as pd
 import altair as alt
 import plotly.express as px
 
+
 class GlobalStats:
 
     option_stats = (
@@ -19,6 +20,12 @@ class GlobalStats:
     def __init__(self):
         self.login = st.session_state.fapp_singleton.loginHandle
         self.mainRoute = st.session_state.fapp_singleton.mainRoute
+
+    def checkstatus(self, tocheck):
+        if tocheck.status_code == 200:
+            return True
+        else:
+            return st.error(f"Failed to retrieve data. Status code: {tocheck.status_code}")
 
     def create_stats(self):
         select = st.selectbox("Choose Global Statistic", self.option_stats, index=None)
