@@ -52,8 +52,23 @@ class LocalStats:
             return st.error(f"Failed to retrieve data. Status code: {tocheck.status_code}")
 
     #Top 5 handicap rooms that were reserve the most
-    def stat_Handicaproom(self):
-        pass
+    def stat_Handicaproom(self,hid):
+        route = self.mainRoute + "hotel/" + str(hid) + "/handicaproom"
+        response = requests.post(route, json=self.login.getLoginJson())
+
+        if not self.checkstatus(response):
+            return
+        df = pd.DataFrame(response.json())
+        chart = alt.Chart(df).mark_bar().encode(
+            x='rname',
+            y='reservation_count',
+            color='rtype'
+        ).properties(
+            width=600,
+            height=400,
+            title='Reservation Count by Hotel'
+        ).interactive()
+        st.write(chart)
 
     #Top 3 rooms that were the least time unavailable
     def stat_LeastReserve(self,hid):
@@ -62,15 +77,32 @@ class LocalStats:
             
             if not self.checkstatus(response):
                 return
-            df = pd.DataFrame(response.json(), columns=['datediff', 'rid'])
-            st.write("Query Results:", df)
-            st.bar_chart(df,x="rid",y="datediff")  
+            df = pd.DataFrame.from_dict(response.json())
+            st.table(df)
+            bar_chart = alt.Chart(df).mark_bar().encode(
+                y='datediff',
+                x='rid',
+                color='rid'
+            )
+            st.altair_chart(bar_chart, use_container_width=True)
 
     #Top 5 clients under 30 that made the most reservation with a credit
     def stat_MostCreditCard(self,hid):
-        pass
+        route = self.mainRoute + "hotel/" + str(hid) + "/mostcreditcard"
+        response = requests.post(route, json=self.login.getLoginJson())
 
-    #Top 3 highest paid regular employees.
+        if not self.checkstatus(response):
+            return
+        df = pd.DataFrame.from_dict(response.json())
+        st.table(df)
+        bar_chart = alt.Chart(df).mark_bar().encode(
+            y='count_reservation',
+            x='full_name',
+            color='full_name'
+        )
+        st.altair_chart(bar_chart, use_container_width=True)
+
+        #Top 3 highest paid regular employees.
     def stat_HighestPaid(self,hid):
         route = self.mainRoute + "hotel/" + str(hid) + "/highestpaid"
         response = requests.post(route, json=self.login.getLoginJson())
@@ -89,11 +121,37 @@ class LocalStats:
 
     #Top 5 clients that received the most discounts
     def stat_MostDiscount(self,hid):
-        pass
+        route = self.mainRoute + "hotel/" + str(hid) + "/mostdiscount"
+        response = requests.post(route, json=self.login.getLoginJson())
+
+        if not self.isValidResponse(response):
+            return
+
+        df = pd.DataFrame.from_dict(response.json())
+        st.table(df)
+        bar_chart = alt.Chart(df).mark_bar().encode(
+            y='discount',
+            x='full_name',
+            color='full_name'
+        )
+        st.altair_chart(bar_chart, use_container_width=True)
 
     #Total reservation by room type.
     def stat_RoomType(self,hid):
-        pass
+        route = self.mainRoute + "hotel/" + str(hid) + "/roomtype"
+        response = requests.post(route, json=self.login.getLoginJson())
+
+        if not self.isValidResponse(response):
+            return
+
+        df = pd.DataFrame.from_dict(response.json())
+        st.table(df)
+        bar_chart = alt.Chart(df).mark_bar().encode(
+            y='reservations_total',
+            x='rtype',
+            color='rtype'
+        )
+        st.altair_chart(bar_chart, use_container_width=True)
 
     #Top 3 rooms that were reserved that had the least guest-to-capacity ratio.
     def stat_LeastGuests(self,hid):
@@ -101,6 +159,15 @@ class LocalStats:
         response = requests.post(route, json=self.login.getLoginJson())
         if not self.checkstatus(response):
             return
-        df = pd.DataFrame(response.json(), columns=['rid', 'ratio'])
-        st.write("Query Results:", df)
-        st.bar_chart(df,x="rid",y="ratio")
+        df = pd.DataFrame.from_dict(response.json())
+        st.table(df)
+        scatter_plot = alt.Chart(df).mark_circle().encode(
+            x='rid',
+            y='ratio',
+            color='rid'
+        ).properties(
+            width=600,
+            height=400,
+            title='Scatter Plot of ratio vs rid'
+        ).interactive()
+        st.altair_chart(scatter_plot, use_container_width=True)
