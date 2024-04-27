@@ -21,12 +21,6 @@ class GlobalStats:
         self.login = st.session_state.fapp_singleton.loginHandle
         self.mainRoute = st.session_state.fapp_singleton.mainRoute
 
-    def checkstatus(self, tocheck):
-        if tocheck.status_code == 200:
-            return True
-        else:
-            return st.error(f"Failed to retrieve data. Status code: {tocheck.status_code}")
-
     def create_stats(self):
         select = st.selectbox("Choose Global Statistic", self.option_stats, index=None)
 
@@ -47,12 +41,12 @@ class GlobalStats:
         if response.status_code == 200:
             return True
         else:
-            return st.error(f"Failed to retrieve data. Status code: {tocheck.status_code}")
+            return st.error(f"Failed to retrieve data. Status code: {response.status_code}")
 
     #Top 3 chains with the highest total revenue.
     def gstat_MostRevenue(self):
         response = requests.post(f'{self.mainRoute}most/revenue', json=self.login.getLoginJson())
-        if self.checkstatus(response):
+        if self.isValidResponse(response):
             df = pd.DataFrame(response.json(), columns=['chid', 'cname', 'total_revenue'])
             st.bar_chart(df, x="cname", y="total_revenue", color="cname")
         pass
@@ -60,7 +54,7 @@ class GlobalStats:
     #Total reservation percentage by payment method
     def gstat_PaymentMethod(self):
         response = requests.post(f'{self.mainRoute}paymentmethod', json=self.login.getLoginJson())
-        if self.checkstatus(response):
+        if self.isValidResponse(response):
             df = pd.DataFrame(response.json(), columns=['payment', 'percentage'])
             fig = px.pie(df, values='percentage', names='payment')
             st.plotly_chart(fig)
@@ -68,7 +62,7 @@ class GlobalStats:
     #Top 3 chain with the least rooms.
     def gstat_LeastRooms(self):
         response = requests.post(f'{self.mainRoute}least/rooms', json=self.login.getLoginJson())
-        if self.checkstatus(response):
+        if self.isValidResponse(response):
             df = pd.DataFrame(response.json(), columns=['cname', 'count_rooms'])
             st.bar_chart(df, x="cname", y="count_rooms", color="cname")
         pass
@@ -91,7 +85,7 @@ class GlobalStats:
     #Top 10% hotels that had the most reservations.
     def gstat_MostReservation(self):
         response = requests.post(f'{self.mainRoute}most/reservation', json=self.login.getLoginJson())
-        if not self.checkstatus(response):
+        if not self.isValidResponse(response):
             return
         df = pd.DataFrame(response.json(), columns=['hname', 'reservations'])
         #st.write("Query Results:", df)
@@ -100,7 +94,7 @@ class GlobalStats:
     #Top 3 month with the most reservation by chain
     def gstat_MostProfitMonth(self):
         response = requests.post(f'{self.mainRoute}most/profitmonth', json=self.login.getLoginJson())
-        if not self.checkstatus(response):
+        if not self.isValidResponse(response):
             return
 
         #st.table(response.json())

@@ -27,7 +27,7 @@ class FApplication:
         elif not login.login_success:
             login.login_user()
         else:
-            dashboard = Dashboard(login.position,login.hotelID)
+            dashboard = Dashboard(login.position)
         pass
 
     def __init__(self):

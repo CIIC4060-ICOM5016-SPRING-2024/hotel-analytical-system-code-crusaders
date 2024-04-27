@@ -14,7 +14,7 @@ class Dashboard:
         "Local Statistics",
     ]
 
-    def __init__(self, position, hid):
+    def __init__(self, position):
         self.position = position
         self.local_stat = LocalStats()
         self.global_stat = GlobalStats()
@@ -24,27 +24,27 @@ class Dashboard:
         #self.tabs = st.sidebar.radio("Navigation", self.accessible_tabs)
         if position == 'Administrator':
             self.tab = st.sidebar.radio("Navigation", self.admin_tabs)
-            self.create_Administrator(hid)
+            self.create_Administrator()
         elif position == 'Supervisor':
-            self.create_Supervisor(hid)
+            self.create_Supervisor()
         elif position == 'Regular':
-            self.create_Regular(hid)
+            self.create_Regular()
         pass
-    def create_Administrator(self, hid):
+    def create_Administrator(self):
         #self.tab = st.sidebar.radio("Navigation", self.admin_tabs)
         #self.local_stat.create_stats()
         #self.global_stat.create_stats()
         if self.tab == "Local Statistics":
-            self.local_stat.create_stats(hid)
+            self.local_stat.create_stats()
             st.write("This is Tab 1 Administrator")
         elif self.tab == "Global Statistics":
             self.global_stat.create_stats()
             st.write("This is Tab 2 Administrator")
         pass
 
-    def create_Supervisor(self,hid):
+    def create_Supervisor(self):
         self.tab = st.sidebar.radio("Navigation", self.normal_tabs)
-        self.local_stat.create_stats(hid)
+        self.local_stat.create_stats()
         st.write("This is Tab 1 Administrator")
         # if self.tabs == "Tab 1":
         #     st.write("This is Tab 1 Supervisor")
@@ -52,9 +52,9 @@ class Dashboard:
         #     st.write("This is Tab 3 Supervisor")
         # pass
 
-    def create_Regular(self,hid):
+    def create_Regular(self):
         self.tab = st.sidebar.radio("Navigation", self.normal_tabs)
-        self.local_stat.create_stats(hid)
+        self.local_stat.create_stats()
         st.write("This is Tab 1 Administrator")
         # if self.tabs == "Tab 1":
         #     st.write("This is Tab 1 Regular")
