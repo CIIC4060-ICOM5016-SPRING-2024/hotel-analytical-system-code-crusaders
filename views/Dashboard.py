@@ -19,11 +19,9 @@ class Dashboard:
         self.local_stat = LocalStats()
         self.global_stat = GlobalStats()
 
-        st.sidebar.title('Hotel Selection')
+        st.sidebar.title('Hotel-Application Selection')
         
-        #self.tabs = st.sidebar.radio("Navigation", self.accessible_tabs)
         if position == 'Administrator':
-            self.tab = st.sidebar.radio("Navigation", self.admin_tabs)
             self.create_Administrator()
         elif position == 'Supervisor':
             self.create_Supervisor()
@@ -31,31 +29,17 @@ class Dashboard:
             self.create_Regular()
         pass
     def create_Administrator(self):
-        #self.tab = st.sidebar.radio("Navigation", self.admin_tabs)
-        #self.local_stat.create_stats()
-        #self.global_stat.create_stats()
+        self.tab = st.sidebar.radio("Navigation", self.admin_tabs)
+
         if self.tab == "Local Statistics":
-            self.local_stat.create_stats()
-            st.write("This is Tab 1 Administrator")
+            self.local_stat.create_stats_Admin()
         elif self.tab == "Global Statistics":
             self.global_stat.create_stats()
-            st.write("This is Tab 2 Administrator")
-        pass
 
     def create_Supervisor(self):
         self.tab = st.sidebar.radio("Navigation", self.normal_tabs)
-        self.local_stat.create_stats()
-        st.write("This is Tab 1 Administrator")
-        # if self.tabs == "Tab 1":
-        #     st.write("This is Tab 1 Supervisor")
-        # elif self.tabs == "Tab 3":
-        #     st.write("This is Tab 3 Supervisor")
-        # pass
+        self.local_stat.create_stats_Supervisor()
 
     def create_Regular(self):
         self.tab = st.sidebar.radio("Navigation", self.normal_tabs)
-        self.local_stat.create_stats()
-        st.write("This is Tab 1 Administrator")
-        # if self.tabs == "Tab 1":
-        #     st.write("This is Tab 1 Regular")
-        # pass
+        self.local_stat.create_stats_Regular()

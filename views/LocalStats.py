@@ -1,6 +1,5 @@
 import streamlit as st
 import requests
-import json
 import pandas as pd
 import altair as alt
 import plotly.express as px
@@ -23,32 +22,77 @@ class LocalStats:
         self.login = st.session_state.fapp_singleton.loginHandle
         self.mainRoute = st.session_state.fapp_singleton.mainRoute
     
-    def create_stats(self):
-        self.hotelID = self.login.hotelID
+    def create_stats_Admin(self):
+
+        st.write(f'# Local Statistics for Hotel')
+
+        response = requests.get(f'{self.mainRoute}hotel')
+        self.allHotels = response.json()
+
+        self.hotelID = -1
+        hotel_selected = st.selectbox('Select Hotel', self.login.getHotels(self.allHotels), index=None)
+        self.hotelID = self.login.getHotelID(hotel_selected, self.allHotels)
 
         if self.hotelID == -1:
-            self.hotel_selection = st.number_input('Select hotel', min_value=1, step=1)
+            st.warning('Choose a hotel')
+
+        self.create_stats()
+
+    def create_stats_Supervisor(self):
+
+        chain_response = requests.get(f'{self.mainRoute}chains')
+        chain_data = self.login.getChainData(self.login.chainID, chain_response.json())
+
+        response = requests.get(f'{self.mainRoute}hotel')
+        hotel_list_json = self.login.getAllHotelsFromChain(self.login.chainID, response.json())
+        hotel_list = self.login.getHotels(hotel_list_json)
+        
+        st.write(f'# Local Statistics for Hotel')
+        if chain_data is not None:
+            chain_name = chain_data['cname']
+            st.write(f'## under chain {chain_name}')
+             
+        hotel_selected = st.selectbox(f'Select Hotel', hotel_list, index=None)
+
+        self.hotelID = -1
+        self.hotelID = self.login.getHotelID(hotel_selected, hotel_list_json)
+
+        if self.hotelID == -1:
+            st.warning(f'Choose a hotel {hotel_selected}')
+
+        self.create_stats()
+
+    def create_stats_Regular(self):
+        response = requests.get(f'{self.mainRoute}hotel')
+        self.hotelID = self.login.hotelID
+        hotel_data = self.login.getHotelData(self.hotelID, response.json())['hname']
+
+        st.write(f'# Local Statistics for Hotel')
+        st.write(f'## Working on {hotel_data}')
+
+        self.create_stats()
+
+    def create_stats(self):
+        response = requests.get(f'{self.mainRoute}hotel/{self.hotelID}')
+        if response.status_code != 200:
+            stat_selected = st.selectbox("Choose Local Statistic", self.option_stats, index=None, disabled=True)
+            return
         else:
-            self.hotel_selection = None
+            stat_selected = st.selectbox("Choose Local Statistic", self.option_stats, index=None)
 
-        if self.hotel_selection is not None:
-            self.hotelID = self.hotel_selection
-
-        select = st.selectbox("Choose Local Statistic", self.option_stats, index=None)
-
-        if select == self.option_stats[0]:
+        if stat_selected == self.option_stats[0]:
             self.stat_Handicaproom()
-        elif select == self.option_stats[1]:
+        elif stat_selected == self.option_stats[1]:
             self.stat_LeastReserve()
-        elif select == self.option_stats[2]:
+        elif stat_selected == self.option_stats[2]:
             self.stat_MostCreditCard()
-        elif select == self.option_stats[3]:
+        elif stat_selected == self.option_stats[3]:
             self.stat_HighestPaid()
-        elif select == self.option_stats[4]:
+        elif stat_selected == self.option_stats[4]:
             self.stat_MostDiscount()
-        elif select == self.option_stats[5]:
+        elif stat_selected == self.option_stats[5]:
             self.stat_RoomType()
-        elif select == self.option_stats[6]:
+        elif stat_selected == self.option_stats[6]:
             self.stat_LeastGuests()
 
     def isValidResponse(self, response):

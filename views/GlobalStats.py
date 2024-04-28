@@ -22,6 +22,8 @@ class GlobalStats:
         self.mainRoute = st.session_state.fapp_singleton.mainRoute
 
     def create_stats(self):
+        st.write(f'# Global Statistics')
+
         select = st.selectbox("Choose Global Statistic", self.option_stats, index=None)
 
         if select == self.option_stats[0]:
