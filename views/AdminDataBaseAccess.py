@@ -13,15 +13,15 @@ class AdminDataBaseAccess:
     ]
     
     available_entities = [
-        "Login",
-        "Employee",
-        "Hotel",
-        "Chains",
-        "Room",
-        "RoomDescription",
-        "RoomUnavailable",
-        "Reserve",
-        "Client",
+        "login",
+        "employee",
+        "hotel",
+        "chains",
+        "room",
+        "roomdescription",
+        "roomunavailable",
+        "reserve",
+        "client",
     ]
 
     def __init__(self):
@@ -37,7 +37,7 @@ class AdminDataBaseAccess:
         if selected_tab == "View Records":
             self.view_record()
         elif selected_tab == "Search Records":
-            st.write("# Search Records")
+            self.search_record()
         elif selected_tab == "Create Record":
             st.write("# Create Records")
         elif selected_tab == "Edit Record":
@@ -49,8 +49,10 @@ class AdminDataBaseAccess:
         st.write("# View Records")
 
         entity_selected = self.choose_entity()
-
-        response = requests.get(f'{self.mainRoute}roomdescription')
+        if entity_selected:
+            response = requests.get(f'{self.mainRoute}{entity_selected}')
+        else:
+            response = requests.get(f'{self.mainRoute}login')
 
         df = pd.DataFrame(response.json())
 
@@ -72,6 +74,18 @@ class AdminDataBaseAccess:
         else:
             st.write("No records to display for this page.")
         pass
+    def search_record(self):
+        st.write("# Search Record")
+        entity_id = st.text_input("Please enter entity ID:", "Enter entity ID")
+        entity_selected = self.choose_entity()
+        if entity_selected and entity_id:
+            response = requests.get(f'{self.mainRoute}{entity_selected}/{entity_id}')
+        else:
+            response = requests.get(f'{self.mainRoute}login/3')
+        if response:
+            st.table(response.json())
+        else:
+            st.write("Please choose a valid entity ID.")
 
     def choose_entity(self):
         return st.selectbox("Select Entity", self.available_entities, index=None, disabled=False)

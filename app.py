@@ -34,7 +34,7 @@ class FApplication:
         if SERVER == "heroku":
             self.mainRoute = 'https://pdb-f386d9f3feff.herokuapp.com/codecrusaders/'
         else:
-            self.mainRoute = 'http://localhost:5000/'
+            self.mainRoute = 'http://127.0.0.1:5000/'
 
         # Create new login object
         self.loginHandle = Login(self.mainRoute)
