@@ -2,13 +2,15 @@ import streamlit as st
 
 from views.LocalStats import LocalStats
 from views.GlobalStats import GlobalStats
+from views.AdminDataBaseAccess import AdminDataBaseAccess
 
 class Dashboard:
 
     admin_tabs = [
         "Local Statistics",
         "Global Statistics",
-        "Create Reservation"
+        "Create Reservation",
+        "Access Database"
     ]
     normal_tabs = [
         "Local Statistics",
@@ -18,6 +20,7 @@ class Dashboard:
         self.position = position
         self.local_stat = LocalStats()
         self.global_stat = GlobalStats()
+        self.admin_database_access = AdminDataBaseAccess()
 
         st.sidebar.title('Hotel-Application Selection')
         
@@ -32,14 +35,16 @@ class Dashboard:
         self.tab = st.sidebar.radio("Navigation", self.admin_tabs)
 
         if self.tab == "Local Statistics":
-            self.local_stat.create_stats_Admin()
+            self.local_stat.create_as_admin()
         elif self.tab == "Global Statistics":
             self.global_stat.create_stats()
+        elif self.tab == "Access Database":
+            self.admin_database_access.create()
 
     def create_Supervisor(self):
         self.tab = st.sidebar.radio("Navigation", self.normal_tabs)
-        self.local_stat.create_stats_Supervisor()
+        self.local_stat.create_as_supervisor()
 
     def create_Regular(self):
         self.tab = st.sidebar.radio("Navigation", self.normal_tabs)
-        self.local_stat.create_stats_Regular()
+        self.local_stat.create_as_regular()

@@ -8,7 +8,7 @@ from views.Login import Login
 
 class LocalStats:
 
-    option_stats = (
+    option_stats = [
         "Top 5 handicap rooms that were reserve the most",
         "Top 3 rooms that were the least time unavailable",
         "Top 5 clients under 30 that made the most reservation with a credit",
@@ -16,13 +16,13 @@ class LocalStats:
         "Top 5 clients that received the most discounts",
         "Total reservation by room type.",
         "Top 3 rooms that were reserved that had the least guest-to-capacity ratio."
-    )
+    ]
 
     def __init__(self):
         self.login = st.session_state.fapp_singleton.loginHandle
         self.mainRoute = st.session_state.fapp_singleton.mainRoute
     
-    def create_stats_Admin(self):
+    def create_as_admin(self):
 
         st.write(f'# Local Statistics for Hotel')
 
@@ -33,12 +33,9 @@ class LocalStats:
         hotel_selected = st.selectbox('Select Hotel', self.login.getHotels(self.allHotels), index=None)
         self.hotelID = self.login.getHotelID(hotel_selected, self.allHotels)
 
-        if self.hotelID == -1:
-            st.warning('Choose a hotel')
+        self.create()
 
-        self.create_stats()
-
-    def create_stats_Supervisor(self):
+    def create_as_supervisor(self):
 
         chain_response = requests.get(f'{self.mainRoute}chains')
         chain_data = self.login.getChainData(self.login.chainID, chain_response.json())
@@ -57,12 +54,9 @@ class LocalStats:
         self.hotelID = -1
         self.hotelID = self.login.getHotelID(hotel_selected, hotel_list_json)
 
-        if self.hotelID == -1:
-            st.warning(f'Choose a hotel {hotel_selected}')
+        self.create()
 
-        self.create_stats()
-
-    def create_stats_Regular(self):
+    def create_as_regular(self):
         response = requests.get(f'{self.mainRoute}hotel')
         self.hotelID = self.login.hotelID
         hotel_data = self.login.getHotelData(self.hotelID, response.json())['hname']
@@ -70,9 +64,9 @@ class LocalStats:
         st.write(f'# Local Statistics for Hotel')
         st.write(f'## Working on {hotel_data}')
 
-        self.create_stats()
+        self.create()
 
-    def create_stats(self):
+    def create(self):
         response = requests.get(f'{self.mainRoute}hotel/{self.hotelID}')
         if response.status_code != 200:
             stat_selected = st.selectbox("Choose Local Statistic", self.option_stats, index=None, disabled=True)
