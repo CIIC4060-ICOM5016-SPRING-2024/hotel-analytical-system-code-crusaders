@@ -24,6 +24,15 @@ class AdminDataBaseAccess:
         "client",
     ]
 
+    searchable_content = [
+        "login",
+        "employee",
+        "hotel",
+        "chains",
+        "room information",
+        "client information",
+    ]
+
     def __init__(self):
         self.login = st.session_state.fapp_singleton.loginHandle
         self.mainRoute = st.session_state.fapp_singleton.mainRoute
@@ -31,6 +40,7 @@ class AdminDataBaseAccess:
     def create(self):
 
         st.write("# Admin Database Access")
+        # Always choose the first choice
         selected_tab = st.selectbox("Select database access choice", self.access_type, index=0)
 
         # Define the content for each tab
@@ -48,12 +58,13 @@ class AdminDataBaseAccess:
     def view_record(self):
         st.write("# View Records")
 
+        # Obtain the chosen entity to work with
         entity_selected = self.choose_entity()
-        if entity_selected:
-            response = requests.get(f'{self.mainRoute}{entity_selected}')
-        else:
-            response = requests.get(f'{self.mainRoute}login')
+        if not entity_selected:
+            st.number_input("Enter page number", min_value=1, max_value=1, value=1, disabled=True)
+            return
 
+        response = requests.get(f'{self.mainRoute}{entity_selected}')
         df = pd.DataFrame(response.json())
 
         # Define pagination parameters
@@ -74,18 +85,148 @@ class AdminDataBaseAccess:
         else:
             st.write("No records to display for this page.")
         pass
+
+
     def search_record(self):
         st.write("# Search Record")
-        entity_id = st.text_input("Please enter entity ID:", "Enter entity ID")
-        entity_selected = self.choose_entity()
-        if entity_selected and entity_id:
-            response = requests.get(f'{self.mainRoute}{entity_selected}/{entity_id}')
-        else:
-            response = requests.get(f'{self.mainRoute}login/3')
-        if response:
-            st.table(response.json())
-        else:
-            st.write("Please choose a valid entity ID.")
+
+        entity_selected = st.selectbox("Select what to search", self.searchable_content, index=None, disabled=False)
+        if not entity_selected:
+            return
+
+        if entity_selected == "login":
+            entered_username = st.text_input("Enter Username to look up", '')
+            if not entered_username:
+                return
+            
+            response = requests.get(f'{self.mainRoute}login')
+
+            found_user = False
+            user_logger_data = {}
+            for login_data in response.json():
+                if login_data['username'] == entered_username:
+                    found_user = True
+                    user_logger_data = login_data
+                    break
+            
+            if not found_user:
+                st.warning("User is not in Database")
+                return
+            
+            st.table(user_logger_data)
+
+        elif entity_selected == "employee":
+            entered_firstname = st.text_input("Enter Employee's First Name to look up", "")
+            entered_lastname = st.text_input("Enter Employee's Last Name to look up", "")
+
+            if not entered_firstname or not entered_lastname:
+                return
+            
+            response = requests.get(f'{self.mainRoute}employee')
+
+            found_employee = False
+            found_employee_data = {}
+            for employee_data in response.json():
+                if employee_data['fname'] == entered_firstname and employee_data['lname'] == entered_lastname:
+                    found_employee = True
+                    found_employee_data = employee_data
+                    break
+            
+            if not found_employee:
+                st.warning("Employee is not in Database")
+                return
+            
+            st.table(found_employee_data)
+
+        elif entity_selected == "hotel":
+            response = requests.get(f'{self.mainRoute}hotel')
+
+            entered_hotel = st.selectbox('Select a Hotel to look up', self.login.getHotels(response.json()), index=None)
+
+            if not entered_hotel:
+                return
+            
+            found_hotel_data = {}
+            for hotel_data in response.json():
+                if hotel_data['hname'] == entered_hotel:
+                    found_hotel_data = hotel_data
+                    break
+            
+            st.table(found_hotel_data)
+
+        elif entity_selected == "chains":
+
+            response = requests.get(f'{self.mainRoute}chains')
+            entered_chain = st.selectbox('Enter a Chain to look up', self.login.getChains(response.json()), index=None)
+
+            if not entered_chain:
+                return
+            
+            found_chain_data = {}
+            for chain_data in response.json():
+                if chain_data['cname'] == entered_chain:
+                    found_chain_data = chain_data
+                    break
+            
+            st.table(found_chain_data)
+
+        elif entity_selected == "room information":
+            # This will display a table with all the room information
+
+            hotel_response = requests.get(f'{self.mainRoute}hotel')
+            entered_hotel = st.selectbox('Select a Hotel name', self.login.getHotels(hotel_response.json()), index=None)
+            
+            roomdescription_response = requests.get(f'{self.mainRoute}roomdescription')
+            entered_room = st.text_input("Enter the Room Name to look up", "")
+            
+            room_response = requests.get(f'{self.mainRoute}room')
+            
+            if not entered_hotel or not entered_room:
+                return
+
+            found_roomdescription = False
+            found_roomdescription_data = {}
+            for roomdescription_data in roomdescription_response.json():
+                if roomdescription_data['rname'] == entered_room:
+                    found_roomdescription = True
+                    found_roomdescription_data = roomdescription_data
+                    break
+
+            if not found_roomdescription:
+                st.warning('No room found in Database')
+                return
+
+            # show room details
+            st.write(f"### Information related to {entered_room} room")
+            st.table(found_roomdescription_data)
+
+            # show the room count
+            room_count = 0
+            avg_room_price = 0
+            room_prices = []
+            for room_data in room_response.json():
+                if room_data['rdid'] == found_roomdescription_data['rdid']:
+                    room_count += 1
+                    avg_room_price += room_data['rprice']
+                    room_prices.append((found_roomdescription_data['rtype'], room_data['rprice']))
+            
+            avg_room_price /= room_count
+
+            st.write(f"### Room count and average price related to {entered_room}")
+            st.table({'room count':room_count, 'rooms average price':avg_room_price})
+
+            st.write(f"### Avaliable prices")
+            st.table(room_prices)
+
+            # show the room unavailable count
+
+        elif entity_selected == "client information":
+            st.text_input("Enter the Client's first name to look up", "")
+            st.text_input("Enter the Client's last name to look up", "")
+            st.text_input("Enter the Client's age to look up", "")
+            
+            # show member year
+            # show reservation for this client
 
     def choose_entity(self):
         return st.selectbox("Select Entity", self.available_entities, index=None, disabled=False)
