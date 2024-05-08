@@ -40,14 +40,6 @@ class FApplication:
         self.loginHandle = Login(self.mainRoute)
         pass
 
-    # check if data is received
-    def checkstatus(self, tocheck):
-        if tocheck.status_code == 200:
-            return True
-        else:
-            return st.error(f"Failed to retrieve data. Status code: {tocheck.status_code}")
-
-
     def createDashboard(self):
         self.dashboard = Dashboard(st.session_state.position)
 

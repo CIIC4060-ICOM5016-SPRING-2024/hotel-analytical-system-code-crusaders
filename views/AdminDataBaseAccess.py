@@ -7,9 +7,6 @@ class AdminDataBaseAccess:
     access_type = [
         "View Records",
         "Search Records",
-        "Create Record", 
-        "Edit Record", 
-        "Delete Record", 
     ]
     
     available_entities = [
@@ -48,12 +45,6 @@ class AdminDataBaseAccess:
             self.view_record()
         elif selected_tab == "Search Records":
             self.search_record()
-        elif selected_tab == "Create Record":
-            st.write("# Create Records")
-        elif selected_tab == "Edit Record":
-            st.write("# Edit Records")
-        elif selected_tab == "Delete Record":
-            st.write("# Delete Records")
 
     def view_record(self):
         st.write("# View Records")
@@ -172,12 +163,16 @@ class AdminDataBaseAccess:
 
         elif entity_selected == "room information":
             # This will display a table with all the room information
-
             hotel_response = requests.get(f'{self.mainRoute}hotel')
             entered_hotel = st.selectbox('Select a Hotel name', self.login.getHotels(hotel_response.json()), index=None)
             
             roomdescription_response = requests.get(f'{self.mainRoute}roomdescription')
-            entered_room = st.text_input("Enter the Room Name to look up", "")
+
+            roomdescription_names = set([])
+            for roomdescription_data in roomdescription_response.json():
+                roomdescription_names.add(roomdescription_data['rname'])
+
+            entered_room = st.selectbox('Enter the Room Name to look up', roomdescription_names, index=None)
             
             room_response = requests.get(f'{self.mainRoute}room')
             
@@ -203,33 +198,71 @@ class AdminDataBaseAccess:
             # show the room count
             room_count = 0
             avg_room_price = 0
-            room_prices = []
+            room_prices = {}
             for room_data in room_response.json():
                 if room_data['rdid'] == found_roomdescription_data['rdid']:
+                    room_id = room_data['rid']
                     room_count += 1
                     avg_room_price += room_data['rprice']
-                    room_prices.append((found_roomdescription_data['rtype'], room_data['rprice']))
+                    room_prices.update({f'room id: {room_id}': str(room_data['rprice']) + '$'})
             
             avg_room_price /= room_count
 
             st.write(f"### Room count and average price related to {entered_room}")
-            st.table({'room count':room_count, 'rooms average price':avg_room_price})
+            st.table({'room count': int(room_count), 'rooms average price': str(float(avg_room_price)) + '$'})
 
-            st.write(f"### Avaliable prices")
+            room_type = found_roomdescription_data['rtype']
+            st.write(f"### Avaliable prices for {room_type}")
             st.table(room_prices)
 
-            # show the room unavailable count
 
         elif entity_selected == "client information":
-            st.text_input("Enter the Client's first name to look up", "")
-            st.text_input("Enter the Client's last name to look up", "")
-            st.text_input("Enter the Client's age to look up", "")
+            client_fname = st.text_input("Enter the Client's first name to look up", "")
+            client_lname = st.text_input("Enter the Client's last name to look up", "")
             
+            client_response = requests.get(f'{self.mainRoute}client')
+            reserve_response = requests.get(f'{self.mainRoute}reserve')
+
+            found_client = False
+            found_client_data = {}
+            for client_data in client_response.json():
+                if client_data['fname'] == client_fname and client_data['lname'] == client_lname:
+                    found_client = True
+                    found_client_data = client_data
+                    break
+
+            if not found_client:
+                st.warning('No matching client found in database')
+                return
+
             # show member year
+            member_year = found_client_data['memberyear']
+
+            st.write(f"### Client Information")
+
+            client_info = {
+                'Client First Name': found_client_data['fname'],
+                'Client Last Name': found_client_data['lname'],
+                'Client Age': found_client_data['age'],
+                'Client member year': member_year,
+            }
+            st.table(client_info)
+
+            # Find reservations related to the cliend provided
+            found_reserve = False
+            found_reserve_data = []
+            for reserve_data in reserve_response.json():
+                if reserve_data['clid'] == found_client_data['clid']:
+                    found_reserve = True
+                    found_reserve_data.append(reserve_data)
+            
+            if not found_reserve:
+                st.warning(f"{client_fname} {client_lname} doesn't have any reservations")
+                return
+            
             # show reservation for this client
+            st.write(f"### All reservations that {client_fname} has")
+            st.table(found_reserve_data)
 
     def choose_entity(self):
         return st.selectbox("Select Entity", self.available_entities, index=None, disabled=False)
-
-    def display_table(self):
-        pass
