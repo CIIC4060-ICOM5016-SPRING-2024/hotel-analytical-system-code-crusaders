@@ -44,7 +44,7 @@ class Dashboard:
         elif self.tab == "Access Database":
             self.admin_database_access.create()
         elif self.tab == "Manage Records":
-            self.manage_records.create()
+            self.manage_records.create_as_admin()
 
     def create_Supervisor(self):
         self.tab = st.sidebar.radio("Navigation", self.normal_tabs)
@@ -52,11 +52,11 @@ class Dashboard:
         if self.tab == "Local Statistics":
             self.local_stat.create_as_supervisor()
         elif self.tab == "Manage Records":
-            self.manage_records.create()
+            self.manage_records.create_as_supervisor()
         
     def create_Regular(self):
         self.tab = st.sidebar.radio("Navigation", self.normal_tabs)
         if self.tab == "Local Statistics":
             self.local_stat.create_as_regular()
         elif self.tab == "Manage Records":
-            self.manage_records.create()
+            self.manage_records.create_as_regular()

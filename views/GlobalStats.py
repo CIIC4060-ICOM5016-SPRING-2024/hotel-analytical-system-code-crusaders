@@ -99,12 +99,9 @@ class GlobalStats:
         if not self.isValidResponse(response):
             return
 
-        #st.table(response.json())
-        #st.bar_chart(response.json())
         df = pd.DataFrame.from_dict(response.json())
-        #st.table(df)
         bar_chart = alt.Chart(df).mark_bar().encode(
-            x = 'year',
+            x = 'month',
             y = 'total_reservations',
             column = 'name',
             color = 'month',
