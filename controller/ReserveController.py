@@ -50,11 +50,10 @@ class ReserveController:
         guests = json["guests"]
         dao = ReserveDAO()
         insert_re = dao.insertReserve(ruid, clid, total_cost, payment, guests)
-        result = self.build_attr_dict(insert_re, ruid, clid, total_cost, payment, guests) # rdcreate returns of inserted tuple
         if not insert_re:
             return jsonify("not added"), 404
         else:
-            return jsonify(result), 201
+            return jsonify(insert_re), 200 # ONLY THE ID NOT JSON
 
 
     def updateReserve(self, reid, json):
