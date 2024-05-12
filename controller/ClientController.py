@@ -44,11 +44,10 @@ class ClientController:
         memberyear = json['memberyear']
         dao = ClientDAO()
         insertclient = dao.insertClient(fname, lname, age, memberyear)
-        result = self.build_attr_dict(insertclient, fname, lname, age, memberyear)  # insertClient returns id of tuple
         if not insertclient:
             return jsonify("not added"), 404
         else:
-            return jsonify(result), 201
+            return jsonify(insertclient), 200 # return the ID not a json :)
 
     def updateClient(self, clid, json):
         fname = json['fname']
