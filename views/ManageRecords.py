@@ -132,9 +132,9 @@ class ManageRecords:
                     return
                 id_value = complementary_response.json()
                 fields.update({complementary_id_name: id_value})
-                print(complementary_id_name, complementary_name, complementary)
+                # print(complementary_id_name, complementary_name, complementary)
 
-            print(table_selected, fields)
+            # print(table_selected, fields)
             main_response = requests.post(f'{self.mainRoute}{table_selected}', json=fields)
             if main_response.status_code == 200:
                 st.success('Operation completed successfully!')
