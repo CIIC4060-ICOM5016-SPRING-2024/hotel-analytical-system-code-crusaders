@@ -125,8 +125,6 @@ class ManageRecords:
 
         if st.button('create', disabled=not valid_to_create) and valid_to_create:
             # Check for the complementary table post response
-
-            print(table_selected, fields)
             if complementary_name is not None:
                 complementary_response = requests.post(f'{self.mainRoute}{complementary_name}', json=complementary)
                 if complementary_response.status_code != 200:
@@ -136,7 +134,7 @@ class ManageRecords:
                 fields.update({complementary_id_name: id_value})
                 print(complementary_id_name, complementary_name, complementary)
 
-            # print(table_selected, fields)
+            print(table_selected, fields)
             main_response = requests.post(f'{self.mainRoute}{table_selected}', json=fields)
             if main_response.status_code == 200:
                 st.success('Operation completed successfully!')
