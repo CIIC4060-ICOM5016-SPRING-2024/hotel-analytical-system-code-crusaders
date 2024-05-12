@@ -15,12 +15,13 @@ class ManageRecords:
 
     tables = {
         'login': [
-            ('employee', str),
+            ('employee', str, 'eid'),
             ('username', str),   
             ('password', str)
         ],
         
         'employee': [
+            ('hotel', 'search', 'hid', 'hname', None),
             ('fname', str), 
             ('lname', str),   
             ('age', int), 
@@ -31,6 +32,7 @@ class ManageRecords:
         'chains': [
             ('cname',      str), 
             ('springmkup', float), 
+            ('summermkup', float), 
             ('fallmkup',   float), 
             ('wintermkup', float)
         ],
@@ -68,7 +70,7 @@ class ManageRecords:
         ],
         
         'reserve': [
-            ('roomunavailable', str),
+            ('roomunavailable', str, 'ruid'),
             ('client', 'search', 'clid', 'fname', 'match'), 
             ('total_cost', float), 
             ('payment', float), 
@@ -112,19 +114,30 @@ class ManageRecords:
             return
 
         result = self.create_widgets(table_selected)
-        fields = result[1]
         valid_to_create = result[0]
-
-        print(fields)
+        fields = result[1]
+        complementary = result[2]
+        complementary_name = result[3]
+        complementary_id_name = result[4]
 
         if st.button('create', disabled=not valid_to_create) and valid_to_create:
-            response = requests.post(f'{self.mainRoute}{table_selected}', json=fields)
+            # Check for the complementary table post response
 
-            if response.status_code == 200:
+            print(table_selected, fields)
+            if complementary_name is not None:
+                complementary_response = requests.post(f'{self.mainRoute}{complementary_name}', json=complementary)
+                if complementary_response.status_code != 200:
+                    st.error('Operation failed on subrecord, check the fields you provided')
+                    return
+                id_value = complementary_response.json()
+                fields.update({complementary_id_name: id_value})
+
+            main_response = requests.post(f'{self.mainRoute}{table_selected}', json=fields)
+            if main_response.status_code == 200:
                 st.success('Operation completed successfully!')
             else:
                 st.error('Operation failed, check the fields you provided')
-        else:
+        elif not valid_to_create:
             st.warning('All fields must be filled up to create')
     
     def update_records(self):
@@ -146,7 +159,10 @@ class ManageRecords:
     def create_widgets(self, table_selected):
 
         valid_to_create = True
-        fields = {}
+        main_fields = {}
+        complementary_fields = {}
+        complementary_table_name = None
+        complementary_table_id = None
         for column in self.tables[table_selected]:
             column_name = column[0]
 
@@ -157,12 +173,23 @@ class ManageRecords:
                     for record in response.json():
                         display_names.update({record[column[3]] : record[column[2]]})
                     id = display_names[st.selectbox(f"Select {column_name}", display_names.keys(), index=0)]
-                    fields.update({column[2]: id})
+                    main_fields.update({column[2]: id})
                 
                 elif column[1] == 'search' and column[4] == 'match':
                     to_search = st.text_input(f"Search for {column_name}", '')
 
                     response = requests.get(f'{self.mainRoute}{column_name}')
+
+                    recommended_names = {}
+                    for record in response.json():
+                        if not to_search:
+                            break
+                        if to_search.lower() in record[column[3]].lower():
+                            recommended_names.update({record[column[3]] : record[column[2]]})
+
+                    if len(recommended_names) != 0:
+                        st.table(recommended_names)
+
                     id_found = -2
                     for record in response.json():
                         if record[column[3]] == to_search:
@@ -173,29 +200,33 @@ class ManageRecords:
                         st.warning('Such record doesnt exist in database')
                         valid_to_create = False
                     else:
-                        fields.update({column[2]: id_found})
+                        main_fields.update({column[2]: id_found})
                 else:
                     result = self.create_widgets(column_name)
-                    fields.update(result[1])
+                    complementary_fields.update(result[1])
                     valid_to_create = result[0]
+                    complementary_table_id = column[2]
+                    complementary_table_name = column_name
 
             elif column[1] == 'date':
-                fields.update({column[0]: st.date_input(f"Select a date {column_name}")})
+                selected_date = st.date_input(f"Select a date {column_name}")
+                formatted_date = selected_date.strftime('%Y-%m-%d')
+                main_fields.update({column[0]: formatted_date})
 
             elif type(column[1]) is list:
                 selected_content = st.selectbox(f"Select {column_name}", column[1], index=0)
-                fields.update({column[0]: selected_content})
+                main_fields.update({column[0]: selected_content})
 
             elif column[1] is int:
-                fields.update({column_name : st.number_input(f"provide {column_name}", min_value=1)})
+                main_fields.update({column_name : st.number_input(f"provide {column_name}", min_value=1)})
             elif column[1] is str:
                 string_value = st.text_input(f"provide {column_name}", "")
                 if not string_value:
                     valid_to_create = False
-                fields.update({column_name : string_value})
+                main_fields.update({column_name : string_value})
             elif column[1] is float:
-                fields.update({column_name : st.number_input(f"set value for {column_name}")})
+                main_fields.update({column_name : st.number_input(f"set value for {column_name}")})
             elif column[1] is bool:
-                fields.update({column_name : st.checkbox(f"check if {column_name}")})
+                main_fields.update({column_name : st.checkbox(f"check if {column_name}")})
 
-        return (valid_to_create, fields)
+        return (valid_to_create, main_fields, complementary_fields, complementary_table_name, complementary_table_id)
