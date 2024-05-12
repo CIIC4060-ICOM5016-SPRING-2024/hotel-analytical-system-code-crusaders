@@ -57,8 +57,7 @@ class RoomUnavailableController:
         if not roomun:
             return jsonify("Not found") , 404 
         else: 
-            result = self.json_dict(roomun)
-            return result 
+            return jsonify(roomun), 200 
         
     def deleteRoomUnavailablebyID(self,ruid):
         dao = RoomUnavailableDAO()

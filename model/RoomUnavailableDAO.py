@@ -24,12 +24,7 @@ class RoomUnavailableDAO:
             """INSERT into roomunavailable (rid, startdate, enddate) VALUES (%s, %s, %s) returning ruid""",
             (rid, startdate, enddate)
         )
-
-        roomsun_list = Database().querySelectFrom(
-            """SELECT ruid, rid, startdate, enddate FROM roomunavailable WHERE ruid = %s""",
-            (inserted,)
-        )
-        return roomsun_list
+        return inserted
     
     def deleteRoomUnavailablebyID(self,ruid):
         roomsun_list = Database().querySelectFrom(
