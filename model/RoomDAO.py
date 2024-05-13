@@ -1,5 +1,7 @@
 from config.Database import Database 
-
+import json
+import psycopg2
+import flask, abort
 class RoomDAO:
 
     def __init__(self):
@@ -32,6 +34,15 @@ class RoomDAO:
         return rooms_list
     
     def deleteRoombyID(self, rid):
+        cursor = self.connection.cursor()
+        cursor.execute("SELECT COUNT(*) FROM roomunavailable WHERE rid = %s", (rid,))
+        count = cursor.fetchone()[0]
+
+        if count > 0:
+            cursor.close()
+            self.connection.close()
+            abort(401)  # Unauthorized because associated orders exist
+            
         rooms_list = Database().querySelectFrom(
             """SELECT * FROM room WHERE rid = %s""",
             (rid,)

@@ -1,5 +1,7 @@
 from config.Database import Database
-
+import json
+import psycopg2
+import flask, abort
 class HotelDAO:
 
     def __init__(self):
@@ -32,6 +34,17 @@ class HotelDAO:
         return hotel_list
     
     def deleteHotel(self,hid):
+        cursor = self.connection.cursor()
+        cursor.execute("SELECT COUNT(*) FROM room WHERE hid = %s", (hid,))
+        count = cursor.fetchone()[0]
+
+        if count > 0:
+            cursor.close()
+            self.connection.close()
+            abort(401)  # Unauthorized because associated orders exist
+
+
+
         hotel_list = Database().querySelectFrom(
             """SELECT * FROM hotel where hid = %s;""",
             (hid,)

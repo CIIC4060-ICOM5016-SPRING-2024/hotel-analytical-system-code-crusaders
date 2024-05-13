@@ -68,8 +68,7 @@ class ChainsController(BaseController):
 
     def delete_byID(self, id):
         result = self.dao.delete_byID(id)
-
         if result is None:
-            return jsonify(f"No matching login user to delete for ID:{id}")
+            return jsonify(f"No matching login user to delete for ID:{id}"), 404
 
         return self.make_json(result)

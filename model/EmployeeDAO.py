@@ -1,5 +1,7 @@
 from config.Database import Database
-
+import json
+import psycopg2
+import flask, abort
 class EmployeeDAO:
 
     def __init__(self):
@@ -36,6 +38,15 @@ class EmployeeDAO:
         return eid
 
     def deleteEmployee(self,eid):
+        cursor = self.connection.cursor()
+        cursor.execute("SELECT COUNT(*) FROM login WHERE eid = %s", (eid,))
+        count = cursor.fetchone()[0]
+
+        if count > 0:
+            cursor.close()
+            self.connection.close()
+            abort(401)  # Unauthorized because associated orders exist
+
         employee_list = Database().querySelectFrom(
             """SELECT * FROM employee where eid = %s""",
             (eid,)
