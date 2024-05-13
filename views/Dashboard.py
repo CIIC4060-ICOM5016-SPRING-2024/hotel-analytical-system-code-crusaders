@@ -1,5 +1,6 @@
 import streamlit as st
 
+from views.Login import Login
 from views.LocalStats import LocalStats
 from views.GlobalStats import GlobalStats
 from views.ManageRecords import ManageRecords
@@ -33,7 +34,21 @@ class Dashboard:
             self.create_Supervisor()
         elif position == 'Regular':
             self.create_Regular()
-    
+
+        # logout user
+        if st.sidebar.button('Logout'):
+            login = st.session_state.fapp_singleton.loginHandle
+            login.username = None
+            login.password = None
+            login.chainID = None
+            login.hotelID = None
+            login.employeeID = None
+            login.position = 'Regular'
+            login.new_account = False
+            login.login_success = False
+            st.empty()
+            st.rerun()
+
     def create_Administrator(self):
         self.tab = st.sidebar.radio("Navigation", self.admin_tabs)
 

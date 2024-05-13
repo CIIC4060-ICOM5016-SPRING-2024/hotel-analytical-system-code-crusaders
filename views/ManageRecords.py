@@ -9,8 +9,6 @@ class ManageRecords:
         "Create Record", 
         "Update Record", 
         "Delete Record", 
-        "Create Roomunavailable", 
-        "Create Reservation", 
     ]
 
     tables = {
@@ -87,8 +85,6 @@ class ManageRecords:
         "roomunavailable",
         "roomdescription",
         "reserve",
-        "room information",
-        "client information",
     ]
 
     def __init__(self):
@@ -102,15 +98,13 @@ class ManageRecords:
 
         # Define the content for each tab
         if selected_tab == "Create Record":
-            self.create_records()
+            st.write("# Create Records")
+            table_selected = st.selectbox("Select which table to create a new record", self.tables.keys(), index=None, disabled=False)
+            self.create_records(table_selected)
         elif selected_tab == "Update Record":
             self.update_records()
         elif selected_tab == "Delete Record":
             self.delete_records()
-        elif selected_tab == "Create Roomunavailable":
-            self.create_roomunavailable()
-        elif selected_tab == "Create Reservation":
-            self.create_reservation()
     
     def create_as_supervisor(self):
         self.create_roomunavailable()
@@ -118,11 +112,7 @@ class ManageRecords:
     def create_as_regular(self):
         self.create_reservation()
 
-    def create_records(self):
-        st.write("# Create Records")
-
-        table_selected = st.selectbox("Select which table to create a new record", self.tables.keys(), index=None, disabled=False)
-
+    def create_records(self, table_selected):
         if table_selected is None:
             return
 
@@ -155,6 +145,14 @@ class ManageRecords:
                 st.error('Operation failed, check the fields you provided')
         elif not valid_to_create:
             st.warning('All fields must be filled up to create')
+
+    def create_reservation(self):
+        st.write("# Create Reservation")
+        self.create_records('reserve')
+
+    def create_roomunavailable(self):
+        st.write("# Create Roomunavailable")
+        self.create_records('roomunavailable')
     
     def update_records(self):
         st.write("# Update Records")
@@ -168,320 +166,23 @@ class ManageRecords:
             return
 
         if entity_selected == "login":
-            entered_username = st.text_input("Enter Username to delete", '')
-            if not entered_username:
-                return
-
-            response = requests.get(f'{self.mainRoute}login')
-
-            found_user = False
-            user_logger_data = {}
-            for login_data in response.json():
-                if login_data['username'] == entered_username:
-                    found_user = True
-                    user_logger_data = login_data
-                    break
-
-            if not found_user:
-                st.warning("User is not in Database")
-                return
-            id = user_logger_data["lid"]
-            #deleted = requests.delete(f'{self.mainRoute}login/{id}')
-            st.write(id)
-            st.table(user_logger_data)
-
+            self.delete_login()
         elif entity_selected == "employee":
-            entered_firstname = st.text_input("Enter Employee's First Name to delete", "")
-            entered_lastname = st.text_input("Enter Employee's Last Name to delete", "")
-
-            if not entered_firstname or not entered_lastname:
-                return
-
-            response = requests.get(f'{self.mainRoute}employee')
-
-            found_employee = False
-            found_employee_data = {}
-            for employee_data in response.json():
-                if employee_data['fname'] == entered_firstname and employee_data['lname'] == entered_lastname:
-                    found_employee = True
-                    found_employee_data = employee_data
-                    break
-
-            if not found_employee:
-                st.warning("Employee is not in Database")
-                return
-            id = found_employee_data["eid"]
-            # deleted = requests.delete(f'{self.mainRoute}employee/{id}')
-            st.write(id)
-            st.table(found_employee_data)
-
+            self.delete_employee()
         elif entity_selected == "hotel":
-            response = requests.get(f'{self.mainRoute}hotel')
-
-            entered_hotel = st.selectbox('Select a Hotel to delete', self.login.getHotels(response.json()), index=None)
-
-            if not entered_hotel:
-                return
-
-            found_hotel_data = {}
-            for hotel_data in response.json():
-                if hotel_data['hname'] == entered_hotel:
-                    found_hotel_data = hotel_data
-                    break
-            id = found_hotel_data["hid"]
-            # deleted = requests.delete(f'{self.mainRoute}hotel/{id}')
-            st.write(id)
-            st.table(found_hotel_data)
-
+            self.delete_hotel()
         elif entity_selected == "chains":
-
-            response = requests.get(f'{self.mainRoute}chains')
-            entered_chain = st.selectbox('Enter a Chain to delete', self.login.getChains(response.json()), index=None)
-
-            if not entered_chain:
-                return
-
-            found_chain_data = {}
-            for chain_data in response.json():
-                if chain_data['cname'] == entered_chain:
-                    found_chain_data = chain_data
-                    break
-            id = found_chain_data["cid"]
-            # deleted = requests.delete(f'{self.mainRoute}chains/{id}')
-            st.write(id)
-            st.table(found_chain_data)
-
+            self.delete_chains()
         elif entity_selected == "room":
-
-            response = requests.get(f'{self.mainRoute}room')
-            entered_room = st.text_input('Enter a Room ID to delete')
-
-            if not entered_room:
-                return
-            else:
-                entered_room = float(entered_room)
-            found_room_data = {}
-            for room_data in response.json():
-                if room_data['rid'] == entered_room:
-                    found_room_data = room_data
-                    break
-            id = found_room_data["rid"]
-            # deleted = requests.delete(f'{self.mainRoute}room/{id}')
-            st.write(id)
-            st.table(found_room_data)
-
+            self.delete_room()
         elif entity_selected == "roomunavailable":
-
-            response = requests.get(f'{self.mainRoute}roomunavailable')
-            entered_room = st.text_input('Enter a Room Unavailable ID to delete')
-
-            if not entered_room:
-                return
-            else:
-                entered_room = float(entered_room)
-            found_room_data = {}
-            for room_data in response.json():
-                if room_data['ruid'] == entered_room:
-                    found_room_data = room_data
-                    break
-            id = found_room_data["ruid"]
-            # deleted = requests.delete(f'{self.mainRoute}roomunavailable/{id}')
-            st.write(id)
-            st.table(found_room_data)
-
+            self.delete_roomunavailable()
         elif entity_selected == "roomdescription":
-
-            response = requests.get(f'{self.mainRoute}roomdescription')
-            entered_room = st.text_input('Enter a Room Description ID to delete')
-
-            if not entered_room:
-                return
-            else:
-                entered_room = float(entered_room)
-            found_room_data = {}
-            for room_data in response.json():
-                if room_data['rdid'] == entered_room:
-                    found_room_data = room_data
-                    break
-            id = found_room_data["rdid"]
-            # deleted = requests.delete(f'{self.mainRoute}roomdescription/{id}')
-            st.write(id)
-            st.table(found_room_data)
-
+            self.delete_roomdescription()
         elif entity_selected == "reserve":
-
-            response = requests.get(f'{self.mainRoute}reserve')
-            entered_reservation = st.text_input('Enter a Reservation ID to delete')
-
-            if not entered_reservation:
-                return
-            else:
-                entered_reservation = float(entered_reservation)
-            found_reservation_data = {}
-            for reservation_data in response.json():
-                if reservation_data['reid'] == entered_reservation:
-                    found_room_data = reservation_data
-                    break
-            id = found_reservation_data["reid"]
-            # deleted = requests.delete(f'{self.mainRoute}reserve/{id}')
-            st.write(id)
-            st.table(found_reservation_data)
-
-        elif entity_selected == "reserve":
-
-            response = requests.get(f'{self.mainRoute}reserve')
-            entered_reservation = st.text_input('Enter a Reservation ID to delete')
-
-            if not entered_reservation:
-                return
-            else:
-                entered_reservation = float(entered_reservation)
-            found_reservation_data = {}
-            for reservation_data in response.json():
-                if reservation_data['reid'] == entered_reservation:
-                    found_room_data = reservation_data
-                    break
-            id = found_reservation_data["reid"]
-            # deleted = requests.delete(f'{self.mainRoute}reserve/{id}')
-            st.write(id)
-            st.table(found_reservation_data)
-
+            self.delete_reserve()
         elif entity_selected == "client":
-            entered_firstname = st.text_input("Enter Client's First Name to delete", "")
-            entered_lastname = st.text_input("Enter Client's Last Name to delete", "")
-
-            if not entered_firstname or not entered_lastname:
-                return
-
-            response = requests.get(f'{self.mainRoute}client')
-
-            found_client = False
-            found_client_data = {}
-            for client_data in response.json():
-                if client_data['fname'] == entered_firstname and client_data['lname'] == entered_lastname:
-                    found_client = True
-                    found_client_data = client_data
-                    break
-
-            if not found_client:
-                st.warning("Client is not in Database")
-                return
-            id = found_client_data["clid"]
-            # deleted = requests.delete(f'{self.mainRoute}client/{id}')
-            st.write(id)
-            st.table(found_client_data)
-
-        elif entity_selected == "room information":
-            # This will display a table with all the room information
-            hotel_response = requests.get(f'{self.mainRoute}hotel')
-            entered_hotel = st.selectbox('Select a Hotel name', self.login.getHotels(hotel_response.json()), index=None)
-
-            roomdescription_response = requests.get(f'{self.mainRoute}roomdescription')
-
-            roomdescription_names = set([])
-            for roomdescription_data in roomdescription_response.json():
-                roomdescription_names.add(roomdescription_data['rname'])
-
-            entered_room = st.selectbox('Enter the Room Name to delete', roomdescription_names, index=None)
-
-            room_response = requests.get(f'{self.mainRoute}room')
-
-            if not entered_hotel or not entered_room:
-                return
-
-            found_roomdescription = False
-            found_roomdescription_data = {}
-            for roomdescription_data in roomdescription_response.json():
-                if roomdescription_data['rname'] == entered_room:
-                    found_roomdescription = True
-                    found_roomdescription_data = roomdescription_data
-                    break
-
-            if not found_roomdescription:
-                st.warning('No room found in Database')
-                return
-
-            # show room details
-            st.write(f"### Information related to {entered_room} room")
-            st.table(found_roomdescription_data)
-
-            # show the room count
-            room_count = 0
-            avg_room_price = 0
-            room_prices = {}
-            for room_data in room_response.json():
-                if room_data['rdid'] == found_roomdescription_data['rdid']:
-                    room_id = room_data['rid']
-                    room_count += 1
-                    avg_room_price += room_data['rprice']
-                    room_prices.update({f'room id: {room_id}': str(room_data['rprice']) + '$'})
-
-            avg_room_price /= room_count
-
-            st.write(f"### Room count and average price related to {entered_room}")
-            st.table({'room count': int(room_count), 'rooms average price': str(float(avg_room_price)) + '$'})
-
-            room_type = found_roomdescription_data['rtype']
-            st.write(f"### Avaliable prices for {room_type}")
-            st.table(room_prices)
-
-
-        elif entity_selected == "client information":
-            client_fname = st.text_input("Enter the Client's first name to delete", "")
-            client_lname = st.text_input("Enter the Client's last name to delete", "")
-
-            client_response = requests.get(f'{self.mainRoute}client')
-            reserve_response = requests.get(f'{self.mainRoute}reserve')
-
-            found_client = False
-            found_client_data = {}
-            for client_data in client_response.json():
-                if client_data['fname'] == client_fname and client_data['lname'] == client_lname:
-                    found_client = True
-                    found_client_data = client_data
-                    break
-
-            if not found_client:
-                st.warning('No matching client found in database')
-                return
-
-            # show member year
-            member_year = found_client_data['memberyear']
-
-            st.write(f"### Client Information")
-
-            client_info = {
-                'Client First Name': found_client_data['fname'],
-                'Client Last Name': found_client_data['lname'],
-                'Client Age': found_client_data['age'],
-                'Client member year': member_year,
-            }
-            st.table(client_info)
-
-            # Find reservations related to the cliend provided
-            found_reserve = False
-            found_reserve_data = []
-            for reserve_data in reserve_response.json():
-                if reserve_data['clid'] == found_client_data['clid']:
-                    found_reserve = True
-                    found_reserve_data.append(reserve_data)
-
-            if not found_reserve:
-                st.warning(f"{client_fname} {client_lname} doesn't have any reservations")
-                return
-
-            # show reservation for this client
-            st.write(f"### All reservations that {client_fname} has")
-            st.table(found_reserve_data)
-        pass
-
-    def create_reservation(self):
-        st.write("# Create Reservation")	
-        pass
-
-    def create_roomunavailable(self):
-        st.write("# Create Roomunavailable")	
-        pass
+            self.delete_client()
 
     def create_widgets(self, table_selected):
 
@@ -490,6 +191,8 @@ class ManageRecords:
         complementary_fields = {}
         complementary_table_name = None
         complementary_table_id = None
+        widgets_used = []
+
         for column in self.tables[table_selected]:
             column_name = column[0]
 
@@ -499,11 +202,15 @@ class ManageRecords:
                     display_names = {}
                     for record in response.json():
                         display_names.update({record[column[3]] : record[column[2]]})
-                    id = display_names[st.selectbox(f"Select {column_name}", display_names.keys(), index=0)]
+
+                    selection = st.selectbox(f"Select {column_name}", display_names.keys(), index=0)
+                    id = display_names[selection]
                     main_fields.update({column[2]: id})
+                    widgets_used.append(selection)
                 
                 elif column[1] == 'search' and column[4] == 'match':
                     to_search = st.text_input(f"Search for {column_name}", '')
+                    widgets_used.append(to_search)
 
                     response = requests.get(f'{self.mainRoute}{column_name}')
 
@@ -534,26 +241,235 @@ class ManageRecords:
                     valid_to_create = result[0]
                     complementary_table_id = column[2]
                     complementary_table_name = column_name
+                    widgets_used.append(result[5])
 
             elif column[1] == 'date':
                 selected_date = st.date_input(f"Select a date {column_name}")
+                widgets_used.append(selected_date)
                 formatted_date = selected_date.strftime('%Y-%m-%d')
                 main_fields.update({column[0]: formatted_date})
 
             elif type(column[1]) is list:
                 selected_content = st.selectbox(f"Select {column_name}", column[1], index=0)
+                widgets_used.append(selected_content)
                 main_fields.update({column[0]: selected_content})
 
             elif column[1] is int:
-                main_fields.update({column_name : st.number_input(f"provide {column_name}", min_value=1)})
+                selected_number = st.number_input(f"provide {column_name}", min_value=1)
+                widgets_used.append(selected_number)
+                main_fields.update({column_name : selected_number})
             elif column[1] is str:
                 string_value = st.text_input(f"provide {column_name}", "")
+                widgets_used.append(string_value)
                 if not string_value:
                     valid_to_create = False
                 main_fields.update({column_name : string_value})
             elif column[1] is float:
-                main_fields.update({column_name : st.number_input(f"set value for {column_name}")})
+                selected_number = st.number_input(f"set value for {column_name}")
+                widgets_used.append(selected_number)
+                main_fields.update({column_name : selected_number})
             elif column[1] is bool:
-                main_fields.update({column_name : st.checkbox(f"check if {column_name}")})
+                check_box = st.checkbox(f"check if {column_name}")
+                widgets_used.append(check_box)
+                main_fields.update({column_name : check_box})
 
-        return (valid_to_create, main_fields, complementary_fields, complementary_table_name, complementary_table_id)
+        return (valid_to_create, main_fields, complementary_fields, complementary_table_name, complementary_table_id, widgets_used)
+    
+    def handle_delete_button(self, table_name, entity_id):
+        if st.button('delete'):
+            request = requests.delete(f'{self.mainRoute}{table_name}/{entity_id}')
+            if request.status_code == 200:
+                st.success('Deleted successfully')
+            elif request.status_code == 404:
+                st.error('No record was found for the given parameters')
+            elif request.status_code == 401:
+                st.error('You can only delete the "leafs" first before deleting this record.')
+
+    def delete_login(self):
+        entered_username = st.text_input("Enter Username to delete", '')
+        if not entered_username:
+            return
+
+        response = requests.get(f'{self.mainRoute}login')
+
+        found_user = False
+        user_logger_data = {}
+        for login_data in response.json():
+            if login_data['username'] == entered_username:
+                found_user = True
+                user_logger_data = login_data
+                break
+
+        if not found_user:
+            st.warning("User is not in Database")
+            return
+        id = user_logger_data["lid"]
+        st.write(id)
+        st.table(user_logger_data)
+
+        self.handle_delete_button('login', id)
+
+    def delete_employee(self):
+        entered_firstname = st.text_input("Enter Employee's First Name to delete", "")
+        entered_lastname = st.text_input("Enter Employee's Last Name to delete", "")
+
+        if not entered_firstname or not entered_lastname:
+            return
+
+        response = requests.get(f'{self.mainRoute}employee')
+
+        found_employee = False
+        found_employee_data = {}
+        for employee_data in response.json():
+            if employee_data['fname'] == entered_firstname and employee_data['lname'] == entered_lastname:
+                found_employee = True
+                found_employee_data = employee_data
+                break
+
+        if not found_employee:
+            st.warning("Employee is not in Database")
+            return
+        id = found_employee_data["eid"]
+        st.write(id)
+        st.table(found_employee_data)
+
+        self.handle_delete_button('employee', id)
+
+    def delete_hotel(self):
+        response = requests.get(f'{self.mainRoute}hotel')
+
+        entered_hotel = st.selectbox('Select a Hotel to delete', self.login.getHotels(response.json()), index=None)
+
+        if not entered_hotel:
+            return
+
+        found_hotel_data = {}
+        for hotel_data in response.json():
+            if hotel_data['hname'] == entered_hotel:
+                found_hotel_data = hotel_data
+                break
+        id = found_hotel_data["hid"]
+        st.write(id)
+        st.table(found_hotel_data)
+
+        self.handle_delete_button('hotel', id)
+
+    def delete_chains(self):
+        response = requests.get(f'{self.mainRoute}chains')
+        entered_chain = st.selectbox('Enter a Chain to delete', self.login.getChains(response.json()), index=None)
+
+        if not entered_chain:
+            return
+
+        found_chain_data = {}
+        for chain_data in response.json():
+            if chain_data['cname'] == entered_chain:
+                found_chain_data = chain_data
+                break
+        id = found_chain_data["cid"]
+        st.write(id)
+        st.table(found_chain_data)
+
+        self.handle_delete_button('chains', id)
+
+    def delete_room(self):
+        response = requests.get(f'{self.mainRoute}room')
+        entered_room = st.text_input('Enter a Room ID to delete')
+
+        if not entered_room:
+            return
+        else:
+            entered_room = float(entered_room)
+        found_room_data = {}
+        for room_data in response.json():
+            if room_data['rid'] == entered_room:
+                found_room_data = room_data
+                break
+        id = found_room_data["rid"]
+        st.write(id)
+        st.table(found_room_data)
+
+        self.handle_delete_button('room', id)
+
+    def delete_roomunavailable(self):
+        response = requests.get(f'{self.mainRoute}roomunavailable')
+        entered_room = st.text_input('Enter a Room Unavailable ID to delete')
+
+        if not entered_room:
+            return
+        else:
+            entered_room = float(entered_room)
+        found_room_data = {}
+        for room_data in response.json():
+            if room_data['ruid'] == entered_room:
+                found_room_data = room_data
+                break
+        id = found_room_data["ruid"]
+        st.write(id)
+        st.table(found_room_data)
+
+        self.handle_delete_button('roomunavailable', id)
+
+    def delete_roomdescription(self):
+        response = requests.get(f'{self.mainRoute}roomdescription')
+        entered_room = st.text_input('Enter a Room Description ID to delete')
+
+        if not entered_room:
+            return
+        else:
+            entered_room = float(entered_room)
+        found_room_data = {}
+        for room_data in response.json():
+            if room_data['rdid'] == entered_room:
+                found_room_data = room_data
+                break
+        id = found_room_data["rdid"]
+        st.write(id)
+        st.table(found_room_data)
+
+        self.handle_delete_button('roomdescription', id)
+
+    def delete_reserve(self):
+        response = requests.get(f'{self.mainRoute}reserve')
+        entered_reservation = st.text_input('Enter a Reservation ID to delete')
+
+        if not entered_reservation:
+            return
+        else:
+            entered_reservation = float(entered_reservation)
+        found_reservation_data = {}
+        for reservation_data in response.json():
+            if reservation_data['reid'] == entered_reservation:
+                found_reservation_data = reservation_data
+                break
+        id = found_reservation_data["reid"]
+        st.write(id)
+        st.table(found_reservation_data)
+
+        self.handle_delete_button('reserve', id)
+
+    def delete_client(self):
+        entered_firstname = st.text_input("Enter Client's First Name to delete", "")
+        entered_lastname = st.text_input("Enter Client's Last Name to delete", "")
+
+        if not entered_firstname or not entered_lastname:
+            return
+
+        response = requests.get(f'{self.mainRoute}client')
+
+        found_client = False
+        found_client_data = {}
+        for client_data in response.json():
+            if client_data['fname'] == entered_firstname and client_data['lname'] == entered_lastname:
+                found_client = True
+                found_client_data = client_data
+                break
+
+        if not found_client:
+            st.warning("Client is not in Database")
+            return
+        id = found_client_data["clid"]
+        st.write(id)
+        st.table(found_client_data)
+
+        self.handle_delete_button('client', id)
