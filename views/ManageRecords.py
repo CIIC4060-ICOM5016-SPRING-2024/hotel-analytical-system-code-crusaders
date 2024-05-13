@@ -305,7 +305,7 @@ class ManageRecords:
                    if st.button("update"):
                        st.success("updated record successfully")
                        update_data.update({'hid': int(hotel_id), 'rdid': int(room_desc_id), 'rprice': float(rprice)})
-                       # final_update = requests.put(f'{self.mainRoute}room/{entered_rid}', json=update_data)
+                       final_update = requests.put(f'{self.mainRoute}room/{entered_rid}', json=update_data)
                     #    st.write(update_data)
 
         elif table_selected == "client":
@@ -333,7 +333,7 @@ class ManageRecords:
                     if st.button("update"):
                         st.success("updated record successfully")
                         update_data.update({'fname': clientname, 'lname': clientlastname, 'age': int(clientage), 'memberyear': int(memberyear)})
-                        # final_update = requests.put(f'{self.mainRoute}client/{entered_clid}', json=update_data)
+                        final_update = requests.put(f'{self.mainRoute}client/{entered_clid}', json=update_data)
                         # st.write(update_data)
 
         elif table_selected == "roomunavailable":
@@ -358,7 +358,7 @@ class ManageRecords:
                    if st.button("update"):
                        st.success("updated record successfully")
                        update_data.update({'rid': int(room_id), 'startdate': stardate, 'enddate': enddate})
-                       # final_update = requests.put(f'{self.mainRoute}roomunavailable/{entered_ruid}', json=update_data)
+                       final_update = requests.put(f'{self.mainRoute}roomunavailable/{entered_ruid}', json=update_data)
                     #    st.write(update_data)
 
         elif table_selected == "roomdescription":
@@ -384,7 +384,7 @@ class ManageRecords:
                     if st.button("update"):
                         st.success("updated record successfully")
                         update_data.update({'rname': rname, 'rtype': rtype, 'capacity': int(capacity), 'ishandicap': ishandicap})
-                        # final_update = requests.put(f'{self.mainRoute}roomdescription/{entered_rdid}', json=update_data)
+                        final_update = requests.put(f'{self.mainRoute}roomdescription/{entered_rdid}', json=update_data)
                         # st.write(update_data)
 
         elif table_selected == "reserve":
@@ -411,7 +411,7 @@ class ManageRecords:
                     if st.button("update"):
                         st.success("updated record successfully")
                         update_data.update({'ruid': int(room_unv_id), 'clid': int(client_id), 'total_cost': float(total_cost), 'payment': payment, 'guests': int(guests)})
-                        # final_update = requests.put(f'{self.mainRoute}hotel/{entered_reid}', json=update_data)
+                        final_update = requests.put(f'{self.mainRoute}hotel/{entered_reid}', json=update_data)
                         # st.write(update_data)
     
     def delete_records(self):
