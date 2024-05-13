@@ -187,10 +187,10 @@ class ManageRecords:
                 password = st.text_input("Change password", '')
                 if not user == "" and not password == "" and not eid == "":
                    if st.button("update"):
-                       st.write("success")
+                       st.success("updated record successfully")
                        update_data.update({'eid': int(eid), 'username': user, 'password': password})
                        # final_update = requests.put(f'{self.mainRoute}login/{entered_lid}', json=update_data)
-                       st.write(update_data)
+                    #    st.write(update_data)
 
         elif table_selected == "employee":
 
@@ -222,10 +222,10 @@ class ManageRecords:
                 salary = st.number_input("Change salary", step=0.01)
                 if not firstname == "" and not lastname == "" and not age == "" and not position == "" and not salary == "" and not hid == "":
                    if st.button("update"):
-                       st.write("success")
+                       st.success("updated record successfully")
                        update_data.update({'hid': int(hid), 'fname': firstname, 'lname': lastname, 'age': int(age), 'position': position, 'salary': float(salary)})
-                       # final_update = requests.put(f'{self.mainRoute}employee/{entered_eid}', json=update_data)
-                       st.write(update_data)
+                       final_update = requests.put(f'{self.mainRoute}employee/{entered_eid}', json=update_data)
+                    #    st.write(update_data)
 
         elif table_selected == "hotel":
             entered_hid = st.number_input("Enter hotel id", min_value=1)
@@ -249,10 +249,10 @@ class ManageRecords:
                 hcity = st.text_input("Change hotel city", '')
                 if not hotelname == "" and not hcity == "" and not chid == "":
                    if st.button("update"):
-                       st.write("success")
-                       update_data.update({'chid': int(chid), 'hname': hotelname, 'hcity': hcity})
-                       # final_update = requests.put(f'{self.mainRoute}hotel/{entered_hid}', json=update_data)
-                       st.write(update_data)
+                        st.success("updated record successfully")
+                        update_data.update({'chid': int(chid), 'hname': hotelname, 'hcity': hcity})
+                        final_update = requests.put(f'{self.mainRoute}hotel/{entered_hid}', json=update_data)
+                    #    st.write(update_data)
 
         elif table_selected == "chains":
             entered_chid = st.number_input("Enter chain id", min_value=1)
@@ -278,10 +278,10 @@ class ManageRecords:
                 wintermkup = st.number_input("Change wintermgkup", step=0.01)
                 if not cname == "" or not springmkup == "" or not summermkup == "" or not fallmkup == "" or not wintermkup == "":
                    if st.button("update"):
-                       st.write("success")
+                       st.success("updated record successfully")
                        update_data.update({'cname': cname, 'springmkup': float(springmkup), 'summermkup': float(summermkup), 'fallmkup': float(fallmkup), 'wintermkup': float(wintermkup)})
-                       # final_update = requests.put(f'{self.mainRoute}chains/{entered_chid}', json=update_data)
-                       st.write(update_data)
+                       final_update = requests.put(f'{self.mainRoute}chains/{entered_chid}', json=update_data)
+                    #    st.write(update_data)
 
         elif table_selected == "room":
             entered_rid = st.number_input("enter room ID", min_value=1)
@@ -303,10 +303,10 @@ class ManageRecords:
                 rprice = st.number_input("Change room price", step=0.01)
                 if not rprice == "" and not hotel_id == "" and not room_desc_id == "":
                    if st.button("update"):
-                       st.write("success")
+                       st.success("updated record successfully")
                        update_data.update({'hid': int(hotel_id), 'rdid': int(room_desc_id), 'rprice': float(rprice)})
                        # final_update = requests.put(f'{self.mainRoute}room/{entered_rid}', json=update_data)
-                       st.write(update_data)
+                    #    st.write(update_data)
 
         elif table_selected == "client":
             entered_clid = st.number_input("enter client ID", min_value=1)
@@ -331,10 +331,10 @@ class ManageRecords:
                 memberyear     = st.text_input("enter client memberyear")
                 if not clientname == "" or not clientlastname == "" or not clientage == "" or not memberyear == "":
                     if st.button("update"):
-                        st.write("success")
+                        st.success("updated record successfully")
                         update_data.update({'fname': clientname, 'lname': clientlastname, 'age': int(clientage), 'memberyear': int(memberyear)})
                         # final_update = requests.put(f'{self.mainRoute}client/{entered_clid}', json=update_data)
-                        st.write(update_data)
+                        # st.write(update_data)
 
         elif table_selected == "roomunavailable":
             entered_ruid = st.number_input("enter user room unavailable id", min_value=1)
@@ -356,10 +356,10 @@ class ManageRecords:
                 enddate = st.date_input("Change enddate",value=None)
                 if not stardate == "" and not enddate == "" and not room_id == "":
                    if st.button("update"):
-                       st.write("success")
+                       st.success("updated record successfully")
                        update_data.update({'rid': int(room_id), 'startdate': stardate, 'enddate': enddate})
                        # final_update = requests.put(f'{self.mainRoute}roomunavailable/{entered_ruid}', json=update_data)
-                       st.write(update_data)
+                    #    st.write(update_data)
 
         elif table_selected == "roomdescription":
             entered_rdid = st.number_input("enter user room description id", min_value=1)
@@ -382,10 +382,10 @@ class ManageRecords:
                 ishandicap = st.checkbox("Change handicap")
                 if not rname == "" and not rtype == "" and not capacity == "" and not ishandicap == "":
                     if st.button("update"):
-                        st.write("success")
+                        st.success("updated record successfully")
                         update_data.update({'rname': rname, 'rtype': rtype, 'capacity': int(capacity), 'ishandicap': ishandicap})
                         # final_update = requests.put(f'{self.mainRoute}roomdescription/{entered_rdid}', json=update_data)
-                        st.write(update_data)
+                        # st.write(update_data)
 
         elif table_selected == "reserve":
             entered_reid = st.number_input("enter user room reserve id", min_value=1)
@@ -409,12 +409,10 @@ class ManageRecords:
                 guests  = st.number_input("Change reservation numbers of guests", min_value=1)
                 if not total_cost == "" and not payment == "" and not guests == "" and not room_unv_id == "" and not client_id == "":
                     if st.button("update"):
-                        st.write("success")
+                        st.success("updated record successfully")
                         update_data.update({'ruid': int(room_unv_id), 'clid': int(client_id), 'total_cost': float(total_cost), 'payment': payment, 'guests': int(guests)})
                         # final_update = requests.put(f'{self.mainRoute}hotel/{entered_reid}', json=update_data)
-                        st.write(update_data)
-
-        pass
+                        # st.write(update_data)
     
     def delete_records(self):
         st.write("# Delete Records")
