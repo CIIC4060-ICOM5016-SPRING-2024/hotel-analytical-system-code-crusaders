@@ -156,6 +156,270 @@ class ManageRecords:
     
     def update_records(self):
         st.write("# Update Records")
+
+        table_selected = st.selectbox("Select what to update", self.searchable_content, index=None, disabled=False)
+        if not table_selected:
+            return
+
+        update_data = {}
+
+        if table_selected == "login":
+
+            entered_lid = st.text_input("enter user ID", '')
+            entered_username = st.text_input("Enter Username", '')
+
+            if not entered_username and not entered_lid:
+                return
+
+            response = requests.get(f'{self.mainRoute}login/{entered_lid}')
+            record = response.json()
+            record_found = False
+            if record['username'] == entered_username:
+                record_found = True
+                st.table(record)
+            else:
+                st.warning("User is not in Database")
+
+            if record_found:
+                eid = st.text_input("Change employee ID")
+                user = st.text_input("Change username", '')
+                password = st.text_input("Change password", '')
+                if not user == "" and not password == "" and not eid == "":
+                   if st.button("update"):
+                       st.write("success")
+                       update_data.update({'eid': int(eid), 'username': user, 'password': password})
+                       # final_update = requests.put(f'{self.mainRoute}login/{entered_lid}', json=update_data)
+                       st.write(update_data)
+
+        elif table_selected == "employee":
+
+            entered_eid = st.text_input("Enter employee id", '')
+            entered_name = st.text_input("Enter employee first name", '')
+
+            if not entered_name and not entered_eid:
+                return
+
+            response = requests.get(f'{self.mainRoute}employee/{entered_eid}')
+            record = response.json()
+            record_found = False
+            if record['fname'] == entered_name:
+                record_found = True
+                st.table(record)
+            else:
+                st.warning("Employee is not in Database")
+
+            if record_found:
+                hid = st.text_input("Change hotel ID")
+                firstname = st.text_input("Change first name", '')
+                lastname = st.text_input("Change last name", '')
+                age = st.text_input("Change age", '')
+                position = st.text_input("Change position", '')
+                salary = st.text_input("Change salary", '')
+                if not firstname == "" and not lastname == "" and not age == "" and not position == "" and not salary == "" and not hid == "":
+                   if st.button("update"):
+                       st.write("success")
+                       update_data.update({'hid': int(hid), 'fname': firstname, 'lname': lastname, 'age': int(age), 'position': position, 'salary': float(salary)})
+                       # final_update = requests.put(f'{self.mainRoute}employee/{entered_eid}', json=update_data)
+                       st.write(update_data)
+
+        elif table_selected == "hotel":
+
+            entered_hid = st.text_input("Enter hotel id", '')
+            entered_hname = st.text_input("Enter hotel name", '')
+
+            if not entered_hid and not entered_hname:
+                return
+
+            response = requests.get(f'{self.mainRoute}hotel/{entered_hid}')
+            record = response.json()
+            record_found = False
+            if record['hname'] == entered_hname:
+                record_found = True
+                st.table(record)
+            else:
+                st.warning("Hotel is not in Database")
+
+            if record_found:
+                chid = st.text_input("Change chain ID")
+                hotelname = st.text_input("Change hotel name", '')
+                hcity = st.text_input("Change hotel city", '')
+                if not hotelname == "" and not hcity == "" and not chid == "":
+                   if st.button("update"):
+                       st.write("success")
+                       update_data.update({'chid': int(chid), 'hname': hotelname, 'hcity': hcity})
+                       # final_update = requests.put(f'{self.mainRoute}hotel/{entered_hid}', json=update_data)
+                       st.write(update_data)
+
+        elif table_selected == "chains":
+
+            entered_chid = st.text_input("Enter chain id", '')
+            entered_cname = st.text_input("Enter chain name", '')
+
+            if not entered_chid and not entered_cname:
+                return
+
+            response = requests.get(f'{self.mainRoute}chains/{entered_chid}')
+            record = response.json()
+            record_found = False
+            if record['cname'] == entered_cname:
+                record_found = True
+                st.table(record)
+            else:
+                st.warning("Chain is not in Database")
+
+            if record_found:
+                cname = st.text_input("Change cname", '')
+                springmkup = st.text_input("Change springmgkup", '')
+                summermkup = st.text_input("Change summermgkup", '')
+                fallmkup = st.text_input("Change fallmgkup", '')
+                wintermkup = st.text_input("Change wintermgkup", '')
+                if not cname == "" or not springmkup == "" or not summermkup == "" or not fallmkup == "" or not wintermkup == "":
+                   if st.button("update"):
+                       st.write("success")
+                       update_data.update({'cname': cname, 'springmkup': float(springmkup), 'summermkup': float(summermkup), 'fallmkup': float(fallmkup), 'wintermkup': float(wintermkup)})
+                       # final_update = requests.put(f'{self.mainRoute}chains/{entered_chid}', json=update_data)
+                       st.write(update_data)
+
+        elif table_selected == "room":
+
+            entered_rid = st.text_input("enter room ID", '')
+
+            if not entered_rid:
+                return
+
+            response = requests.get(f'{self.mainRoute}room/{entered_rid}')
+            record = response.json()
+            record_found = False
+            if record[0]['rid'] == float(entered_rid):
+                record_found = True
+                st.table(record)
+            else:
+                st.warning("Room is not in Database")
+
+            if record_found:
+                hotel_id = st.text_input("Change Hotel ID")
+                room_desc_id = st.text_input("Change Room Description ID")
+                rprice = st.text_input("Change room price", '')
+                if not rprice == "" and not hotel_id == "" and not room_desc_id == "":
+                   if st.button("update"):
+                       st.write("success")
+                       update_data.update({'hid': int(hotel_id), 'rdid': int(room_desc_id), 'rprice': float(rprice)})
+                       # final_update = requests.put(f'{self.mainRoute}room/{entered_rid}', json=update_data)
+                       st.write(update_data)
+
+        elif table_selected == "client":
+
+            entered_clid = st.text_input("enter client ID", '')
+            entered_fname = st.text_input("enter client First name", '')
+
+            if not entered_clid and not entered_fname:
+                return
+
+            response = requests.get(f'{self.mainRoute}client/{entered_clid}')
+            record = response.json()
+            record_found = False
+            if record[0]['fname'] == entered_fname:
+                record_found = True
+                st.table(record)
+            else:
+                st.warning("Client is not in Database")
+
+            if record_found:
+                clientname = st.text_input("enter client first name")
+                clientlastname = st.text_input("enter client Last name")
+                clientage = st.text_input("enter client age")
+                memberyear = st.text_input("enter client memberyear")
+                if not clientname == "" or not clientlastname == "" or not clientage == "" or not memberyear == "":
+                    if st.button("update"):
+                        st.write("success")
+                        update_data.update({'fname': clientname, 'lname': clientlastname, 'age': int(clientage), 'memberyear': int(memberyear)})
+                        # final_update = requests.put(f'{self.mainRoute}client/{entered_clid}', json=update_data)
+                        st.write(update_data)
+
+        if table_selected == "roomunavailable":
+
+            entered_ruid = st.text_input("enter user room unavailable id", '')
+
+            if not entered_ruid:
+                return
+
+            response = requests.get(f'{self.mainRoute}roomunavailable/{entered_ruid}')
+            record = response.json()
+            record_found = False
+            if record['ruid'] == float(entered_ruid):
+                record_found = True
+                st.table(record)
+            else:
+                st.warning("Room unavailable is not in Database")
+
+            if record_found:
+                room_id = st.text_input("Change room id")
+                stardate = st.date_input("Change startdate",value=None)
+                enddate = st.date_input("Change enddate",value=None)
+                if not stardate == "" and not enddate == "" and not room_id == "":
+                   if st.button("update"):
+                       st.write("success")
+                       update_data.update({'rid': int(room_id), 'startdate': stardate, 'enddate': enddate})
+                       # final_update = requests.put(f'{self.mainRoute}roomunavailable/{entered_ruid}', json=update_data)
+                       st.write(update_data)
+
+        if table_selected == "roomdescription":
+
+            entered_rdid = st.text_input("enter user room description id", '')
+
+            if not entered_rdid:
+                return
+
+            response = requests.get(f'{self.mainRoute}roomdescription/{entered_rdid}')
+            record = response.json()
+            record_found = False
+            if record['rdid'] == float(entered_rdid):
+                record_found = True
+                st.table(record)
+            else:
+                st.warning("Room description is not in Database")
+
+            if record_found:
+                rname = st.text_input("Change room description name", '')
+                rtype = st.text_input("Change room despcription type", '')
+                capacity = st.text_input("Change room capacity", '')
+                ishandicap = st.selectbox("Change handicap", ("true", "false"), index=None)
+                if not rname == "" and not rtype == "" and not capacity == "" and not ishandicap == "":
+                    if st.button("update"):
+                        st.write("success")
+                        update_data.update({'rname': rname, 'rtype': rtype, 'capacity': int(capacity), 'ishandicap': ishandicap})
+                        # final_update = requests.put(f'{self.mainRoute}roomdescription/{entered_rdid}', json=update_data)
+                        st.write(update_data)
+
+        if table_selected == "reserve":
+
+            entered_reid = st.text_input("enter user room reserve id", '')
+
+            if not entered_reid:
+                return
+
+            response = requests.get(f'{self.mainRoute}reserve/{entered_reid}')
+            record = response.json()
+            record_found = False
+            if record[0]['reid'] == float(entered_reid):
+                record_found = True
+                st.table(record)
+            else:
+                st.warning("Reserve is not in Database")
+
+            if record_found:
+                room_unv_id = st.text_input("Change room unavailable id")
+                client_id = st.text_input("Change client id")
+                total_cost = st.text_input("Change reservation total_cost", '')
+                payment = st.text_input("Change reservation payment", '')
+                guests = st.text_input("Change reservation numbers of guests")
+                if not total_cost == "" and not payment == "" and not guests == "" and not room_unv_id == "" and not client_id == "":
+                    if st.button("update"):
+                        st.write("success")
+                        update_data.update({'ruid': int(room_unv_id), 'clid': int(client_id), 'total_cost': float(total_cost), 'payment': payment, 'guests': int(guests)})
+                        # final_update = requests.put(f'{self.mainRoute}hotel/{entered_reid}', json=update_data)
+                        st.write(update_data)
+
         pass
     
     def delete_records(self):
