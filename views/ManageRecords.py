@@ -165,7 +165,7 @@ class ManageRecords:
 
         if table_selected == "login":
 
-            entered_lid = st.text_input("enter user ID", '')
+            entered_lid = st.number_input("enter user ID", min_value=1)
             entered_username = st.text_input("Enter Username", '')
 
             if not entered_username and not entered_lid:
@@ -173,6 +173,7 @@ class ManageRecords:
 
             response = requests.get(f'{self.mainRoute}login/{entered_lid}')
             record = response.json()
+
             record_found = False
             if record['username'] == entered_username:
                 record_found = True
@@ -181,7 +182,7 @@ class ManageRecords:
                 st.warning("User is not in Database")
 
             if record_found:
-                eid = st.text_input("Change employee ID")
+                eid = st.number_input("Change employee ID", min_value=1)
                 user = st.text_input("Change username", '')
                 password = st.text_input("Change password", '')
                 if not user == "" and not password == "" and not eid == "":
@@ -193,7 +194,7 @@ class ManageRecords:
 
         elif table_selected == "employee":
 
-            entered_eid = st.text_input("Enter employee id", '')
+            entered_eid = st.number_input("Enter employee id", min_value=1)
             entered_name = st.text_input("Enter employee first name", '')
 
             if not entered_name and not entered_eid:
@@ -201,6 +202,10 @@ class ManageRecords:
 
             response = requests.get(f'{self.mainRoute}employee/{entered_eid}')
             record = response.json()
+            
+            if response.status_code != 200:
+                return
+
             record_found = False
             if record['fname'] == entered_name:
                 record_found = True
@@ -209,12 +214,12 @@ class ManageRecords:
                 st.warning("Employee is not in Database")
 
             if record_found:
-                hid = st.text_input("Change hotel ID")
+                hid = st.number_input("Change hotel ID", min_value=1)
                 firstname = st.text_input("Change first name", '')
                 lastname = st.text_input("Change last name", '')
-                age = st.text_input("Change age", '')
-                position = st.text_input("Change position", '')
-                salary = st.text_input("Change salary", '')
+                age = st.number_input("Change age", min_value=18)
+                position = st.selectbox("Change position", ['Administrator', 'Regular', 'Supervisor'], index=0)
+                salary = st.number_input("Change salary", step=0.01)
                 if not firstname == "" and not lastname == "" and not age == "" and not position == "" and not salary == "" and not hid == "":
                    if st.button("update"):
                        st.write("success")
@@ -223,8 +228,7 @@ class ManageRecords:
                        st.write(update_data)
 
         elif table_selected == "hotel":
-
-            entered_hid = st.text_input("Enter hotel id", '')
+            entered_hid = st.number_input("Enter hotel id", min_value=1)
             entered_hname = st.text_input("Enter hotel name", '')
 
             if not entered_hid and not entered_hname:
@@ -240,7 +244,7 @@ class ManageRecords:
                 st.warning("Hotel is not in Database")
 
             if record_found:
-                chid = st.text_input("Change chain ID")
+                chid = st.number_input("Change chain ID", min_value=1)
                 hotelname = st.text_input("Change hotel name", '')
                 hcity = st.text_input("Change hotel city", '')
                 if not hotelname == "" and not hcity == "" and not chid == "":
@@ -251,8 +255,7 @@ class ManageRecords:
                        st.write(update_data)
 
         elif table_selected == "chains":
-
-            entered_chid = st.text_input("Enter chain id", '')
+            entered_chid = st.number_input("Enter chain id", min_value=1)
             entered_cname = st.text_input("Enter chain name", '')
 
             if not entered_chid and not entered_cname:
@@ -269,10 +272,10 @@ class ManageRecords:
 
             if record_found:
                 cname = st.text_input("Change cname", '')
-                springmkup = st.text_input("Change springmgkup", '')
-                summermkup = st.text_input("Change summermgkup", '')
-                fallmkup = st.text_input("Change fallmgkup", '')
-                wintermkup = st.text_input("Change wintermgkup", '')
+                fallmkup   = st.number_input("Change fallmgkup",   step=0.01)
+                springmkup = st.number_input("Change springmgkup", step=0.01)
+                summermkup = st.number_input("Change summermgkup", step=0.01)
+                wintermkup = st.number_input("Change wintermgkup", step=0.01)
                 if not cname == "" or not springmkup == "" or not summermkup == "" or not fallmkup == "" or not wintermkup == "":
                    if st.button("update"):
                        st.write("success")
@@ -281,9 +284,7 @@ class ManageRecords:
                        st.write(update_data)
 
         elif table_selected == "room":
-
-            entered_rid = st.text_input("enter room ID", '')
-
+            entered_rid = st.number_input("enter room ID", min_value=1)
             if not entered_rid:
                 return
 
@@ -297,9 +298,9 @@ class ManageRecords:
                 st.warning("Room is not in Database")
 
             if record_found:
-                hotel_id = st.text_input("Change Hotel ID")
-                room_desc_id = st.text_input("Change Room Description ID")
-                rprice = st.text_input("Change room price", '')
+                hotel_id = st.number_input("Change Hotel ID", min_value=1)
+                room_desc_id = st.number_input("Change Room Description ID", min_value=1)
+                rprice = st.number_input("Change room price", step=0.01)
                 if not rprice == "" and not hotel_id == "" and not room_desc_id == "":
                    if st.button("update"):
                        st.write("success")
@@ -308,8 +309,7 @@ class ManageRecords:
                        st.write(update_data)
 
         elif table_selected == "client":
-
-            entered_clid = st.text_input("enter client ID", '')
+            entered_clid = st.number_input("enter client ID", min_value=1)
             entered_fname = st.text_input("enter client First name", '')
 
             if not entered_clid and not entered_fname:
@@ -325,10 +325,10 @@ class ManageRecords:
                 st.warning("Client is not in Database")
 
             if record_found:
-                clientname = st.text_input("enter client first name")
+                clientname     = st.text_input("enter client first name")
                 clientlastname = st.text_input("enter client Last name")
-                clientage = st.text_input("enter client age")
-                memberyear = st.text_input("enter client memberyear")
+                clientage      = st.number_input("enter client age", min_value=1)
+                memberyear     = st.text_input("enter client memberyear")
                 if not clientname == "" or not clientlastname == "" or not clientage == "" or not memberyear == "":
                     if st.button("update"):
                         st.write("success")
@@ -336,10 +336,8 @@ class ManageRecords:
                         # final_update = requests.put(f'{self.mainRoute}client/{entered_clid}', json=update_data)
                         st.write(update_data)
 
-        if table_selected == "roomunavailable":
-
-            entered_ruid = st.text_input("enter user room unavailable id", '')
-
+        elif table_selected == "roomunavailable":
+            entered_ruid = st.number_input("enter user room unavailable id", min_value=1)
             if not entered_ruid:
                 return
 
@@ -353,7 +351,7 @@ class ManageRecords:
                 st.warning("Room unavailable is not in Database")
 
             if record_found:
-                room_id = st.text_input("Change room id")
+                room_id = st.number_input("Change room id", min_value=1)
                 stardate = st.date_input("Change startdate",value=None)
                 enddate = st.date_input("Change enddate",value=None)
                 if not stardate == "" and not enddate == "" and not room_id == "":
@@ -363,10 +361,8 @@ class ManageRecords:
                        # final_update = requests.put(f'{self.mainRoute}roomunavailable/{entered_ruid}', json=update_data)
                        st.write(update_data)
 
-        if table_selected == "roomdescription":
-
-            entered_rdid = st.text_input("enter user room description id", '')
-
+        elif table_selected == "roomdescription":
+            entered_rdid = st.number_input("enter user room description id", min_value=1)
             if not entered_rdid:
                 return
 
@@ -382,8 +378,8 @@ class ManageRecords:
             if record_found:
                 rname = st.text_input("Change room description name", '')
                 rtype = st.text_input("Change room despcription type", '')
-                capacity = st.text_input("Change room capacity", '')
-                ishandicap = st.selectbox("Change handicap", ("true", "false"), index=None)
+                capacity = st.number_input("Change room capacity", min_value=1)
+                ishandicap = st.checkbox("Change handicap")
                 if not rname == "" and not rtype == "" and not capacity == "" and not ishandicap == "":
                     if st.button("update"):
                         st.write("success")
@@ -391,10 +387,8 @@ class ManageRecords:
                         # final_update = requests.put(f'{self.mainRoute}roomdescription/{entered_rdid}', json=update_data)
                         st.write(update_data)
 
-        if table_selected == "reserve":
-
-            entered_reid = st.text_input("enter user room reserve id", '')
-
+        elif table_selected == "reserve":
+            entered_reid = st.number_input("enter user room reserve id", min_value=1)
             if not entered_reid:
                 return
 
@@ -408,11 +402,11 @@ class ManageRecords:
                 st.warning("Reserve is not in Database")
 
             if record_found:
-                room_unv_id = st.text_input("Change room unavailable id")
-                client_id = st.text_input("Change client id")
-                total_cost = st.text_input("Change reservation total_cost", '')
+                room_unv_id = st.number_input("Change room unavailable id", min_value=1)
+                client_id   = st.number_input("Change client id", min_value=1)
+                total_cost  = st.number_input("Change reservation total_cost", step=0.01)
                 payment = st.text_input("Change reservation payment", '')
-                guests = st.text_input("Change reservation numbers of guests")
+                guests  = st.number_input("Change reservation numbers of guests", min_value=1)
                 if not total_cost == "" and not payment == "" and not guests == "" and not room_unv_id == "" and not client_id == "":
                     if st.button("update"):
                         st.write("success")
