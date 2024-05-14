@@ -189,7 +189,7 @@ class ManageRecords:
                    if st.button("update"):
                        st.success("updated record successfully")
                        update_data.update({'eid': int(eid), 'username': user, 'password': password})
-                       # final_update = requests.put(f'{self.mainRoute}login/{entered_lid}', json=update_data)
+                       final_update = requests.put(f'{self.mainRoute}login/{entered_lid}', json=update_data)
                     #    st.write(update_data)
 
         elif table_selected == "employee":
